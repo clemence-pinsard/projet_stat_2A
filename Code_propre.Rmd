@@ -13,12 +13,161 @@ knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+library(lubridate)
 ```
 
 ## R Markdown
 
 ```{r}
-load("fiche_wa.rdata")
+load("data/fiche_wa.rdata")
 summary(fiche_wa)
 ```
+
+```{r}
+# --- PARAMÈTRES ---
+seuil_retraite <- 2022 # Si pas de perf après 2022, on considère la carrière finie
+
+# --- NETTOYAGE INITIAL ET CALCUL DE L'ÂGE ---
+# On crée une base de travail propre sans toucher à l'originale
+df_travail <- fiche_wa %>%
+  filter(!is.na(mark_numeric), !is.na(season), !is.na(Group_Discipline)) %>%
+  mutate(
+    season_num = as.numeric(as.character(season)),
+    dob_parsed = parse_date_time(DOB, orders = c("ymd", "dmy", "mdy")),
+    Age = season_num - year(dob_parsed)
+  ) 
+
+# --- FILTRE CARRIÈRES TERMINÉES ---
+# On identifie ceux qui ont concouru après 2022
+ids_actifs <- df_travail %>%
+  filter(season_num > seuil_retraite) %>%
+  pull(ID) %>%
+  unique()
+
+# On exclut ces IDs pour ne garder que les retraités
+df_retraites <- df_travail %>%
+  filter(!ID %in% ids_actifs)
+
+# --- GESTION DES DOUBLONS ET SÉLECTION DE LA MEILLEURE PERF ---
+# Une seule ligne par Athlète, par Âge et par Discipline
+df_final <- df_retraites %>%
+  # Supprime les doublons techniques (même perf dans l'année)
+  distinct(ID, season, mark_numeric, discipline, .keep_all = TRUE) %>%
+  
+  # Groupement par athlète, âge et discipline
+  group_by(ID, Age, discipline) %>%
+  
+  # On garde la meilleure performance annuelle (le max de mark_numeric)
+  # Rappel : mark_numeric est négatif pour les courses, donc le max est le meilleur temps
+  slice_max(mark_numeric, n = 1, with_ties = FALSE) %>%
+  ungroup() %>%
+  
+  # --- ORGANISATION PAR FAMILLES ---
+  # On simplifie les noms des groupes de discipline
+  mutate(Famille = case_when(
+    Group_Discipline == "sprints" ~ "Sprint",
+    Group_Discipline == "throws"  ~ "Lancers",
+    Group_Discipline %in% c("middlelong", "road-running") ~ "Endurance",
+    TRUE ~ "A exclure"
+  )) %>%
+  # On ne garde que les 3 groupes d'intérêt pour le rapport
+  filter(Famille != "A exclure")
+
+# --- VÉRIFICATION ---
+cat("Statistiques de la base nettoyée :\n")
+cat("- Nombre d'athlètes retraités : ", length(unique(df_final$ID)), "\n")
+cat("- Nombre total de lignes (1 par athlète/âge) : ", nrow(df_final), "\n")
+
+# Petit aperçu rapide de la répartition
+table(df_final$Famille, df_final$Sex)
+rm(df_retraites)
+rm(df_travail)
+```
+
+```{r}
+# Extraction du pic réel par athlète et par discipline
+stats_pic_discipline <- df_final %>%
+  group_by(ID, Nom, Famille, discipline, Sex) %>%
+  summarise(
+    Age_Pic_Obs = Age[which.max(mark_numeric)],
+    Best_Mark = max(mark_numeric),
+    # On compte les années où l'athlète a pratiqué CETTE discipline précise
+    Nb_Annees_Discipline = n_distinct(season_num),
+    .groups = "drop"
+  ) %>%
+  # Filtre : au moins 5 ans de pratique dans la discipline
+  filter(Nb_Annees_Discipline >= 5)
+
+# Aperçu du résultat
+head(stats_pic_discipline)
+```
+
+
+```{r}
+# Résumé statistique par Famille
+desc_famille <- stats_pic_discipline %>%
+  group_by(Famille) %>%
+  summarise(
+    Effectif = n(),
+    Moyenne = mean(Age_Pic_Obs),
+    Mediane = median(Age_Pic_Obs),
+    SD = sd(Age_Pic_Obs),
+    Max_Age = max(Age_Pic_Obs)
+  )
+
+print(desc_famille)
+
+# Graphique : Boxplot par Famille
+p1 <- ggplot(stats_pic_discipline, aes(x = Famille, y = Age_Pic_Obs, fill = Famille)) +
+  geom_boxplot(notch = TRUE, alpha = 0.7) +
+  labs(title = "Comparaison de l'âge au pic par famille de discipline",
+       subtitle = "Carrières terminées (>= 5 ans d'expérience)",
+       y = "Âge au pic (Années)", x = "") +
+  theme_minimal()
+
+print(p1)
+
+# Par discipline
+p2 <- ggplot(stats_pic_discipline, aes(x = Famille, y = Age_Pic_Obs, fill = discipline)) +
+  geom_boxplot(notch = TRUE, alpha = 0.7) +
+  labs(title = "Comparaison de l'âge au pic par discipline",
+       subtitle = "Carrières terminées (>= 5 ans d'expérience)",
+       y = "Âge au pic (Années)", x = "") +
+  theme_minimal()
+
+print(p2)
+```
+
+```{r}
+# 1. Préparation des données pour TOUTES les disciplines
+stats_toutes_disc <- stats_pic_discipline %>%
+  group_by(Famille, discipline) %>%
+  summarise(
+    Moyenne_Pic = mean(Age_Pic_Obs),
+    Effectif = n(),
+    .groups = "drop"
+  ) %>%
+  filter(Effectif >= 5) %>% # On garde un minimum de 5 athlètes pour que la barre ait du sens
+  arrange(Moyenne_Pic)
+
+# 2. Graphique complet
+ggplot(stats_toutes_disc, aes(x = reorder(discipline, Moyenne_Pic), y = Moyenne_Pic, fill = Famille)) +
+  geom_col(alpha = 0.8) +
+  # Ajout de la valeur précise au bout de chaque barre
+  geom_text(aes(label = round(Moyenne_Pic, 1)), hjust = -0.2, size = 3) +
+  coord_flip(ylim = c(15, max(stats_toutes_disc$Moyenne_Pic) + 3)) +
+  scale_fill_brewer(palette = "Set1") +
+  labs(
+    title = "Âge moyen au pic par discipline",
+    x = "Discipline",
+    y = "Âge moyen au pic observé",
+    fill = "Famille"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 8),
+    legend.position = "bottom"
+  )
+```
+
 
