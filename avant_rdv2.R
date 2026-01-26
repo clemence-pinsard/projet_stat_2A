@@ -110,6 +110,149 @@ df_fiche_wa_sans_NA_nom_ID_problematiques2 %>%
   distinct(ID, Nom) %>% 
   print(n = 50)
 
+#### Arthur
+# Analyse du ResultScore par Discipline
+# Objectif : Voir si le score est comparable entre les épreuves
+score_summary <- df_fiche_wa_sans_NA %>%
+  filter(resultScore > 0) %>% # On exclut les scores nuls pour l'analyse de distribution
+  group_by(Epreuve_championnat) %>%
+  summarise(
+    moyenne = mean(resultScore),
+    mediane = median(resultScore),
+    sd = sd(resultScore),
+    n = n()
+  ) %>%
+  arrange(desc(moyenne))
 
+print(score_summary)
 
+# Visualisation des disparités (Boxplot)
+ggplot(df_fiche_wa_sans_NA %>% filter(resultScore > 0), 
+       aes(x = reorder(Epreuve_championnat, resultScore, FUN = median), y = resultScore, fill = Sex)) +
+  geom_boxplot(outlier.size = 0.5) +
+  coord_flip() +
+  labs(title = "Distribution des ResultScore par discipline",
+       x = "Discipline", y = "Score") +
+  theme_minimal()
+
+# Résolution du problème ID vs Nom
+# On crée une table de correspondance unique ID -> Nom (le plus fréquent)
+# Cela permet de "nettoyer" les noms qui auraient changé pour un même ID
+id_clean_table <- df_fiche_wa_sans_NA %>%
+  group_by(ID, Nom) %>%
+  count() %>%
+  group_by(ID) %>%
+  slice_max(n, n = 1, with_ties = FALSE) %>%
+  select(ID, Nom_Unique = Nom)
+
+df_final <- df_fiche_wa_sans_NA %>%
+  left_join(id_clean_table, by = "ID") %>%
+  filter(resultScore > 0) # On retire définitivement les scores nuls
+
+# --- 3. Analyse de la structure longitudinale (pour Modèles Mixtes) ---
+# Combien de performances par athlète ?
+ath_count <- df_final %>%
+  group_by(ID, Epreuve_championnat) %>%
+  summarise(n_perf = n(), .groups = "drop")
+
+# Visualisation de la "profondeur" des données
+ggplot(ath_count, aes(x = n_perf)) +
+  geom_histogram(binwidth = 1, fill = "steelblue", color = "white") +
+  xlim(0, 20) +
+  labs(title = "Nombre de performances par athlète/discipline",
+       x = "Nombre de saisons/performances", y = "Nombre d'athlètes") +
+  theme_minimal()
+
+# Filtrage : On garde uniquement ceux qui ont au moins 5 performances 
+# (Seuil minimal pour que l'effet aléatoire individuel ait du sens)
+df_mixed_model <- df_final %>%
+  group_by(ID, Epreuve_championnat) %>%
+  filter(n() >= 5) %>%
+  ungroup()
+
+# --- 4. Analyse du déséquilibre Hommes/Femmes post-1997 ---
+# On crée un indicateur de période pour tester l'hypothèse historique
+df_final <- df_final %>%
+  mutate(periode = ifelse(season < 1997, "Avant 1997", "Après 1997"))
+
+# Tableau croisé Période / Sexe
+table_sexe_periode <- df_final %>%
+  group_by(periode, Sex) %>%
+  tally() %>%
+  group_by(periode) %>%
+  mutate(prop = n / sum(n))
+
+print(table_sexe_periode)
+
+# TEST
+
+library(lubridate)
+
+df_compare <- df_final %>%
+  filter(Epreuve_championnat %in% c("100-metres", "200-metres", "shot-put", "discus-throw")) %>%
+  mutate(
+    Famille = ifelse(Epreuve_championnat %in% c("100-metres", "200-metres"), "Sprint", "Lancers"),
+    
+    # parse_date_time est plus robuste car il teste plusieurs formats
+    dob_parsed = parse_date_time(DOB, orders = c("ymd", "dmy", "mdy")),
+    year_birth = year(dob_parsed),
+    
+    season_num = as.numeric(as.character(season)),
+    Age = season_num - year_birth
+  ) %>%
+  # On filtre les valeurs où l'âge n'a pas pu être calculé ou est aberrant
+  filter(!is.na(Age), Age > 12, Age < 50)
+
+# On relance le graphique
+ggplot(df_compare, aes(x = Age, y = resultScore, color = Famille)) +
+  geom_point(alpha = 0.05, size = 0.5) +
+  geom_smooth(method = "loess", se = TRUE, linewidth = 1.2) + 
+  facet_wrap(~Sex) +
+  labs(
+    title = "Relation Âge-Performance : Sprinteurs vs Lanceurs",
+    subtitle = "Modélisation de la trajectoire de carrière moyenne",
+    x = "Âge de l'athlète",
+    y = "ResultScore (Points)",
+    color = "Discipline"
+  ) +
+  scale_color_manual(values = c("Sprint" = "#E41A1C", "Lancers" = "#377EB8")) +
+  theme_minimal()
+
+# 1. Préparation des données filtrées par famille
+df_evol_compare <- df_final %>%
+  filter(Epreuve_championnat %in% c("100-metres", "200-metres", "shot-put", "discus-throw")) %>%
+  mutate(
+    Famille = ifelse(Epreuve_championnat %in% c("100-metres", "200-metres"), "Sprint", "Lancers"),
+    season_num = as.numeric(as.character(season))
+  ) %>%
+  group_by(season_num, Famille) %>%
+  summarise(
+    moyenne = mean(resultScore, na.rm = TRUE),
+    minimum = min(resultScore, na.rm = TRUE),
+    maximum = max(resultScore, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# 2. Graphique comparatif avec facettes
+ggplot(df_evol_compare, aes(x = season_num, group = Famille)) +
+  # Zone d'étendue (Min-Max)
+  geom_ribbon(aes(ymin = minimum, ymax = maximum, fill = Famille), alpha = 0.2) +
+  # Ligne de la moyenne
+  geom_line(aes(y = moyenne, color = Famille), linewidth = 1.2) +
+  # Points pour marquer chaque année
+  geom_point(aes(y = moyenne, color = Famille), size = 1) +
+  # Séparation en deux colonnes : Sprint vs Lancers
+  facet_wrap(~Famille) +
+  labs(
+    title = "Comparaison de l'évolution des performances : Sprint vs Lancers",
+    subtitle = "Évolution de la moyenne et de l'étendue (Min-Max) des scores par saison",
+    x = "Saison",
+    y = "ResultScore (Points)",
+    fill = "Famille",
+    color = "Famille"
+  ) +
+  scale_color_manual(values = c("Sprint" = "#E41A1C", "Lancers" = "#377EB8")) +
+  scale_fill_manual(values = c("Sprint" = "#E41A1C", "Lancers" = "#377EB8")) +
+  theme_minimal() +
+  theme(legend.position = "none")
 
