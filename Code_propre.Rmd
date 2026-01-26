@@ -170,4 +170,206 @@ ggplot(stats_toutes_disc, aes(x = reorder(discipline, Moyenne_Pic), y = Moyenne_
   )
 ```
 
+```{r}
+# 1. Déséquilibre hommme-femme 
+
+df_final %>%
+  count(Sex) %>%
+  mutate(pourcentage = n / sum(n) * 100)
+
+df_final %>%
+  count(season, Sex) %>%
+  group_by(season) %>%
+  mutate(pourcentage = n / sum(n) * 100) %>% 
+  print(n = 70)
+
+# Déséquilibre homme-femme par saison 
+
+ggplot(df_final, aes(x = season, fill = Sex)) +
+  geom_bar(position = "fill") +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    title = "Répartition des athlètes par saison et par sexe",
+    x = "Saison",
+    y = "Proportion"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Déséquilibre homme-femme par discipline
+
+epreuve_sexe <- df_final %>%
+  count(Epreuve_championnat, Sex)
+
+ggplot(epreuve_sexe, aes(x = Epreuve_championnat, y = n, fill = Sex)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Répartition des athlètes par Epreuve_championnat et par sexe",
+    x = "Epreuve_championnat",
+    y = "Nombre d’athlètes"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# 2. Répartition par discipline 
+
+df_final %>%
+  distinct(ID, discipline, Sex) %>%
+  count(discipline, Sex) %>%
+  group_by(discipline) %>% 
+  mutate(pourcentage = n / sum(n) * 100) %>%
+  arrange(desc(pourcentage))
+```
+
+```{r}
+# FOCUS SUR L'AGE EN GENERAL
+
+# 1. Stats des sur l'âge
+
+age_min <- min(df_final$Age, na.rm = TRUE)
+age_max <- max(df_final$Age, na.rm = TRUE)
+age_moyen <- mean(df_final$Age, na.rm = TRUE)
+age_mediane <- median(df_final$Age, na.rm = TRUE)
+
+age_min
+age_max
+age_moyen
+age_mediane
+
+age_ecart_type <- sd(df_final$Age, na.rm = TRUE)
+age_ecart_type
+
+quartiles_age <- quantile(df_final$Age, probs = c(0.25, 0.75), na.rm = TRUE)
+quartiles_age
+
+# 2. Déséquilibre âge (distribution)
+
+df_final %>%
+  count(Age) %>%
+  mutate(pourcentage = n / sum(n) * 100)
+
+df_final <- df_final %>%
+  mutate(tranche_age = cut(Age,
+                            breaks = c(15, 20, 25, 30, 35, Inf),
+                            right = FALSE,
+                            labels = c("15-20", "20-25", "25-30", "30-35", ">35")))
+
+distribution_age <- df_final %>%
+  count(tranche_age)
+
+distribution_age
+
+# Visuellement 
+
+ggplot(df_final, aes(x = Age)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 binwidth = 2,
+                 fill = "grey80",
+                 color = "white") +
+  geom_density(color = "steelblue", linewidth = 1) +
+  labs(title = "Distribution et densité de l'âge",
+       x = "Âge",
+       y = "Densité") +
+  theme_minimal()
+
+
+```
+
+```{r}
+# On étudie en détal mark_numeric 
+
+stats_performance <- df_final %>%
+  group_by(discipline) %>%
+  summarise(
+    n = n(),
+    min = min(mark_numeric, na.rm = TRUE),
+    Q1 = quantile(mark_numeric, 0.25, na.rm = TRUE),
+    mediane = median(mark_numeric, na.rm = TRUE),
+    moyenne = mean(mark_numeric, na.rm = TRUE),
+    Q3 = quantile(mark_numeric, 0.75, na.rm = TRUE),
+    max = max(mark_numeric, na.rm = TRUE),
+    ecart_type = sd(mark_numeric, na.rm = TRUE)
+  ) %>%
+  arrange(discipline)
+
+stats_performance
+
+# On corrige les performances négatives pour les disciplines de sprint et d'endurance 
+
+df_final <- df_final %>%
+  mutate(mark_numeric_corrigee = ifelse(Famille %in% c("Sprint", "Endurance"),
+                                       -mark_numeric,
+                                       mark_numeric))
+
+stats_performance_corrigee <- df_final %>%
+  group_by(discipline) %>%
+  summarise(
+    n = n(),
+    min = min(mark_numeric_corrigee, na.rm = TRUE),
+    Q1 = quantile(mark_numeric_corrigee, 0.25, na.rm = TRUE),
+    mediane = median(mark_numeric_corrigee, na.rm = TRUE),
+    moyenne = mean(mark_numeric_corrigee, na.rm = TRUE),
+    Q3 = quantile(mark_numeric_corrigee, 0.75, na.rm = TRUE),
+    max = max(mark_numeric_corrigee, na.rm = TRUE),
+    ecart_type = sd(mark_numeric_corrigee, na.rm = TRUE)
+  ) %>%
+  arrange(discipline)
+
+stats_performance_corrigee
+
+# On centre et on réduit cette valeur corrigée (conseiller pour les modèles non linéaires)
+
+df_final <- df_final %>%
+  group_by(discipline) %>%
+  mutate(mark_numeric_centree_reduite = as.numeric(scale(mark_numeric_corrigee))) %>%
+  ungroup()
+
+
+```
+
+```{r}
+# Modèle de Moore (pour chaque discipline (Famille dans un premier temps))
+
+# Pour chaque discipline
+
+resultats_discipline <- df_final %>%
+  group_by(discipline) %>%
+  do({
+    modele <- lm(mark_numeric_corrigee ~ Age + I(Age^2), data = .)
+    coefs <- coef(modele)
+    age_pic <- -coefs["Age"] / (2 * coefs["I(Age^2)"])
+    
+    data.frame(
+      discipline = unique(.$discipline),
+      age_pic = age_pic,
+      r_squared = summary(modele)$r.squared,
+      aic = AIC(modele),
+      bic = BIC(modele)
+    )
+  })
+
+resultats_discipline
+
+# Pour chaque sexe et discipline 
+
+resultats_sexe_discipline <- df_final %>%
+  group_by(Sex, discipline) %>%
+  do({
+    modele <- lm(mark_numeric_corrigee ~ Age + I(Age^2), data = .)
+    coefs <- coef(modele)
+    age_pic <- -coefs["Age"] / (2 * coefs["I(Age^2)"])
+    
+    data.frame(
+      sexe_discipline = unique(.$Sex, .$discipline),
+      age_pic = age_pic,
+      r_squared = summary(modele)$r.squared,
+      aic = AIC(modele),
+      bic = BIC(modele)
+    )
+  })
+
+resultats_sexe_discipline
+```
+
+
 
