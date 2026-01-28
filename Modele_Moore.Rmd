@@ -1,0 +1,219 @@
+---
+title: "Modele_Moore"
+output: html_document
+date: "2026-01-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Précuations initiales
+
+On commence par executer Code_propre.Rmd pour avoir les bonnes données. Puis on importe les librairies necessaires.
+
+```{r}
+library(dplyr)
+library(nlme)
+library(tibble)
+library(stringr)
+```
+
+## Nettoyage et préparation générale
+
+```{r}
+df_model <- df_final %>%
+  filter(
+    !is.na(mark_numeric_corrigee),
+    !is.na(Age),
+    !is.na(discipline),
+    !is.na(ID),
+    !is.na(Sex)
+  ) %>%
+  droplevels()
+```
+
+On crée t (le temps dans notre modèle).
+
+```{r}
+t0 <- min(df_model$Age, na.rm = TRUE)
+df_model <- df_model %>%
+  mutate(
+    t = Age - t0,
+    disc_factor = factor(discipline),
+    sex_factor = factor(Sex),
+    disc_sex = interaction(discipline, Sex)
+  )
+```
+
+## Fonction pour filtrer et préparer les données
+
+```{r}
+prepare_data <- function(data, group_var, min_obs = 50, percentile = 0.995){
+  data %>%
+    group_by(across(all_of(group_var))) %>%
+    filter(n() >= min_obs) %>%
+    ungroup() %>%
+    droplevels() %>%
+    filter(mark_numeric_corrigee <= quantile(mark_numeric_corrigee, percentile))}
+```
+
+## Fonction pour le calcul des valeurs initiales
+
+```{r}
+compute_start <- function(data, group_var){
+  data %>%
+    group_by(across(all_of(group_var))) %>%
+    summarise(
+      a = max(mark_numeric_corrigee, na.rm = TRUE),
+      b = 0.01,
+      c = min(mark_numeric_corrigee, na.rm = TRUE),
+      d = 0.005
+    ) %>% ungroup()
+}
+```
+
+# Modèle de Moore par discipline
+
+```{r}
+df_disc <- prepare_data(df_model, "disc_factor", min_obs = 100)
+start_disc <- compute_start(df_disc, "disc_factor")
+
+modele_disc <- nlme(
+  mark_numeric_corrigee ~ a * (1 - exp(-0.01 * t)) + c * (1 - exp(0.005 * t)),
+  data = df_disc,
+  fixed = a + c ~ disc_factor,
+  random = a ~ 1 | ID,
+  start = c(a = start_disc$a, c = start_disc$c),
+  control = nlmeControl(maxIter = 2000, pnlsMaxIter = 200, tolerance = 1e-5, msVerbose = TRUE)
+)
+
+summary(modele_disc)
+fixef(modele_disc)
+```
+
+# Modèle de Moore par sexe
+
+```{r}
+df_sex <- prepare_data(df_model, "sex_factor", min_obs = 50)
+start_sex <- compute_start(df_sex, "sex_factor")
+
+modele_sex <- nlme(
+  mark_numeric_corrigee ~ a * (1 - exp(-0.01 * t)) + c * (1 - exp(0.005 * t)),
+  data = df_sex,
+  fixed = a + c ~ sex_factor,
+  random = a ~ 1 | ID,
+  start = c(a = start_sex$a, c = start_sex$c),
+  control = nlmeControl(maxIter = 2000, pnlsMaxIter = 200, tolerance = 1e-5, msVerbose = TRUE)
+)
+
+summary(modele_sex)
+fixef(modele_sex)
+```
+
+# Modèle de Moore par athlète x discipline
+
+```{r}
+# Ici, on s'assure que chaque athlète a assez d'observations dans la discipline
+df_ath_disc <- df_model %>%
+  group_by(ID, disc_factor) %>%
+  filter(n() >= 5) %>%
+  ungroup() %>%
+  droplevels()
+
+df_ath_disc <- prepare_data(df_ath_disc, "disc_factor", min_obs = 50)
+start_ath_disc <- compute_start(df_ath_disc, "disc_factor")
+
+modele_ath_disc <- nlme(
+  mark_numeric_corrigee ~ a * (1 - exp(-0.01 * t)) + c * (1 - exp(0.005 * t)),
+  data = df_ath_disc,
+  fixed = a + c ~ disc_factor,
+  random = a ~ 1 | ID/disc_factor,
+  start = c(a = start_ath_disc$a, c = start_ath_disc$c),
+  control = nlmeControl(maxIter = 2000, pnlsMaxIter = 200, tolerance = 1e-5, msVerbose = TRUE)
+)
+
+summary(modele_ath_disc)
+fixef(modele_ath_disc)
+```
+
+# Calcul de l'âge au pic dans chaque cas 
+
+## Modèle par discipline
+
+```{r}
+# Extraire les coefficients fixes
+params_disc <- as.data.frame(coef(modele_disc))
+params_disc$discipline <- rownames(params_disc)
+rownames(params_disc) <- NULL
+
+a_cols <- grep("^a", names(params_disc), value = TRUE)
+c_cols <- grep("^c", names(params_disc), value = TRUE)
+
+# extraire juste le nom de la discipline après "a.disc_factor"
+params_disc$discipline <- str_replace(params_disc$discipline, "^a\\.disc_factor", "")
+params_disc$discipline <- str_trim(params_disc$discipline)  # enlever espaces
+
+
+params_disc <- params_disc %>%
+  rowwise() %>%
+  mutate(
+    t_pic = log((get(a_cols[1]) * 0.01) / (get(c_cols[1]) * 0.005)) / (0.01 + 0.005),
+    Age_pic = t_pic + t0
+  )
+
+params_disc
+```
+
+## Modèle par sexe
+
+```{r}
+# Extraire les coefficients fixes
+params_sexe <- as.data.frame(coef(modele_sex))
+params_sexe$discipline <- rownames(params_sexe)
+rownames(params_sexe) <- NULL
+
+a_cols_sexe <- grep("^a", names(params_sexe), value = TRUE)
+c_cols_sexe <- grep("^c", names(params_sexe), value = TRUE)
+
+# extraire juste le nom de la discipline après "a.disc_factor"
+params_sexe$discipline <- str_replace(params_sexe$discipline, "^a\\.disc_factor", "")
+params_sexe$discipline <- str_trim(params_sexe$discipline)  # enlever espaces
+
+
+params_sexe <- params_sexe %>%
+  rowwise() %>%
+  mutate(
+    t_pic = log((get(a_cols_sexe[1]) * 0.01) / (get(c_cols_sexe[1]) * 0.005)) / (0.01 + 0.005),
+    Age_pic = t_pic + t0
+  )
+
+params_sexe
+```
+
+## Modèle par athlète x discipline
+
+```{r}
+## Extraire les coefficients fixes
+params_ath_disc <- as.data.frame(coef(modele_ath_disc))
+params_ath_disc$discipline <- rownames(params_ath_disc)
+rownames(params_ath_disc) <- NULL
+
+a_cols_ath_disc <- grep("^a", names(params_ath_disc), value = TRUE)
+c_cols_ath_disc <- grep("^c", names(params_ath_disc), value = TRUE)
+
+# extraire juste le nom de la discipline après "a.disc_factor"
+params_ath_disc$discipline <- str_replace(params_ath_disc$discipline, "^a\\.disc_factor", "")
+params_ath_disc$discipline <- str_trim(params_ath_disc$discipline)  # enlever espaces
+
+
+params_ath_disc <- params_ath_disc %>%
+  rowwise() %>%
+  mutate(
+    t_pic = log((get(a_cols_ath_disc[1]) * 0.01) / (get(c_cols_ath_disc[1]) * 0.005)) / (0.01 + 0.005),
+    Age_pic = t_pic + t0
+  )
+
+params_ath_disc
+```
+
