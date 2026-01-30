@@ -17,6 +17,7 @@ library(dplyr)
 library(nlme)
 library(tibble)
 library(stringr)
+library(purrr)
 ```
 
 ## Nettoyage et préparation générale
@@ -216,4 +217,116 @@ params_ath_disc <- params_ath_disc %>%
 
 params_ath_disc
 ```
+
+```{r}
+compute_age_pic <- function(a, c, b = 0.01, d = 0.005, t0){
+  t_pic <- log((a * b) / (c * d)) / (b + d)
+  Age_pic <- t_pic + t0
+  tibble(t_pic = t_pic, Age_pic = Age_pic)
+}
+```
+
+## Age au pic par discipline
+
+```{r}
+# Effets fixes
+fe_disc <- fixef(modele_disc)
+
+# Intercept
+a0 <- fe_disc["a.(Intercept)"]
+c0 <- fe_disc["c.(Intercept)"]
+
+# Effets discipline
+disc_levels <- levels(df_disc$disc_factor)
+
+age_pic_disc <- map_dfr(disc_levels, function(disc){
+
+  a_disc <- a0 + fe_disc[paste0("a.disc_factor", disc)]
+  c_disc <- c0 + fe_disc[paste0("c.disc_factor", disc)]
+
+  compute_age_pic(a_disc, c_disc, t0 = t0) %>%
+    mutate(discipline = disc)
+})
+
+age_pic_disc
+```
+
+## Age au pic par sexe
+
+```{r}
+fe_sex <- fixef(modele_sex)
+
+a0 <- fe_sex["a.(Intercept)"]
+c0 <- fe_sex["c.(Intercept)"]
+
+sex_levels <- levels(df_sex$sex_factor)
+
+age_pic_sex <- map_dfr(sex_levels, function(sex){
+
+  a_sex <- a0 + fe_sex[paste0("a.sex_factor", sex)]
+  c_sex <- c0 + fe_sex[paste0("c.sex_factor", sex)]
+
+  compute_age_pic(a_sex, c_sex, t0 = t0) %>%
+    mutate(sex = sex)
+})
+
+age_pic_sex
+```
+
+## Age au pic par athlete x discipline
+
+```{r}
+# Fonction âge au pic
+compute_age_pic <- function(a, c) {
+  ifelse(a <= 0 | c <= 0, NA, log((2 * a) / c) / 0.015)
+}
+
+# 1️⃣ Effets fixes
+fe_disc <- fixef(modele_ath_disc)
+a0 <- fe_disc["a.(Intercept)"]
+c0 <- fe_disc["c.(Intercept)"]
+
+# 2️⃣ Dataframe complet ID × discipline
+df_ids <- df_ath_disc %>%
+  select(ID, disc_factor) %>%
+  distinct()
+
+# 3️⃣ Effets aléatoires
+re_disc <- ranef(modele_ath_disc)$`ID/disc_factor`
+
+if(is.null(re_disc) || nrow(as.data.frame(re_disc)) == 0){
+  # Pas d'effet aléatoire, créer une colonne a = 0
+  re_disc_df <- df_ids %>% mutate(a = 0)
+} else {
+  re_disc_df <- as.data.frame(re_disc) %>%
+    tibble::rownames_to_column("ID_disc") %>%
+    separate(ID_disc, into = c("ID", "disc_factor"), sep = "/") %>%
+    mutate(a = ifelse("a" %in% names(.), .[["a"]], 0)) %>%
+    select(ID, disc_factor, a)
+}
+
+# 4️⃣ Calcul âge au pic
+df_age_pic_ind <- df_ids %>%
+  left_join(re_disc_df, by = c("ID", "disc_factor")) %>%
+  rowwise() %>%
+  mutate(
+    a_ind = a0 + ifelse(paste0("a.disc_factor", disc_factor) %in% names(fe_disc),
+                        fe_disc[paste0("a.disc_factor", disc_factor)], 0) + a,
+    c_ind = c0 + ifelse(paste0("c.disc_factor", disc_factor) %in% names(fe_disc),
+                        fe_disc[paste0("c.disc_factor", disc_factor)], 0),
+    age_pic = compute_age_pic(a_ind, c_ind)
+  ) %>%
+  ungroup() %>%
+  select(ID, disc_factor, age_pic)
+
+df_age_pic_ind <- df_age_pic_ind %>%
+  left_join(df_ath_disc %>% select(ID, Nom) %>% distinct(), by = "ID") %>%
+  select(ID, Nom, disc_factor, age_pic)
+
+df_age_pic_ind <- df_age_pic_ind %>%
+  mutate(age_pic_real = age_pic + t0)  # âge réel
+
+df_age_pic_ind
+```
+
 
