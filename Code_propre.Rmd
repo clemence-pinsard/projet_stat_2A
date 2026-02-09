@@ -170,6 +170,43 @@ ggplot(stats_toutes_disc, aes(x = reorder(discipline, Moyenne_Pic), y = Moyenne_
   )
 ```
 
+#séparation H/F
+```{r}
+# 1. Préparation des données (on s'assure d'avoir les deux sexes pour chaque discipline)
+stats_comp_sex <- stats_pic_discipline %>%
+  group_by(discipline, Sex, Famille) %>%
+  summarise(
+    Moyenne_Pic = mean(Age_Pic_Obs),
+    Effectif = n(),
+    .groups = "drop"
+  ) 
+
+# 2. Graphique avec barres juxtaposées (position dodge)
+age_pic_réel <- ggplot(stats_comp_sex, aes(x = discipline, y = Moyenne_Pic, fill = Sex)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  # Ajout des étiquettes (on les décale aussi avec position_dodge)
+  geom_text(aes(label = round(Moyenne_Pic, 1)), 
+            position = position_dodge(width = 0.8), 
+            hjust = -0.2, size = 2.8) +
+  coord_flip(ylim = c(15, max(stats_comp_sex$Moyenne_Pic) + 5)) +
+  # Couleurs contrastées pour H/F
+  scale_fill_manual(values = c("men" = "#377EB8", "women" = "#FB9A99")) +
+  labs(
+    title = "Comparaison de l'âge au pic : Hommes vs Femmes",
+    subtitle = "Moyenne observée par discipline (Carrières >= 5 ans)",
+    x = "Discipline",
+    y = "Âge moyen au pic",
+    fill = "Sexe"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 9),
+    legend.position = "top"
+  )
+age_pic_réel
+```
+
+
 ```{r}
 # 1. Déséquilibre hommme-femme 
 
@@ -369,6 +406,37 @@ resultats_sexe_discipline <- df_final %>%
   })
 
 resultats_sexe_discipline
+
+#graph 
+# Utilisation de ton objet resultats_sexe_discipline
+ggplot(resultats_sexe_discipline, aes(x = discipline, y = age_pic, fill = Sex)) +
+  # Barres côte à côte pour comparer Hommes et Femmes
+  geom_col(position = position_dodge(width = 0.8), width = 0.7) +
+  
+  # Ajout des valeurs au bout des barres
+  geom_text(aes(label = round(age_pic, 1)), 
+            position = position_dodge(width = 0.8), 
+            hjust = -0.2, size = 3) +
+  
+  # Inversion des axes pour la lisibilité
+  coord_flip() +
+  
+  # Couleurs pour le Sexe
+  scale_fill_manual(values = c("men" = "#377EB8", "women" = "#FB9A99")) +
+  
+  labs(
+    title = "Âge au Pic Théorique par Discipline (Modèle de Moore)",
+    x = "Discipline",
+    y = "Âge au pic calculé",
+    fill = "Sexe"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 9),
+    legend.position = "top"
+  )
+
+print(age_pic_réel)
 ```
 
 
