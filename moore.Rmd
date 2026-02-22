@@ -1,0 +1,16 @@
+---
+title: "mooore"
+output: html_document
+date: "2026-02-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Nouveau test de modèle de Moore
+
+```{r}
+
+```
+
