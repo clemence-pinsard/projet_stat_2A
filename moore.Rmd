@@ -69,136 +69,6 @@ for (dis in disciplines) {
 }
 ```
 
-
-## Modèle par discipline
-
-```{r}
-# 1. Préparation des objets pour stocker les résultats
-disciplines_list <- unique(df_final$discipline)
-model_results <- list() # Pour stocker les objets modèles
-coef_table <- data.frame() # Pour stocker les coefficients a, b, c, d
-all_preds <- data.frame() # Pour stocker les points de la courbe pour les graphiques
-
-# 2. Lancement de la boucle
-for (dis in disciplines_list) {
-  
-  # Filtrage des données pour la discipline en cours
-  data_temp <- subset(df_final, discipline == dis)
-  
-  # On vérifie qu'on a assez de données (ex: au moins 10 points)
-  if (nrow(data_temp) > 50) {
-    
-    # Tentative d'ajustement du modèle de Moore
-    # On utilise try() pour que la boucle ne s'arrête pas si une discipline échoue
-    fit <- try(nlsLM(
-      mark_numeric ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
-      data = data_temp,
-      start = list(a = 10, b = 0.1, c = -2, d = 0.01),
-      lower = c(a = 0, b = 0.001, c = -Inf, d = 0.0001), # Bornes minimales
-      upper = c(a = Inf, b = 1, c = 0, d = 0.5),        # Bornes maximales
-      control = nls.lm.control(maxiter = 500)
-    ), silent = TRUE)
-    
-    # Si le modèle a réussi (n'est pas une erreur)
-    if (!inherits(fit, "try-error")) {
-      
-      # A. Sauvegarde du modèle
-      model_results[[dis]] <- fit
-      
-      # B. Extraction des coefficients
-      cf <- as.data.frame(t(coef(fit)))
-      cf$discipline <- dis
-      coef_table <- rbind(coef_table, cf)
-      
-      # C. Création des prédictions pour le graphique
-      age_seq <- seq(min(data_temp$Age, na.rm = TRUE), 
-                     max(data_temp$Age, na.rm = TRUE), 
-                     length.out = 100)
-      
-      preds <- data.frame(
-        Age = age_seq,
-        pred_mark = predict(fit, newdata = data.frame(Age = age_seq)),
-        discipline = dis
-      )
-      all_preds <- rbind(all_preds, preds)
-      
-      message(paste("Succès pour :", dis))
-      
-    } else {
-      message(paste("Échec de convergence pour :", dis))
-    }
-  }
-}
-```
-
-```{r}
-# Voir les paramètres a, b, c, d par discipline
-print(coef_table)
-```
-
-```{r}
-# Affichage des modèles (et comparaison avec les données réelles)
-# 1. Créer un dossier pour stocker les images (optionnel)
-if(!dir.exists("graphiques_disciplines")) dir.create("graphiques_disciplines")
-
-# 2. Boucle pour générer un graphique par discipline
-for (dis in unique(all_preds$discipline)) {
-  
-  # Filtrage des données réelles et des prédictions pour la discipline 'dis'
-  data_obs <- subset(df_final, discipline == dis)
-  data_pred <- subset(all_preds, discipline == dis)
-  
-  # Création du graphique
-  p <- ggplot() +
-    # Points réels
-    geom_point(data = data_obs, aes(x = Age, y = mark_numeric), 
-               alpha = 0.4, color = "steelblue") +
-    # Courbe du modèle de Moore
-    geom_line(data = data_pred, aes(x = Age, y = pred_mark), 
-              color = "darkred", size = 1.2) +
-    # Titres et style
-    labs(title = paste("Modèle de Moore :", dis),
-         subtitle = "Évolution de la performance en fonction de l'âge",
-         x = "Âge",
-         y = "Performance (mark_numeric)") +
-    theme_minimal()
-  
-  # 3. Affichage dans la console R
-  print(p)
-  
-  # 4. Sauvegarde automatique en format PNG
-  # Nom du fichier nettoyé (sans espaces bizarres)
-  file_name <- paste0("graphiques_disciplines/", gsub(" ", "_", dis), ".png")
-  ggsave(file_name, plot = p, width = 8, height = 6)
-}
-  theme(legend.position = "bottom")
-```
-
-## Calcul de l'age au pic théorique selon le modèle de Moore
-
-```{r}
-# Calcul de l'âge au pic à partir des colonnes de coef_table
-coef_table <- coef_table %>%
-  mutate(
-    # Application de ta formule
-    # On utilise abs() pour s'assurer que le log reçoit une valeur positive 
-    # (utile si 'c' a été estimé négativement pour représenter le déclin)
-    age_pic = log(abs(a * b) / abs(c * d)) / (b + d)
-  )
-
-coef_table
-```
-
-```{r}
-# Trouver l'âge au pic directement sur la courbe tracée
-pic_robuste <- all_preds %>%
-  group_by(discipline) %>%
-  filter(pred_mark == max(pred_mark)) %>% # On prend le point le plus haut
-  select(discipline, age_pic_reel = Age, performance_max = pred_mark)
-
-print(pic_robuste)
-```
-
 # Modèle de Moore (mieux)
 
 ## Fonctions utiles 
@@ -217,7 +87,7 @@ generate_starts <- function() {
 
 generate_smart_starts <- function(max_val) {
   list(
-    a = runif(1, max_val * 0.1, max_val * 1.5), 
+    a = max_val, 
     b = runif(1, 0.01, 1), 
     c = runif(1, max_val * 0.1, max_val * 1.5), 
     d = runif(1, 0.001, 0.1)
@@ -240,97 +110,151 @@ fit_moore <- function(data, start_params) {
 
 ```
 
+```{r}
+# Modèle de Moore : a(1 - exp(-b*t)) + c(1 - exp(-d*t))
+moore_model <- function(Age, params) {
+  params["a"] * (1 - exp(-params["b"] * Age)) + 
+  params["c"] * (1 - exp(-params["d"] * Age))
+}
+
+# Fonction de perte (Somme des Carrés des Résidus)
+moore_loss <- function(params, Age, mark_numeric) {
+  pred <- moore_model(Age, params)
+  sum((mark_numeric - pred)^2, na.rm = TRUE)
+}
+
+# Calcul de l'Erreur Quadratique Moyenne (RMSE)
+calc_rmse <- function(model_params, data) {
+  preds <- moore_model(data$Age, model_params)
+  sqrt(mean((data$mark_numeric - preds)^2, na.rm = TRUE))
+}
+
+# Ajustement robuste avec nlminb
+fit_moore_nlminb <- function(data, start_params) {
+  # Transformation des params en vecteur pour nlminb
+  start_vec <- unlist(start_params)
+  
+  fit <- tryCatch({
+    nlminb(
+      start = start_vec,
+      objective = moore_loss,
+      Age = data$Age,
+      mark_numeric = data$mark_numeric,
+      lower = c(0, 0, 0, 0), # Contraintes de positivité
+      upper = c(Inf, 5, Inf, 5) # Optionnel : éviter des taux d'explosion (b et d)
+    )
+  }, error = function(e) return(NULL))
+  
+  if (is.null(fit) || fit$convergence != 0) return(NULL)
+  return(fit$par) # On retourne les meilleurs paramètres
+}
+
+generate_random_starts <- function(max_perf) {
+  list(
+    a = runif(1, 0, max_perf),  # Fixé au max de la discipline
+    b = runif(1, 0.01, 0.5),    # Taux de croissance rapide
+    c = runif(1, 0, max_perf),  # Asymptote secondaire
+    d = runif(1, 0.001, 0.1)    # Taux de croissance lent (pour la décroissance)
+  )
+}
+```
+
 ## Préparation des données pour utiliser l'aléatoire pour les points de départ (plusieurs fois)
 
 ```{r}
-n_essais <- 500  # Nombre de fois qu'on régénère les points de départ
+n_essais <- 10000
 
-# On prépare la structure de calcul
 calcul_grille <- df_final %>%
   group_by(Sex, discipline) %>%
   filter(n() > 100) %>%
   nest() %>%
-  # On calcule la performance max pour aider les points de départ
-  mutate(max_perf = map_dbl(data, ~max(abs(.x$mark_numeric), na.rm = TRUE))) %>%
-  # On duplique chaque groupe 500 fois
-  uncount(n_essais, .id = "tentative_id") %>%
-  # On génère des paramètres de départ différents pour chaque ligne
-  mutate(params_initiaux = map(tentative_id, ~generate_smart_starts(.x)))
-
-# À ce stade, 'calcul_grille' contient une ligne par tentative
+  # Calcul de la performance max pour fixer 'a'
+  mutate(max_perf = map_dbl(data, ~max(.x$mark_numeric, na.rm = TRUE))) %>%
+  # On duplique pour le nombre de tentatives
+  uncount(n_essais, .id = "tentative_id")
 ```
 
+## Simulation 
+
 ```{r}
+# Génération avec points de départ aléatoires
 resultats_tentatives <- calcul_grille %>%
-  mutate(model_fit = map2(data, params_initiaux, ~fit_moore(.x, .y))) %>%
+  mutate(
+    # Génération aléatoire en utilisant max_perf
+    params_init = map(max_perf, ~generate_random_starts(.x)),
+    # Ajustement avec nlminb
+    model_fit = map2(data, params_init, ~fit_moore_nlminb(.x, .y))
+  ) %>%
+  # On retire les échecs de convergence
   filter(!map_lgl(model_fit, is.null))
+```
 
-# 4. Vérification : Combien de disciplines ont au moins UN modèle réussi ?
-check <- resultats_tentatives %>% 
-  group_by(sexe, discipline) %>% 
-  summarise(nb_reussites = n(), .groups = "drop")
+## Selection du meilleur modèle
 
-print("Nombre de réussites par discipline :")
-print(check)
-
-# 5. Sélection du meilleur parmi les réussites
+```{r}
 resultats_finaux <- resultats_tentatives %>%
-  mutate(rss = map_dbl(model_fit, ~deviance(.x))) %>%
-  group_by(sexe, discipline) %>%
-  slice_min(order_by = rss, n = 1, with_ties = FALSE) %>%
+  mutate(rmse = map2_dbl(model_fit, data, ~calc_rmse(.x, .y))) %>%
+  group_by(Sex, discipline) %>%
+  slice_min(rmse, n = 1, with_ties = FALSE) %>%
   ungroup()
 ```
 
-
-
-## Obtention des modèles 
+## Calcul de l'âge au pic
 
 ```{r}
-modeles_ajustes <- calcul_grille %>%
-  mutate(
-    model_fit = map2(data, params_initiaux, ~fit_moore(.x, .y))
-  ) %>%
-  # On ne garde que ceux qui ne sont pas NULL
-  filter(!map_lgl(model_fit, is.null)) %>%
-  mutate(
-    # On extrait le RSS directement de l'objet nls sans passer par glance()
-    # Cela évite l'erreur de calcul de l'inverse de la matrice
-    rss = map_dbl(model_fit, ~ deviance(.x))
+resultats_finaux <- resultats_finaux %>%
+  mutate(age_pic = map_dbl(model_fit, function(p) {
+    # La perf max théorique est a + c
+    target <- 0.95 * (p[1] + p[3]) 
+    tryCatch({
+      uniroot(function(t) (p[1]*(1-exp(-p[2]*t)) + p[3]*(1-exp(-p[4]*t))) - target, 
+              lower = 0, upper = 100)$root
+    }, error = function(e) NA)
+  }))
+```
+
+## Visualisation 
+
+```{r}
+# Extraction des courbes pour le graphique
+plot_curves <- resultats_finaux %>%
+  mutate(preds = map2(data, model_fit, function(d, p) {
+    age_seq <- seq(min(d$Age, na.rm = TRUE), max(d$Age, na.rm = TRUE), length.out = 100)
+    data.frame(
+      Age = age_seq,
+      Mark = p[1]*(1-exp(-p[2]*age_seq)) + p[3]*(1-exp(-p[4]*age_seq))
+    )
+  })) %>%
+  select(Sex, discipline, preds) %>%
+  unnest(preds)
+
+# Graphique ggplot2
+ggplot() +
+  # Points réels (tous les points de df_final)
+  geom_point(data = df_final, aes(x = Age, y = mark_numeric), 
+             alpha = 0.05, size = 0.5, color = "grey70") +
+  
+  # Courbes du modèle (uniquement là où le modèle a réussi)
+  geom_line(data = plot_curves, aes(x = Age, y = Mark), 
+            color = "firebrick", linewidth = 1) +
+  
+  # Lignes verticales pour l'âge au pic
+  geom_vline(data = resultats_finaux, aes(xintercept = age_pic), 
+             linetype = "dashed", color = "black", alpha = 0.6) +
+  
+  # Organisation en grille par Sexe et Discipline
+  facet_wrap(~Sex + discipline, scales = "free_y") + 
+  
+  labs(
+    title = "Modèle de Moore : Double Exponentielle Optimisée",
+    subtitle = "Comparaison par sexe et discipline (Ligne pointillée = Âge au pic)",
+    x = "Âge", 
+    y = "Performance"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(face = "bold"), # Titres des facettes en gras
+    panel.spacing = unit(1, "lines")         # Espace entre les graphiques
   )
-```
-
-## Comparaison des modèles
-
-```{r}
-safe_tidy <- possibly(tidy, otherwise = NULL)
-
-meilleurs_modeles <- modeles_ajustes %>%
-  group_by(Sex, discipline) %>%
-  # On choisit le meilleur modèle basé sur le RSS calculé
-  slice_min(order_by = rss, n = 1, with_ties = FALSE) %>%
-  ungroup()
-```
-
-## Résultats finaux
-
-```{r}
-tableau_coefficients <- meilleurs_modeles %>%
-  mutate(coeffs = map(model_fit, safe_tidy)) %>%
-  filter(!map_lgl(coeffs, is.null)) %>% # On ignore les rares cas où tidy échoue encore
-  select(Sex, discipline, rss, coeffs) %>%
-  unnest(coeffs)
-
-print(tableau_coefficients)
-```
-
-```{r}
-df_final %>%
-  group_by(Sex, discipline) %>%
-  summarise(
-    nb_donnees = n(),
-    .groups = "drop"
-  ) %>%
-  mutate(passe_le_filtre = nb_donnees > 100) %>%
-  print(n = Inf) # Affiche toutes les lignes
 ```
 
