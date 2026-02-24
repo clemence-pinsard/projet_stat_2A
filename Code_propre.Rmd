@@ -106,8 +106,239 @@ stats_pic_discipline <- df_final %>%
 
 # Aperçu du résultat
 head(stats_pic_discipline)
+
+# Tableau croisé Famille / Sexe
+table_effectifs <- stats_pic_discipline %>%
+  group_by(Famille, Sex) %>%
+  summarise(Nb_Athletes = n(), .groups = "drop") %>%
+  # On pivote pour avoir une lecture plus facile (Hommes vs Femmes en colonnes)
+  tidyr::pivot_wider(names_from = Sex, values_from = Nb_Athletes)
+
+print("Nombre d'athlètes (>= 5 ans de carrière) par Famille :")
+print(table_effectifs)
+
+# Tableau détaillé par discipline et sexe
+effectifs_detail <- stats_pic_discipline %>%
+  group_by(discipline, Sex) %>%
+  summarise(Effectif = n(), .groups = "drop") %>%
+  tidyr::pivot_wider(names_from = Sex, values_from = Effectif) %>%
+  arrange(discipline)
+
+print("Effectifs détaillés par discipline :")
+print(effectifs_detail)
+
+ggplot(stats_pic_discipline, aes(x = discipline, fill = Sex)) +
+  geom_bar(position = "dodge") +
+  coord_flip() +
+  labs(title = "Nombre d'athlètes par discipline (Filtre 5 ans)",
+       x = "Discipline", y = "Nombre d'athlètes") +
+  theme_minimal()
+
+#par age
+# Décompte précis par âge et par sexe
+effectifs_par_age <- stats_pic_discipline %>%
+  group_by(Age_Pic_Obs, Sex) %>%
+  summarise(Nb_Athletes = n(), .groups = "drop") %>%
+  tidyr::pivot_wider(names_from = Sex, values_from = Nb_Athletes, values_fill = 0) %>%
+  arrange(Age_Pic_Obs)
+
+# Affichage du tableau complet
+print(effectifs_par_age, n = 40) # n = 40 pour être sûr de tout voir
+
+ggplot(stats_pic_discipline, aes(x = Age_Pic_Obs, color = Sex, fill = Sex)) +
+  # geom_density permet de voir la forme de la distribution
+  geom_histogram(aes(y = ..count..), binwidth = 1, position = "identity", alpha = 0.3) +
+  scale_x_continuous(breaks = seq(15, 50, by = 2)) +
+  scale_color_manual(values = c("men" = "#377EB8", "women" = "#FB9A99")) +
+  scale_fill_manual(values = c("men" = "#377EB8", "women" = "#FB9A99")) +
+  labs(
+    title = "Effectifs d'athlètes par année d'âge au pic",
+    subtitle = "Comparaison Hommes vs Femmes (Filtre >= 5 ans de carrière)",
+    x = "Âge au pic (en années)",
+    y = "Nombre d'athlètes"
+  ) +
+  theme_minimal()
+
+stats_pic_discipline %>%
+  group_by(Sex) %>%
+  summarise(
+    Age_Mode = Age_Pic_Obs[which.max(tabulate(match(Age_Pic_Obs, unique(Age_Pic_Obs))))],
+    Age_Median = median(Age_Pic_Obs),
+    Age_Moyen = mean(Age_Pic_Obs),
+    Effectif_Total = n()
+  )
 ```
 
+#selection du top N sinon les graphiques ne sont pas utilisables 
+```{r}
+# On définit le nombre d'athlètes par groupe (ex: Top 39 car 39 femmes en Discu plus petite valeur)
+N_top <- 39
+
+stats_pic_equilibre <- stats_pic_discipline %>%
+  group_by(discipline, Sex) %>%
+  # On classe par la meilleure performance (attention au sens : décroissant pour sauts/lancers, croissant pour courses)
+  # Pour simplifier, on utilise Best_Mark car tu l'as déjà calculée
+  arrange(desc(Best_Mark)) %>% 
+  slice_head(n = N_top) %>%
+  ungroup()
+
+# Vérification : on doit avoir le même nombre max par groupe
+table(stats_pic_equilibre$discipline, stats_pic_equilibre$Sex)
+```
+
+
+
+# GRAPHIQUE RAPPORT
+```{r}
+# Création du Tableau 1 équilibré
+tab1_equilibre <- stats_pic_equilibre %>%
+  group_by(Sex) %>%
+  summarise(
+    Effectif = n(),
+    Min = min(Age_Pic_Obs),
+    Q1 = quantile(Age_Pic_Obs, 0.25),
+    Moyenne = round(mean(Age_Pic_Obs), 2),
+    SD = round(sd(Age_Pic_Obs), 2),
+    Mediane = median(Age_Pic_Obs),
+    Q3 = quantile(Age_Pic_Obs, 0.75),
+    Max = max(Age_Pic_Obs)
+  )
+
+print("--- Tableau 1 : Résumé de l'âge au pic (Échantillon Top 39) ---")
+print(tab1_equilibre)
+
+ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
+  # Superposition avec transparence
+  geom_histogram(binwidth = 1, position = "identity", alpha = 0.5, color = "white", size = 0.2) +
+  
+  # Lignes de moyenne affinées
+  geom_vline(data = tab1_equilibre, aes(xintercept = Moyenne, color = Sex), 
+             linetype = "dashed", size = 0.7) +
+  
+  # Couleurs Vert et Bleu
+  # Men : Bleu Royal | Women : Vert Emeraude
+  scale_fill_manual(values = c("men" = "#2E86C1", "women" = "#28B463")) +
+  scale_color_manual(values = c("men" = "#1B4F72", "women" = "#186A3B")) +
+  
+  scale_x_continuous(breaks = seq(16, 50, by = 2)) +
+  
+  labs(
+    title = "Distribution de l'âge au pic de performance (Top 39)",
+    subtitle = "Comparaison à effectifs égaux | Lignes pointillées = Moyennes",
+    x = "Âge au pic (années)",
+    y = "Nombre d'athlètes",
+    fill = "Sexe",
+    color = "Sexe"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+  )
+```
+
+```{r}
+ggplot(stats_pic_equilibre, aes(x = Famille, y = Age_Pic_Obs, fill = Sex)) +
+  geom_boxplot(notch = TRUE, alpha = 0.8, outlier.colour = "black", outlier.shape = 1) +
+  scale_fill_manual(values = c("men" = "#2E86C1", "women" = "#28B463")) +
+  labs(
+    title = "Âge au pic selon les familles de disciplines (Top 39)",
+    x = "Groupe de discipline",
+    y = "Âge au pic observé"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+```{r}
+top_longevite <- stats_pic_equilibre %>%
+  arrange(desc(Age_Pic_Obs)) %>%
+  select(Nom, discipline, Sex, Age_Pic_Obs, Nb_Annees_Discipline) %>%
+  head(10)
+
+print("--- Top 10 des pics les plus tardifs (Top 39) ---")
+print(top_longevite)
+```
+# Tests statistiques 
+```{r}
+ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
+  # Utilisation de geom_density pour voir "l'allure" de la courbe lissée
+  geom_density(alpha = 0.5) +
+  # On sépare par discipline
+  facet_wrap(~ discipline, scales = "free_y") + 
+  
+  # Tes couleurs Vert et Bleu
+  scale_fill_manual(values = c("men" = "#2E86C1", "women" = "#28B463")) +
+  
+  labs(
+    title = "Allure de la distribution de l'âge au pic par discipline",
+    subtitle = "Analyse de la normalité (Top 39 par sexe)",
+    x = "Âge au pic (années)",
+    y = "Densité"
+  ) +
+  theme_minimal(base_size = 9) + # Taille de texte réduite pour que tout rentre
+  theme(
+    legend.position = "bottom",
+    panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+    strip.text = element_text(face = "bold") # Noms des disciplines en gras
+  )
+```
+
+```{r}
+# ==============================================================================
+# PARTIE 1 : TESTS GLOBAUX (SEXE ET FAMILLE)
+# ==============================================================================
+
+# 1. Test de Wilcoxon-Mann-Whitney (Comparaison Hommes vs Femmes Globale)
+# On teste si la distribution de l'âge au pic diffère entre les sexes
+wilcox_global <- wilcox.test(Age_Pic_Obs ~ Sex, data = stats_pic_equilibre)
+
+# 2. Test de Kruskal-Wallis (Comparaison entre Familles)
+# On teste si l'appartenance à une famille influence l'âge au pic
+kruskal_famille <- kruskal.test(Age_Pic_Obs ~ Famille, data = stats_pic_equilibre)
+
+# 3. Test Post-hoc de Dunn (Comparaisons par paires de Familles)
+# Nécessaire uniquement si Kruskal-Wallis est significatif
+library(FSA)
+dunn_familles <- dunnTest(Age_Pic_Obs ~ Famille, 
+                          data = stats_pic_equilibre, 
+                          method = "bonferroni")
+
+# ==============================================================================
+# PARTIE 2 : ANALYSE DÉTAILLÉE PAR DISCIPLINE
+# ==============================================================================
+
+# Calcul des p-values de Wilcoxon pour chaque discipline individuellement
+test_par_discipline <- stats_pic_equilibre %>%
+  group_by(discipline) %>%
+  summarise(
+    P_Value = wilcox.test(Age_Pic_Obs ~ Sex)$p.value,
+    Mediane_Hommes = median(Age_Pic_Obs[Sex == "men"]),
+    Mediane_Femmes = median(Age_Pic_Obs[Sex == "women"]),
+    Difference_Mediane = Mediane_Hommes - Mediane_Femmes
+  ) %>%
+  mutate(Significatif = ifelse(P_Value < 0.05, "OUI", "NON")) %>%
+  arrange(P_Value)
+
+# ==============================================================================
+# PARTIE 3 : AFFICHAGE DES RÉSULTATS
+# ==============================================================================
+
+cat("\n--- RÉSULTAT TEST WILCOXON GLOBAL (SEXE) ---\n")
+print(wilcox_global)
+
+cat("\n--- RÉSULTAT KRUSKAL-WALLIS (FAMILLES) ---\n")
+print(kruskal_famille)
+
+cat("\n--- RÉSULTAT TEST DE DUNN (DIFFÉRENCES ENTRE FAMILLES) ---\n")
+print(dunn_familles)
+
+cat("\n--- ANALYSE PAR DISCIPLINE (TOP 39 EQUILIBRÉ) ---\n")
+print(test_par_discipline)
+```
+
+
+# Ancien graphe
 
 ```{r}
 # Résumé statistique par Famille
