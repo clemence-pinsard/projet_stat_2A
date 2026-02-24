@@ -24,6 +24,12 @@ summary(fiche_wa)
 ```
 
 ```{r}
+View(fiche_wa %>% group_by(Sex, season, discipline) %>% 
+  summarise(N = n()))
+```
+
+
+```{r}
 # --- PARAMÈTRES ---
 seuil_retraite <- 2022 # Si pas de perf après 2022, on considère la carrière finie
 
