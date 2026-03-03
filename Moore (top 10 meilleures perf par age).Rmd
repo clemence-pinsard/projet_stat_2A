@@ -1,0 +1,884 @@
+---
+title: "Moore (top 10 meilleures perf par age)"
+output: html_document
+date: "2026-02-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("minpack.lm")
+```
+
+
+```{r}
+library(tidyverse)
+library(minpack.lm)
+library(broom)
+library(ggplot2)
+library(dplyr)
+```
+
+# Moore meilleure perf par age
+
+## Préparation des données 1
+
+```{r}
+N <- 10
+df_moore_3_top10_meilleure_par_age <- df_final %>%
+  filter(Age >= 16 & Age <= 40) %>%
+  # On groupe par discipline, sexe et âge
+  group_by(discipline, Sex, Age) %>%
+  # On garde les 10 meilleures performances (mark_numeric) pour chaque groupe
+  slice_max(order_by = mark_numeric, n = N, with_ties = FALSE) %>% 
+  ungroup() %>%
+  # Note : Le "complete" et le "na.approx" deviennent complexes avec 10 valeurs par âge.
+  # Si tu veux boucher les trous, il est préférable de le faire sur une base agrégée.
+  group_by(discipline, Sex) %>%
+  mutate(meilleure_perf = zoo::na.approx(mark_numeric, na.rm = FALSE))
+```
+
+## Préparation des données 2 
+
+```{r}
+library(tidyverse)
+library(zoo)
+
+# 1. Préparation des données
+df_list <- df_moore_3_top10_meilleure_par_age %>%
+  # On s'assure de ne pas traiter de données manquantes sur les axes principaux
+  filter(!is.na(meilleure_perf), !is.na(Age)) %>%
+  
+  group_by(Sex, discipline) %>%
+  mutate(
+    # La direction est calculée sur l'ensemble des 10 athlètes de tous les âges du groupe
+    direction = if_else(median(meilleure_perf, na.rm = TRUE) < 0, -1, 1),
+    
+    # Age_Rel reste le même pour les 10 athlètes d'un même âge
+    Age_Rel = Age - min(Age),
+    
+    # On compte le nombre total de performances disponibles pour ce groupe (Sexe x Discipline)
+    # Si tu as 10 athlètes sur 20 âges différents, n_points sera de 200.
+    n_points = n()
+  ) %>%
+  
+  # On filtre pour garder les groupes qui ont assez de matière (ex: au moins 3 âges complets = 30 points)
+  filter(n_points >= 30) %>%
+  
+  # On calcule la performance maximale absolue du groupe
+  mutate(max_perf = max(meilleure_perf, na.rm = TRUE)) %>%
+  filter(!is.na(max_perf), is.finite(max_perf)) %>%
+  ungroup() %>%
+  
+  # 2. Séparation en liste par Sexe et Discipline
+  group_split(Sex, discipline)
+
+# 3. Attribution des noms aux éléments de la liste
+# On remplace les espaces par des underscores pour éviter les erreurs de noms d'objets
+names(df_list) <- map_chr(df_list, ~ {
+  sex_val <- unique(.x$Sex)
+  disc_val <- gsub(" ", "_", unique(.x$discipline))
+  paste0("df_", sex_val, "_", disc_val)
+})
+
+# 4. Envoi de chaque table dans l'environnement global (ton "Global Environment")
+list2env(df_list, envir = .GlobalEnv)
+```
+## Modèles de Moore
+
+### Homme disque 
+
+```{r}
+generate_starts <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.08, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.07)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds <- c(a = 90, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_men_Discus_Throw,
+  start = generate_starts(max(df_men_Discus_Throw$meilleure_perf)),
+  lower = lower_bounds,
+  upper = upper_bounds,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit)
+
+# 4. Récupération des paramètres optimaux
+params <- coef(fit)
+print(params)
+
+# 5. Visualisation
+plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Discus_Throw$Age, predict(fit), col="red", lwd=2)
+```
+
+```{r}
+t_pic <- log(params["a"]*params["b"]/(params["c"]*params["d"]))/(params["b"]+params["d"])
+print(t_pic)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit <- NULL
+min_rmse <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf <- max(df_men_Discus_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Discus_Throw,
+      start = generate_starts(max_perf),
+      lower = lower_bounds,
+      upper = upper_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse) {
+      min_rmse <- current_rmse
+      best_fit <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse, "\n")
+  summary(best_fit)
+  params <- coef(best_fit)
+  print(params)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit)
+
+t_pic <- log(params["a"]*params["b"]/(params["c"]*params["d"]))/(params["b"]+params["d"])
+print(t_pic)
+
+# 5. Visualisation
+plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Discus_Throw$Age, predict(best_fit), col="red", lwd=2)
+```
+
+
+### Femme disque
+
+```{r}
+generate_starts_femme_disque <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.07, 0.11)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.05, 0.07)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_f_d <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_f_d <- c(a = 80, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_femme_disque <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_women_Discus_Throw,
+  start = generate_starts_femme_disque(max(df_women_Discus_Throw$meilleure_perf)),
+  lower = lower_bounds,
+  upper = upper_bounds,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_femme_disque)
+
+# 4. Récupération des paramètres optimaux
+params_femme_disque <- coef(fit_femme_disque)
+print(params_femme_disque)
+
+# 5. Visualisation
+plot(df_women_Discus_Throw$Age, df_women_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Discus_Throw$Age, predict(fit_femme_disque), col="red", lwd=2)
+```
+
+```{r}
+t_pic_femme_disque <- log(params_femme_disque["a"]*params_femme_disque["b"]/(params_femme_disque["c"]*params_femme_disque["d"]))/(params_femme_disque["b"]+params_femme_disque["d"])
+print(t_pic_femme_disque)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_d <- NULL
+min_rmse_f_d <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_d <- max(df_women_Discus_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result_f_d <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Discus_Throw,
+      start = generate_starts_femme_disque(max_perf_f_d),
+      lower = lower_bounds_f_d,
+      upper = upper_bounds_f_d,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result_f_d)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_d) {
+      min_rmse_f_d <- current_rmse
+      best_fit_f_d <- result_f_d
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_d)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_d, "\n")
+  summary(best_fit_f_d)
+  params_f_d <- coef(best_fit_f_d)
+  print(params_f_d)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_d)
+
+t_pic_f_d <- log(params_f_d["a"]*params_f_d["b"]/(params_f_d["c"]*params_f_d["d"]))/(params_f_d["b"]+params_f_d["d"])
+print(t_pic_f_d)
+
+# 5. Visualisation
+plot(df_women_Discus_Throw$Age, df_women_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Discus_Throw$Age, predict(best_fit_f_d), col="red", lwd=2)
+```
+
+### Homme Marteau 
+
+```{r}
+generate_starts_homme_marteau <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_m_h <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_m_h <- c(a = 95, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_homme_marteau <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_men_Hammer_Throw,
+  start = generate_starts_homme_marteau(max(df_men_Hammer_Throw$meilleure_perf)),
+  lower = lower_bounds_m_h,
+  upper = upper_bounds_m_h,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_homme_marteau)
+
+# 4. Récupération des paramètres optimaux
+params_homme_marteau <- coef(fit_homme_marteau)
+print(params_homme_marteau)
+
+# 5. Visualisation
+plot(df_men_Hammer_Throw$Age, df_men_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Hammer_Throw$Age, predict(fit_homme_marteau), col="red", lwd=2)
+```
+
+```{r}
+t_pic_homme_marteau <- log(params_homme_marteau["a"]*params_homme_marteau["b"]/(params_homme_marteau["c"]*params_homme_marteau["d"]))/(params_homme_marteau["b"]+params_homme_marteau["d"])
+print(t_pic_homme_marteau)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_m <- NULL
+min_rmse_h_m <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_m <- max(df_men_Hammer_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Hammer_Throw,
+      start = generate_starts_homme_marteau(max_perf_h_m),
+      lower = lower_bounds_m_h,
+      upper = upper_bounds_m_h,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_m) {
+      min_rmse_h_m <- current_rmse
+      best_fit_h_m <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_m)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_m, "\n")
+  summary(best_fit_h_m)
+  params_h_m <- coef(best_fit_h_m)
+  print(params_h_m)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_m)
+
+t_pic_h_m <- log(params_h_m["a"]*params_h_m["b"]/(params_h_m["c"]*params_h_m["d"]))/(params_h_m["b"]+params_h_m["d"])
+print(t_pic_h_m)
+
+# 5. Visualisation
+plot(df_men_Hammer_Throw$Age, df_men_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Hammer_Throw$Age, predict(best_fit_h_m), col="red", lwd=2)
+```
+
+### Femme Marteau 
+
+```{r}
+generate_starts_femme_marteau <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_m_f <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_m_f <- c(a = 90, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_femme_marteau <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_women_Hammer_Throw,
+  start = generate_starts_femme_marteau(max(df_women_Hammer_Throw$meilleure_perf)),
+  lower = lower_bounds_m_f,
+  upper = upper_bounds_m_f,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_femme_marteau)
+
+# 4. Récupération des paramètres optimaux
+params_femme_marteau <- coef(fit_femme_marteau)
+print(params_femme_marteau)
+
+# 5. Visualisation
+plot(df_women_Hammer_Throw$Age, df_women_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Hammer_Throw$Age, predict(fit_femme_marteau), col="red", lwd=2)
+```
+
+```{r}
+t_pic_femme_marteau <- log(params_femme_marteau["a"]*params_femme_marteau["b"]/(params_femme_marteau["c"]*params_femme_marteau["d"]))/(params_femme_marteau["b"]+params_femme_marteau["d"])
+print(t_pic_femme_marteau)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_m <- NULL
+min_rmse_f_m <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_m <- max(df_women_Hammer_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Hammer_Throw,
+      start = generate_starts_femme_marteau(max_perf_h_m),
+      lower = lower_bounds_m_f,
+      upper = upper_bounds_m_f,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_m) {
+      min_rmse_f_m <- current_rmse
+      best_fit_f_m <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_m)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_m, "\n")
+  summary(best_fit_f_m)
+  params_f_m <- coef(best_fit_f_m)
+  print(params_f_m)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_m)
+
+t_pic_f_m <- log(params_f_m["a"]*params_f_m["b"]/(params_f_m["c"]*params_f_m["d"]))/(params_f_m["b"]+params_f_m["d"])
+print(t_pic_f_m)
+
+# 5. Visualisation
+plot(df_women_Hammer_Throw$Age, df_women_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Hammer_Throw$Age, predict(best_fit_f_m), col="red", lwd=2)
+```
+
+### Homme Javelot
+
+```{r}
+generate_starts_homme_javelot <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_j_h <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_j_h <- c(a = 110, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_homme_javelot <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_men_Javelin_Throw,
+  start = generate_starts_homme_javelot(max(df_men_Javelin_Throw$meilleure_perf)),
+  lower = lower_bounds_j_h,
+  upper = upper_bounds_j_h,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_homme_javelot)
+
+# 4. Récupération des paramètres optimaux
+params_homme_javelot <- coef(fit_homme_javelot)
+print(params_homme_javelot)
+
+# 5. Visualisation
+plot(df_men_Javelin_Throw$Age, df_men_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Javelin_Throw$Age, predict(fit_homme_javelot), col="red", lwd=2)
+```
+
+```{r}
+t_pic_homme_javelot <- log(params_homme_javelot["a"]*params_homme_javelot["b"]/(params_homme_javelot["c"]*params_homme_javelot["d"]))/(params_homme_javelot["b"]+params_homme_javelot["d"])
+print(t_pic_homme_javelot)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_j <- NULL
+min_rmse_h_j <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_j <- max(df_men_Javelin_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Javelin_Throw,
+      start = generate_starts_homme_javelot(max_perf_h_j),
+      lower = lower_bounds_j_h,
+      upper = upper_bounds_j_h,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_j) {
+      min_rmse_h_j <- current_rmse
+      best_fit_h_j <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_j)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_j, "\n")
+  summary(best_fit_h_j)
+  params_h_j <- coef(best_fit_h_j)
+  print(params_h_j)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_j)
+
+t_pic_h_j <- log(params_h_j["a"]*params_h_j["b"]/(params_h_j["c"]*params_h_j["d"]))/(params_h_j["b"]+params_h_j["d"])
+print(t_pic_h_j)
+
+# 5. Visualisation
+plot(df_men_Javelin_Throw$Age, df_men_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Javelin_Throw$Age, predict(best_fit_h_j), col="red", lwd=2)
+```
+
+### Femme Javelot
+
+```{r}
+generate_starts_femme_javelot <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_j_f <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_j_f <- c(a = 80, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_femme_javelot <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_women_Javelin_Throw,
+  start = generate_starts_femme_javelot(max(df_women_Javelin_Throw$meilleure_perf)),
+  lower = lower_bounds_j_f,
+  upper = upper_bounds_j_f,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_femme_javelot)
+
+# 4. Récupération des paramètres optimaux
+params_femme_javelot <- coef(fit_femme_javelot)
+print(params_femme_javelot)
+
+# 5. Visualisation
+plot(df_women_Javelin_Throw$Age, df_women_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Javelin_Throw$Age, predict(fit_femme_javelot), col="red", lwd=2)
+```
+
+```{r}
+t_pic_femme_javelot <- log(params_femme_javelot["a"]*params_femme_javelot["b"]/(params_femme_javelot["c"]*params_femme_javelot["d"]))/(params_femme_javelot["b"]+params_femme_javelot["d"])
+print(t_pic_femme_javelot)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_j <- NULL
+min_rmse_f_j <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_j <- max(df_women_Javelin_Throw$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Javelin_Throw,
+      start = generate_starts_femme_javelot(max_perf_f_j),
+      lower = lower_bounds_j_f,
+      upper = upper_bounds_j_f,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_j) {
+      min_rmse_f_j <- current_rmse
+      best_fit_f_j <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_j)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_j, "\n")
+  summary(best_fit_f_j)
+  params_f_j <- coef(best_fit_f_j)
+  print(params_f_j)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_j)
+
+t_pic_f_j <- log(params_f_j["a"]*params_f_j["b"]/(params_f_j["c"]*params_f_j["d"]))/(params_f_j["b"]+params_f_j["d"])
+print(t_pic_f_j)
+
+# 5. Visualisation
+plot(df_women_Javelin_Throw$Age, df_women_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Javelin_Throw$Age, predict(best_fit_f_j), col="red", lwd=2)
+```
+
+### Homme Poids
+
+```{r}
+generate_starts_homme_poids <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_p_h <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_p_h <- c(a = 30, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_homme_poids <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_men_Shot_Put,
+  start = generate_starts_homme_poids(max(df_men_Shot_Put$meilleure_perf)),
+  lower = lower_bounds_p_h,
+  upper = upper_bounds_p_h,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_homme_poids)
+
+# 4. Récupération des paramètres optimaux
+params_homme_poids <- coef(fit_homme_poids)
+print(params_homme_poids)
+
+# 5. Visualisation
+plot(df_men_Shot_Put$Age, df_men_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Shot_Put$Age, predict(fit_homme_poids), col="red", lwd=2)
+```
+
+```{r}
+t_pic_homme_poids <- log(params_homme_poids["a"]*params_homme_poids["b"]/(params_homme_poids["c"]*params_homme_poids["d"]))/(params_homme_poids["b"]+params_homme_poids["d"])
+print(t_pic_homme_poids)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_p <- NULL
+min_rmse_h_p <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_p <- max(df_men_Shot_Put$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Shot_Put,
+      start = generate_starts_homme_poids(max_perf_h_p),
+      lower = lower_bounds_p_h,
+      upper = upper_bounds_p_h,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_p) {
+      min_rmse_h_p <- current_rmse
+      best_fit_h_p <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_p)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_p, "\n")
+  summary(best_fit_h_p)
+  params_h_p <- coef(best_fit_h_p)
+  print(params_h_p)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_p)
+
+t_pic_h_p <- log(params_h_p["a"]*params_h_p["b"]/(params_h_p["c"]*params_h_p["d"]))/(params_h_p["b"]+params_h_p["d"])
+print(t_pic_h_p)
+
+# 5. Visualisation
+plot(df_men_Shot_Put$Age, df_men_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Shot_Put$Age, predict(best_fit_h_p), col="red", lwd=2)
+```
+
+### Femme Poids
+
+```{r}
+generate_starts_femme_poids <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.06, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.08)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds_p_f <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds_p_f <- c(a = 30, b = 0.5,   c = 100,  d = 0.2)
+
+set.seed("123")
+# 2. Création du modèle avec nls
+# On utilise l'algorithme "port" pour forcer les paramètres > 0
+fit_femme_poids <- fit <- nlsLM(
+  meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+  data = df_women_Shot_Put,
+  start = generate_starts_femme_poids(max(df_women_Shot_Put$meilleure_perf)),
+  lower = lower_bounds_p_f,
+  upper = upper_bounds_p_f,
+  control = nls.lm.control(maxiter = 5000, maxfev = 2000)
+)
+
+# 3. Affichage des résultats
+summary(fit_femme_poids)
+
+# 4. Récupération des paramètres optimaux
+params_femme_poids <- coef(fit_femme_poids)
+print(params_femme_poids)
+
+# 5. Visualisation
+plot(df_women_Shot_Put$Age, df_women_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Shot_Put$Age, predict(fit_femme_poids), col="red", lwd=2)
+```
+
+```{r}
+t_pic_femme_poids <- log(params_femme_poids["a"]*params_femme_poids["b"]/(params_femme_poids["c"]*params_femme_poids["d"]))/(params_femme_poids["b"]+params_femme_poids["d"])
+print(t_pic_femme_poids)
+```
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_p <- NULL
+min_rmse_f_p <- Inf # On commence avec une erreur infinie
+n_iterations <- 1000
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_p <- max(df_women_Shot_Put$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Shot_Put,
+      start = generate_starts_femme_poids(max_perf_f_p),
+      lower = lower_bounds_p_f,
+      upper = upper_bounds_p_f,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_p) {
+      min_rmse_f_p <- current_rmse
+      best_fit_f_p <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_p)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_p, "\n")
+  summary(best_fit_f_p)
+  params_f_p <- coef(best_fit_f_p)
+  print(params_f_p)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_p)
+
+t_pic_f_p <- log(params_f_p["a"]*params_f_p["b"]/(params_f_p["c"]*params_f_p["d"]))/(params_f_p["b"]+params_f_p["d"])
+print(t_pic_f_p)
+
+# 5. Visualisation
+plot(df_women_Shot_Put$Age, df_women_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Shot_Put$Age, predict(best_fit_f_p), col="red", lwd=2)
+```
+
+

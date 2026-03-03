@@ -1,26 +1,127 @@
 ---
-title: "Rapport"
-format: html
-editor: visual
+title: ""
+format:
+  pdf:
+    documentclass: report
+    mainfont: "TeX Gyre Termes"
+    header-includes: |
+      \usepackage{enumitem}
+      \setlist[itemize]{label=$\bullet$}  % Puce ronde classique
+lang: fr
+fontsize: 11pt
+papersize: a4
+geometry: top=1.5cm, bottom=1.5cm, left=2.5cm, right=2.5cm
+bibliography: references.bib
+link-citations: true 
+nocite: "@*"
 ---
 
-## Quarto
+<!--Cette première partie ci-dessus entre deux « --- » s’appelle un « YAML header » (nom en anglais aussi utilisé en français) ou un « en-tête YAML ».-->
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+<!--« lang: fr » à remplacer par « lang: en » si rapport rédigé en anglais. Définir la langue du document est utile pour la typographie (par exemple les espaces autour de la ponctuation ne sont pas les mêmes dans les deux langues), la langue de la table des matières, des dates, le cadre linguistique du PDF généré, etc.-->
 
-## Running Code
+<!--« mainfont » définit la police utilisée et « fontsize » la taille de cette police.-->
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
+```{=html}
+<!--« header-includes: |
+      \usepackage[bottom]{footmisc} » permet aux notes de bas de page d’être réellement en bas de page et non juste après la dernière ligne de texte (ce qui peut amener à des notes en milieu de page si le texte s’arrête à ce niveau).-->
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
+```{=html}
+<!--« text: |
+      \usepackage[dvipsnames]{xcolor} » permet de mettre des portions de texte en couleur.-->
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{=html}
+<!--« text: |
+      \usepackage{booktabs} » permet d’utiliser le langage LaTeX pour améliorer la présentation des tableaux. -->
+```
+
+<!--« geometry » définit les marges de chaque taille du rapport. « top », en haut ; « bottom », en bas ; « left », à gauche ; « right », à droite.-->
+
+```{=html}
+<!--« bibliography: references.bib
+citation: true
+link-citations: true 
+nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’explications, voir la section dédiée.-->
+```
+
+<!--La présentation de la page de titre est codée ci-dessous en LaTeX qui est un langage supporté par les documents Quarto sur RStudio ; sauf à vouloir innover la présentation, vous n’avez pas à apprendre le langage LaTeX à cette fin. Toutefois, selon la nature du projet, vous aurez peut-être à étudier davantage LaTeX pour rédiger des formules mathématiques ou pour améliorer la présentation de vos tableaux. Page officielle de ce langage de programmation : https://www.latex-project.org/ (en anglais). De nombreux autres sites également en français enseignent l’utilisation de LaTeX, dans son ensemble ou pour un usage particulier de ce langage.-->
+
+\begin{titlepage}
+\centering
+
+\includegraphics{ressources/ensai_logo_1.png}\\
+\vspace{1.0cm}
+
+{\LARGE\textsc{Rapport de tel projet}}\\
+\vspace{0.5cm}
+{\large Élèves 1A}
+
+\vspace{2.5cm}
+
+\rule{\textwidth}{0.5mm}\\
+\vspace{0.8cm}
+{\huge\bfseries Titre choisi pour mon rapport en Quarto}\\
+\vspace{0.8cm}
+\rule{\textwidth}{0.5mm}\\
+
+\vspace{2.5cm}
+
+\begin{flushleft}
+\emph{Étudiant·e·s :}\\
+Blanche Neige\\
+Peter Pan\\
+Mickey Mouse\\
+Elsa d’Arendelle\\
+\end{flushleft}
+
+\begin{flushright}
+\emph{Responsable :}\\
+la Fée bleue\\
+\vspace{1.0cm}
+\emph{Encadrant(e) :}\\
+Jiminy Cricket\\
+\end{flushright}
+
+\vfill 
+\begin{center}
+École nationale de la statistique et de l’analyse de l’information\\
+2025--2026
+\end{center}
+\end{titlepage}
+
+<!--« vspace » définit la taille verticale d’un espace à laisser vide.-->
+
+<!--« flushleft », « flushright » et « center » : alignements à gauche, à droite et centré.-->
+
+<!--« \emph » met du texte en italique dans un texte en romain et vice versa.-->
+
+<!--« vfill » renvoie le texte codé par la suite (ici jusqu’à « \end{titlepage} » en bas de la page.-->
+
+<!--Dans « 2025--2026 », les deux traits d’union permettent de faire un tiret long. « 2025--2026 » pourra être remplacé par une date.-->
+
+# Résumé
+
+# Mots-clés
+
+\tableofcontents
+
+# Introduction
+
+# Présentation des données
+
+# Etude 1 : statistiques descriptives
+
+# Etude 2 : Modèles
+
+# Discussion générale
+
+# Conclusion
+
+# Remerciements
+
+# Références {#pagedesreferences}
+
+# Annexes {#pagesdannexes}
+
