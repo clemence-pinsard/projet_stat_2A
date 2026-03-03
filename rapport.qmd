@@ -58,7 +58,7 @@ nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’ex
 \includegraphics{ressources/ensai_logo_1.png}\\
 \vspace{1.0cm}
 
-{\LARGE\textsc{Rapport de tel projet}}\\
+{\LARGE\textsc{Rapport de projet statistique}}\\
 \vspace{0.5cm}
 {\large Élèves 2A}
 
@@ -263,7 +263,7 @@ Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents
 
 \newpage
 
-# Références {#pagedesreferences} {.unnumbered}
+# Références  {.unnumbered}
 
 Voici la liste de toutes les références bibliographiques utiles à la rédaction de ce rapport :
 
@@ -272,5 +272,5 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 \newpage
 
-# Annexes {#pagesdannexes} {.unnumbered}
+# Annexes {.unnumbered}
 
