@@ -200,7 +200,7 @@ Dans son modèle, Dan H. Moore explique la relation entre l'âge et la performan
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-L'équation \eqref{eq:moore} est un modèle à double exponentielle, constitué de deux composantes : \
+L'équation \eqref{eq-moore} est un modèle à double exponentielle, constitué de deux composantes : \
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
@@ -231,7 +231,27 @@ On note dans nos données un fort déséquilibre dans la distribution des âges 
 
 ##### Pourquoi cette méthode ?
 
+La méthode de la descente de gradient est nécessaire car dans le cadre du modèle de Moore, la formule présente une non-linéarité par rapport aux paramètres b et d, situés en exposants. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
+
 ##### Fonctionnement
+
+La descente de gradient est un algorithme d'optimisation itératif du premier ordre. Son objectif est de déterminer le jeu de paramètres $\theta$ qui minimise une fonction de coût (ou fonction de perte), notée J($\theta$). Dans ce cadre, nous utilisons l'Erreur Quadratique Moyenne (MSE), qui mesure l'écart entre les prédictions du modèle et les observations réelles.
+
+Le gradient, noté $\nabla J(\theta)$, est le vecteur regroupant les dérivées partielles de la fonction de coût J par rapport à chaque paramètre : 
+$$\nabla J(\theta) = \begin{pmatrix}
+\frac{\partial J(\theta)}{\partial \theta_1} \\
+\vdots \\
+\frac{\partial J(\theta)}{\partial \theta_n}
+\end{pmatrix}$$
+
+Mathématiquement, ce vecteur pointe toujours vers la direction de la plus forte augmentation de la fonction. Par conséquent, pour minimiser l'erreur, l'algorithme doit se déplacer dans la direction opposée au gradient.
+
+L'algorithme démarre d'une initialisation arbitraire et met à jour les paramètres de manière itérative selon la règle suivante : $\theta_{next} = \theta_{current} - \eta \cdot \nabla J(\theta)$.
+Dans cette formule, $\eta$ représente le taux d'apprentissage (learning rate). C'est un hyperparamètre crucial qui détermine la taille du pas effectué à chaque étape :
+-	S'il est trop grand, l'algorithme risque d'osciller et de ne jamais converger.
+-	S'il est trop petit, la progression sera extrêmement lente.
+L'opération est répétée jusqu'à la convergence, c'est-à-dire lorsque le gradient devient proche de zéro (indiquant que nous avons atteint un minimum) ou lorsque le nombre maximal d'itérations est atteint.
+
 
 ##### Optimum local 
 

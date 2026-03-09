@@ -18,34 +18,17 @@ library(dplyr)
 
 # Moore meilleure perf par age
 
-## Préparation des données 1
-
-```{r}
-df_moore_meilleure_par_age <- df_final %>%
-  filter(Age >= 16 & Age <= 40) %>%
-  # Sélection du record par âge 
-  group_by(discipline, Sex, Age) %>%
-  summarise(
-    meilleure_perf = max(mark_numeric, na.rm = TRUE),
-    .groups = "drop"
-  ) %>%
-  # Assurer la continuité (16 à 40 ans sans trous)
-  complete(Age = 16:40, nesting(discipline, Sex)) %>%
-  group_by(discipline, Sex) %>%
-  mutate(meilleure_perf = zoo::na.approx(meilleure_perf, na.rm = FALSE))
-```
-
 ## Données réelles
 
 ```{r}
 # 1. Création du dossier s'il n'existe pas déjà
-if(!dir.exists("donnees_reelles_moore_2_meilleure_par_age")) {
-  dir.create("donnees_reelles_moore_2_meilleure_par_age")
+if(!dir.exists("donnees_reelles_meilleure_par_age")) {
+  dir.create("donnees_reelles_meilleure_par_age")
 }
 
 # 2. Liste des combinaisons uniques (Discipline et Sexe)
 # On utilise distinct() ou unique() sur les deux colonnes
-combinaisons <- unique(df_moore_meilleure_par_age[, c("discipline", "Sex")])
+combinaisons <- unique(df_meilleure_par_age[, c("discipline", "Sex")])
 
 # 3. Boucle de génération et de sauvegarde
 for (i in 1:nrow(combinaisons)) {
@@ -55,7 +38,7 @@ for (i in 1:nrow(combinaisons)) {
   sexe <- combinaisons$Sex[i]
   
   # Filtrage sur les deux critères
-  data_dis <- subset(df_moore_meilleure_par_age, discipline == dis & Sex == sexe)
+  data_dis <- subset(df_meilleure_par_age, discipline == dis & Sex == sexe)
   
   # On saute l'itération si jamais il n'y a pas de données (sécurité)
   if(nrow(data_dis) == 0) next
@@ -74,7 +57,7 @@ for (i in 1:nrow(combinaisons)) {
   # 4. Construction du nom de fichier propre
   # On inclut le sexe dans le nom pour ne pas écraser les fichiers
   nom_propre_dis <- gsub("[[:punct:]]| ", "_", dis)
-  nom_fichier <- paste0("donnees_reelles_moore_2_meilleure_par_age/brut_", nom_propre_dis, "_", sexe, ".png")
+  nom_fichier <- paste0("donnees_reelles_meilleure_par_age/brut_", nom_propre_dis, "_", sexe, ".png")
   
   # 5. Sauvegarde
   ggsave(
@@ -89,38 +72,6 @@ for (i in 1:nrow(combinaisons)) {
 }
 ```
 
-
-## Préparation des données 2 
-
-```{r}
-# 1. On prépare les données comme avant (sans le nest)
-df_list <- df_moore_meilleure_par_age %>%
-  filter(!is.na(meilleure_perf), !is.na(Age)) %>%
-  group_by(Sex, discipline) %>%
-  mutate(
-    direction = if_else(median(meilleure_perf, na.rm = TRUE) < 0, -1, 1),
-    Age_Rel = Age - min(Age),
-    n_points = n()
-  ) %>%
-  # On filtre pour garder les groupes avec assez de points
-  filter(n_points >= 10) %>%
-  # On calcule max_perf par groupe
-  mutate(max_perf = max(meilleure_perf, na.rm = TRUE)) %>%
-  # On enlève les max_perf invalides
-  filter(!is.na(max_perf), is.finite(max_perf)) %>%
-  # 2. On sépare le dataframe en une liste de dataframes
-  group_split()
-
-# 3. On donne des noms explicites à chaque élément de la liste
-# Exemple de nom : "df_Men_100m"
-names(df_list) <- map_chr(df_list, ~ {
-  paste0("df_", unique(.x$Sex), "_", gsub(" ", "_", unique(.x$discipline)))
-})
-
-# 4. On extrait chaque table de la liste vers l'environnement global
-list2env(df_list, envir = .GlobalEnv)
-```
-
 ## Modèles de Moore
 
 ### Homme disque 
@@ -129,7 +80,7 @@ list2env(df_list, envir = .GlobalEnv)
 # Initialisation des variables pour stocker le meilleur résultat
 best_fit <- NULL
 min_rmse <- Inf # On commence avec une erreur infinie
-n_iterations <- 1000
+n_iterations <- 5000
 
 # On récupère le max une seule fois pour l'efficacité
 max_perf <- max(df_men_Discus_Throw$meilleure_perf)
@@ -184,6 +135,17 @@ lines(df_men_Discus_Throw$Age, predict(best_fit), col="red", lwd=2)
 ### Femme disque 
 
 ```{r}
+generate_starts <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.08, 0.1)
+  start_c <- runif(1, 1, 2)
+  start_d <- runif(1, 0.06, 0.07)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+upper_bounds <- c(a = 90, b = 0.5,   c = 100,  d = 0.2)
+
 # Initialisation des variables pour stocker le meilleur résultat
 best_fit_f_d <- NULL
 min_rmse_f_d <- Inf # On commence avec une erreur infinie
