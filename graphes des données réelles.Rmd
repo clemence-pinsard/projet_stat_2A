@@ -47,7 +47,7 @@ for (i in 1:nrow(combinaisons)) {
   # 4. Construction du nom de fichier propre
   # On inclut le sexe dans le nom pour ne pas écraser les fichiers
   nom_propre_dis <- gsub("[[:punct:]]| ", "_", dis)
-  nom_fichier <- paste0("donnees_reelles_globale/brut_", nom_propre_dis, "_", sexe, ".png")
+  nom_fichier <- paste0("donnees_reelles_globales/brut_", nom_propre_dis, "_", sexe, ".png")
   
   # 5. Sauvegarde
   ggsave(
