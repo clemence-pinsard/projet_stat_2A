@@ -18,69 +18,25 @@ library(dplyr)
 
 # Moore meilleure perf par age
 
-## Données réelles
-
-```{r}
-# 1. Création du dossier s'il n'existe pas déjà
-if(!dir.exists("donnees_reelles_meilleure_par_age")) {
-  dir.create("donnees_reelles_meilleure_par_age")
-}
-
-# 2. Liste des combinaisons uniques (Discipline et Sexe)
-# On utilise distinct() ou unique() sur les deux colonnes
-combinaisons <- unique(df_meilleure_par_age[, c("discipline", "Sex")])
-
-# 3. Boucle de génération et de sauvegarde
-for (i in 1:nrow(combinaisons)) {
-  
-  # Extraction de la discipline et du sexe pour cette itération
-  dis <- combinaisons$discipline[i]
-  sexe <- combinaisons$Sex[i]
-  
-  # Filtrage sur les deux critères
-  data_dis <- subset(df_meilleure_par_age, discipline == dis & Sex == sexe)
-  
-  # On saute l'itération si jamais il n'y a pas de données (sécurité)
-  if(nrow(data_dis) == 0) next
-  
-  # Création du graphique
-  p <- ggplot(data_dis, aes(x = Age, y = meilleure_perf)) +
-    geom_point(alpha = 0.5, color = "steelblue", size = 1.5) +
-    labs(
-      title = paste("Données brutes :", dis, "-", sexe),
-      subtitle = paste("Nombre d'observations :", nrow(data_dis)),
-      x = "Âge",
-      y = "Performance (mark_numeric)"
-    ) +
-    theme_minimal()
-  
-  # 4. Construction du nom de fichier propre
-  # On inclut le sexe dans le nom pour ne pas écraser les fichiers
-  nom_propre_dis <- gsub("[[:punct:]]| ", "_", dis)
-  nom_fichier <- paste0("donnees_reelles_meilleure_par_age/brut_", nom_propre_dis, "_", sexe, ".png")
-  
-  # 5. Sauvegarde
-  ggsave(
-    filename = nom_fichier, 
-    plot = p, 
-    width = 8, 
-    height = 6, 
-    dpi = 300 
-  )
-  
-  message(paste("Graphique sauvegardé pour :", dis, "(", sexe, ")"))
-}
-```
-
 ## Modèles de Moore
 
 ### Homme disque 
 
 ```{r}
+generate_starts_homme_disque <- function(max){
+  start_a <- runif(1, 0.9*max, 1.2*max)
+  start_b <- runif(1, 0.08, 0.1)
+  start_c <- runif(1, start_a/100 - 0.25, start_a/100 + 0.25)
+  start_d <- runif(1, 0.06, 0.07)
+  return(list(a = start_a, b = start_b, c = start_c, d = start_d))
+}
+
+lower_bounds <- c(a = 20, b = 0.001, c = -100, d = 0.001)
+
 # Initialisation des variables pour stocker le meilleur résultat
 best_fit <- NULL
 min_rmse <- Inf # On commence avec une erreur infinie
-n_iterations <- 5000
+n_iterations <- 1000
 
 # On récupère le max une seule fois pour l'efficacité
 max_perf <- max(df_men_Discus_Throw$meilleure_perf)
@@ -92,9 +48,8 @@ for (i in 1:n_iterations) {
     nlsLM(
       meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
       data = df_men_Discus_Throw,
-      start = generate_starts(max_perf),
+      start = generate_starts_homme_disque(max_perf),
       lower = lower_bounds,
-      upper = upper_bounds,
       control = nls.lm.control(maxiter = 1000, maxfev = 2000)
     )
   }, error = function(e) return(NULL)) # Si erreur, on retourne NULL

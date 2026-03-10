@@ -1,7 +1,7 @@
 library(shiny)
 library(ggplot2)
 
-df_reelles <- data.frame(t = df_women_Discus_Throw$Age, y = df_women_Discus_Throw$meilleure_perf)
+df_reelles <- data.frame(t = df_women_Marathon$Age, y = df_women_Marathon$meilleure_perf_km_par_h)
 
 ui <- fluidPage(
   titlePanel("Modélisation : Somme d'exponentielles"),
@@ -9,14 +9,14 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       h4("Premier composant"),
-      sliderInput("a", "Amplitude a :", min = 0, max = 150, value = 50, step = 0.5),
-      sliderInput("b", "Taux b :", min = 0, max = 10, value = 0.5, step = 0.01),
+      sliderInput("a", "Amplitude a :", min = 0, max = 30, value = 25, step = 0.25),
+      sliderInput("b", "Taux b :", min = 0, max = 8, value = 0.5, step = 0.001),
       
       hr(),
       
       h4("Second composant"),
-      sliderInput("c", "Amplitude c :", min = 0, max = 80, value = 30, step = 0.1),
-      sliderInput("d", "Taux d :", min = 0, max = 1, value = 0.2, step = 0.01), # Corrigé à 1 pour éviter explosion exponentielle
+      sliderInput("c", "Amplitude c :", min = 0, max = 30, value = 1, step = 0.05),
+      sliderInput("d", "Taux d :", min = 0, max = 3, value = 0.07, step = 0.01), # Corrigé à 1 pour éviter explosion exponentielle
       
       hr(),
       
@@ -76,3 +76,4 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
+

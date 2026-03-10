@@ -1,0 +1,120 @@
+---
+title: "donnees reelles"
+output: html_document
+date: "2026-03-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Données réelles globale
+
+```{r}
+# 1. Création du dossier s'il n'existe pas déjà
+if(!dir.exists("donnees_reelles_globales")) {
+  dir.create("donnees_reelles_globales")
+}
+
+# 2. Liste des combinaisons uniques (Discipline et Sexe)
+# On utilise distinct() ou unique() sur les deux colonnes
+combinaisons <- unique(df_final[, c("discipline", "Sex")])
+
+# 3. Boucle de génération et de sauvegarde
+for (i in 1:nrow(combinaisons)) {
+  
+  # Extraction de la discipline et du sexe pour cette itération
+  dis <- combinaisons$discipline[i]
+  sexe <- combinaisons$Sex[i]
+  
+  # Filtrage sur les deux critères
+  data_dis <- subset(df_final, discipline == dis & Sex == sexe)
+  
+  # On saute l'itération si jamais il n'y a pas de données (sécurité)
+  if(nrow(data_dis) == 0) next
+  
+  # Création du graphique
+  p <- ggplot(data_dis, aes(x = Age, y = mark_numeric)) +
+    geom_point(alpha = 0.5, color = "steelblue", size = 1.5) +
+    labs(
+      title = paste("Données brutes :", dis, "-", sexe),
+      subtitle = paste("Nombre d'observations :", nrow(data_dis)),
+      x = "Âge",
+      y = "Performance (mark_numeric)"
+    ) +
+    theme_minimal()
+  
+  # 4. Construction du nom de fichier propre
+  # On inclut le sexe dans le nom pour ne pas écraser les fichiers
+  nom_propre_dis <- gsub("[[:punct:]]| ", "_", dis)
+  nom_fichier <- paste0("donnees_reelles_globale/brut_", nom_propre_dis, "_", sexe, ".png")
+  
+  # 5. Sauvegarde
+  ggsave(
+    filename = nom_fichier, 
+    plot = p, 
+    width = 8, 
+    height = 6, 
+    dpi = 300 
+  )
+  
+  message(paste("Graphique sauvegardé pour :", dis, "(", sexe, ")"))
+}
+```
+
+## Données réelles meilleure perf par age
+
+```{r}
+# 1. Création du dossier s'il n'existe pas déjà
+if(!dir.exists("donnees_reelles_meilleure_par_age")) {
+  dir.create("donnees_reelles_meilleure_par_age")
+}
+
+# 2. Liste des combinaisons uniques (Discipline et Sexe)
+# On utilise distinct() ou unique() sur les deux colonnes
+combinaisons <- unique(df_meilleure_par_age[, c("discipline", "Sex")])
+
+# 3. Boucle de génération et de sauvegarde
+for (i in 1:nrow(combinaisons)) {
+  
+  # Extraction de la discipline et du sexe pour cette itération
+  dis <- combinaisons$discipline[i]
+  sexe <- combinaisons$Sex[i]
+  
+  # Filtrage sur les deux critères
+  data_dis <- subset(df_meilleure_par_age, discipline == dis & Sex == sexe)
+  
+  # On saute l'itération si jamais il n'y a pas de données (sécurité)
+  if(nrow(data_dis) == 0) next
+  
+  # Création du graphique
+  p <- ggplot(data_dis, aes(x = Age, y = meilleure_perf)) +
+    geom_point(alpha = 0.5, color = "steelblue", size = 1.5) +
+    labs(
+      title = paste("Données brutes :", dis, "-", sexe),
+      subtitle = paste("Nombre d'observations :", nrow(data_dis)),
+      x = "Âge",
+      y = "Performance (mark_numeric)"
+    ) +
+    theme_minimal()
+  
+  # 4. Construction du nom de fichier propre
+  # On inclut le sexe dans le nom pour ne pas écraser les fichiers
+  nom_propre_dis <- gsub("[[:punct:]]| ", "_", dis)
+  nom_fichier <- paste0("donnees_reelles_meilleure_par_age/brut_", nom_propre_dis, "_", sexe, ".png")
+  
+  # 5. Sauvegarde
+  ggsave(
+    filename = nom_fichier, 
+    plot = p, 
+    width = 8, 
+    height = 6, 
+    dpi = 300 
+  )
+  
+  message(paste("Graphique sauvegardé pour :", dis, "(", sexe, ")"))
+}
+```
+
+
+
