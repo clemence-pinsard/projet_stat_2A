@@ -139,3 +139,14 @@ df_men_110_Metres_Hurdles$meilleure_perf_km_par_h <- df_men_110_Metres_Hurdles$m
 df_women_100_Metres_Hurdles$meilleure_perf <- -df_women_100_Metres_Hurdles$meilleure_perf
 df_women_100_Metres_Hurdles$meilleure_perf <- 100/df_women_100_Metres_Hurdles$meilleure_perf
 df_women_100_Metres_Hurdles$meilleure_perf_km_par_h <- df_women_100_Metres_Hurdles$meilleure_perf*(10^(-3)/(1/3600))
+
+
+df_men_400_Metres_Hurdles$meilleure_perf <- -df_men_400_Metres_Hurdles$meilleure_perf
+df_men_400_Metres_Hurdles$meilleure_perf <- 110/df_men_400_Metres_Hurdles$meilleure_perf
+df_men_400_Metres_Hurdles$meilleure_perf_km_par_h <- df_men_400_Metres_Hurdles$meilleure_perf*(10^(-3)/(1/3600))
+
+df_women_400_Metres_Hurdles$meilleure_perf <- -df_women_400_Metres_Hurdles$meilleure_perf
+df_women_400_Metres_Hurdles$meilleure_perf <- 100/df_women_400_Metres_Hurdles$meilleure_perf
+df_women_400_Metres_Hurdles$meilleure_perf_km_par_h <- df_women_400_Metres_Hurdles$meilleure_perf*(10^(-3)/(1/3600))
+
+
