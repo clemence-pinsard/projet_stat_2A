@@ -176,8 +176,6 @@ N_top <- 39
 
 stats_pic_equilibre <- stats_pic_discipline %>%
   group_by(discipline, Sex) %>%
-  # On classe par la meilleure performance (attention au sens : décroissant pour sauts/lancers, croissant pour courses)
-  # Pour simplifier, on utilise Best_Mark car tu l'as déjà calculée
   arrange(desc(Best_Mark)) %>% 
   slice_head(n = N_top) %>%
   ungroup()
@@ -223,8 +221,6 @@ ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
   scale_x_continuous(breaks = seq(16, 50, by = 2)) +
   
   labs(
-    title = "Distribution de l'âge au pic de performance (Top 39)",
-    subtitle = "Comparaison à effectifs égaux | Lignes pointillées = Moyennes",
     x = "Âge au pic (années)",
     y = "Nombre d'athlètes",
     fill = "Sexe",
@@ -235,6 +231,7 @@ ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
     legend.position = "top",
     panel.grid.minor = element_blank(),
   )
+ggsave("outputs/histogramme_global.png", width = 8, height = 5, dpi = 300)
 ```
 
 ```{r}
@@ -242,12 +239,12 @@ ggplot(stats_pic_equilibre, aes(x = Famille, y = Age_Pic_Obs, fill = Sex)) +
   geom_boxplot(notch = TRUE, alpha = 0.8, outlier.colour = "black", outlier.shape = 1) +
   scale_fill_manual(values = c("men" = "#2E86C1", "women" = "#28B463")) +
   labs(
-    title = "Âge au pic selon les familles de disciplines (Top 39)",
     x = "Groupe de discipline",
     y = "Âge au pic observé"
   ) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
+ggsave("outputs/boxplot_familles.png", width = 8, height = 6, dpi = 300)
 ```
 
 ```{r}
@@ -271,8 +268,6 @@ ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
   scale_fill_manual(values = c("men" = "#2E86C1", "women" = "#28B463")) +
   
   labs(
-    title = "Allure de la distribution de l'âge au pic par discipline",
-    subtitle = "Analyse de la normalité (Top 39 par sexe)",
     x = "Âge au pic (années)",
     y = "Densité"
   ) +
@@ -282,6 +277,7 @@ ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
     panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
     strip.text = element_text(face = "bold") # Noms des disciplines en gras
   )
+ggsave("outputs/planche_densites.png", width = 12, height = 8, dpi = 300)
 ```
 
 ```{r}

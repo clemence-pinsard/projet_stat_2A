@@ -5,7 +5,6 @@ format:
     documentclass: article
     number-sections: true
     number-depth: 3
-    mainfont: "TeX Gyre Termes"
     header-includes: |
       \usepackage{enumitem}
       \setlist[itemize]{label=$\bullet$}  % Puce ronde classique
@@ -30,17 +29,14 @@ language:
 <!--« header-includes: |
       \usepackage[bottom]{footmisc} » permet aux notes de bas de page d’être réellement en bas de page et non juste après la dernière ligne de texte (ce qui peut amener à des notes en milieu de page si le texte s’arrête à ce niveau).-->
 ```
-
 ```{=html}
 <!--« text: |
       \usepackage[dvipsnames]{xcolor} » permet de mettre des portions de texte en couleur.-->
 ```
-
 ```{=html}
 <!--« text: |
       \usepackage{booktabs} » permet d’utiliser le langage LaTeX pour améliorer la présentation des tableaux. -->
 ```
-
 <!--« geometry » définit les marges de chaque taille du rapport. « top », en haut ; « bottom », en bas ; « left », à gauche ; « right », à droite.-->
 
 ```{=html}
@@ -49,9 +45,9 @@ citation: true
 link-citations: true 
 nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’explications, voir la section dédiée.-->
 ```
-
 <!--La présentation de la page de titre est codée ci-dessous en LaTeX qui est un langage supporté par les documents Quarto sur RStudio ; sauf à vouloir innover la présentation, vous n’avez pas à apprendre le langage LaTeX à cette fin. Toutefois, selon la nature du projet, vous aurez peut-être à étudier davantage LaTeX pour rédiger des formules mathématiques ou pour améliorer la présentation de vos tableaux. Page officielle de ce langage de programmation : https://www.latex-project.org/ (en anglais). De nombreux autres sites également en français enseignent l’utilisation de LaTeX, dans son ensemble ou pour un usage particulier de ce langage.-->
 
+```{=tex}
 \begin{titlepage}
 \centering
 
@@ -90,7 +86,7 @@ Imad {Hamri}\\
 2025--2026
 \end{center}
 \end{titlepage}
-
+```
 <!--« vspace » définit la taille verticale d’un espace à laisser vide.-->
 
 <!--« flushleft », « flushright » et « center » : alignements à gauche, à droite et centré.-->
@@ -103,11 +99,11 @@ Imad {Hamri}\\
 
 # Résumé {.unnumbered}
 
-La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à trois familles de disciplines — sprint, lancers et endurance. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
+La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à trois familles de disciplines --- sprint, lancers et endurance. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
 
 # Abstract {.unnumbered}
 
-Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model (1975) and the IMAP model (Berthelot et al., 2019), across three discipline families — sprints, throws, and endurance. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
+Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model (1975) and the IMAP model (Berthelot et al., 2019), across three discipline families --- sprints, throws, and endurance. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
 
 # Mots-clés {.unnumbered}
 
@@ -121,27 +117,25 @@ Early talent detection and understanding the career trajectories of elite athlet
 
 ## Contexte et enjeux {.unnumbered}
 
-La détection précoce des talents sportifs constitue un enjeu majeur pour les fédérations internationales d'athlétisme. Si la question de l'identification des jeunes athlètes prometteurs semble intuitive, elle se révèle en réalité bien plus complexe : les performances exceptionnelles observées à l'adolescence ne garantissent pas nécessairement la réussite au plus haut niveau à l'âge adulte. Ce constat soulève une problématique centrale : comment identifier, parmi les jeunes athlètes performants, ceux qui parviendront à maintenir, voire améliorer leur niveau dans les années suivantes ? 
+La détection précoce des talents sportifs constitue un enjeu majeur pour les fédérations internationales d'athlétisme. Si la question de l'identification des jeunes athlètes prometteurs semble intuitive, elle se révèle en réalité bien plus complexe : les performances exceptionnelles observées à l'adolescence ne garantissent pas nécessairement la réussite au plus haut niveau à l'âge adulte. Ce constat soulève une problématique centrale : comment identifier, parmi les jeunes athlètes performants, ceux qui parviendront à maintenir, voire améliorer leur niveau dans les années suivantes ?
 
-Cette question s'inscrit dans un contexte scientifique où la relation entre l'âge et la performance sportive a fait l'objet de nombreuses recherches. Depuis les travaux pionniers de Moore en 1975, qui proposa le premier modèle mathématique de cette relation, la communauté scientifique n'a cessé d'approfondir la compréhension de cette dynamique. Plus récemment, Berthelot et ses collaborateurs ont développé en 2019 le modèle IMAP (Integrative Model of Age-Performance), fondé sur des mécanismes biologiques cellulaires, offrant ainsi une nouvelle perspective pour modéliser l'évolution des capacités physiques tout au long de la vie. \
+Cette question s'inscrit dans un contexte scientifique où la relation entre l'âge et la performance sportive a fait l'objet de nombreuses recherches. Depuis les travaux pionniers de Moore en 1975, qui proposa le premier modèle mathématique de cette relation, la communauté scientifique n'a cessé d'approfondir la compréhension de cette dynamique. Plus récemment, Berthelot et ses collaborateurs ont développé en 2019 le modèle IMAP (Integrative Model of Age-Performance), fondé sur des mécanismes biologiques cellulaires, offrant ainsi une nouvelle perspective pour modéliser l'évolution des capacités physiques tout au long de la vie.\
 
 Notre étude s'appuie sur une base de données internationale fournie par World Athletics, couvrant la période 2000-2024 et recensant les 100 meilleures performances annuelles, pour chaque sexe, dans chaque discipline athlétique. Ce corpus, portant sur plusieurs dizaines de milliers de performances au plus haut niveau mondial, permet d'analyser finement la trajectoire des athlètes d'élite à travers différentes disciplines.
 
 ## Objectif de l'étude {.unnumbered}
 
-L'objectif principal de ce projet est d'analyser la relation entre l'âge et la performance en athlétisme. Plus spécifiquement, nous cherchons à comprendre comment évoluent les performances athlétiques au fil du temps et à déterminer l'âge auquel les athlètes atteignent leur pic de performance. \
+L'objectif principal de ce projet est d'analyser la relation entre l'âge et la performance en athlétisme. Plus spécifiquement, nous cherchons à comprendre comment évoluent les performances athlétiques au fil du temps et à déterminer l'âge auquel les athlètes atteignent leur pic de performance.\
 
-Contrairement aux approches basées uniquement sur l'âge moyen des athlètes, qui peuvent être biaisées par les différences d'âge de début et de fin de carrière selon les pays ou les disciplines, notre étude se concentre sur l'identification de l'âge au pic de performance. Cette approche permet de mieux comprendre la dynamique temporelle de la performance sportive, caractérisée par une phase de croissance progressive des capacités, suivie d'un plateau puis d'un déclin lié au vieillissement. 
+Contrairement aux approches basées uniquement sur l'âge moyen des athlètes, qui peuvent être biaisées par les différences d'âge de début et de fin de carrière selon les pays ou les disciplines, notre étude se concentre sur l'identification de l'âge au pic de performance. Cette approche permet de mieux comprendre la dynamique temporelle de la performance sportive, caractérisée par une phase de croissance progressive des capacités, suivie d'un plateau puis d'un déclin lié au vieillissement.
 
 ## Questions de recherches et trajectoires attendues {.unnumbered}
 
 L'analyse de nos données vise à répondre à plusieurs interrogations fondamentales sur la dynamique de la performance athlétique. La littérature scientifique nous guide dans la formulation de nos attentes quant aux résultats escomptés.
 
-Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins\cite{Allen2015} ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond. 
+Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins\cite{Allen2015} ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond.
 
-
-La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins\cite{Allen2015}, rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 \cite{Infographic2020} révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes. 
-
+La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins\cite{Allen2015}, rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 \cite{Infographic2020} révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes.
 
 Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter \cite{Carter2019} décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \\
 
@@ -159,8 +153,7 @@ Il convient toutefois de noter certaines limites structurelles : un déséquilib
 
 ## Préparation et nettoyage des données
 
-Le passage des données brutes à un échantillon exploitable a nécessité un protocole de nettoyage, articulé autour de quatre étapes clés :
-- \textbf{Calcul de l'âge et nettoyage initial :} Les entrées ne disposant pas de performance numérique exploitable ou d'une date de naissance valide ont été écartées. L'âge de chaque athlète a été calculé par la différence entre l'année de la performance (\textit{season}) et son année de naissance.\
+Le passage des données brutes à un échantillon exploitable a nécessité un protocole de nettoyage, articulé autour de quatre étapes clés : - \textbf{Calcul de l'âge et nettoyage initial :} Les entrées ne disposant pas de performance numérique exploitable ou d'une date de naissance valide ont été écartées. L'âge de chaque athlète a été calculé par la différence entre l'année de la performance (\textit{season}) et son année de naissance.\
 - \textbf{Identification des carrières terminées :} Afin d'éviter le biais de troncature (inclure un athlète n'ayant pas encore atteint son pic), nous avons restreint l'étude aux athlètes retraités. Un seuil de "retraite" a été fixé à l'année 2022 : tout athlète ayant réalisé une performance après cette date a été considéré comme actif et exclu de l'analyse.\
 - \textbf{Sélection de la meilleure performance annuelle :} Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en trois familles majeures : \textbf{Sprint}, \textbf{Lancers} et \textbf{Endurance}.\
 - \textbf{Filtrage par expérience et équilibrage (Top 39) :} Pour garantir que l'âge au pic observé soit représentatif d'une trajectoire complète, seuls les athlètes ayant au moins \textbf{5 années de performances} enregistrées dans une même discipline ont été retenus. Enfin, pour corriger les disparités d'effectifs entre les sexes, nous avons procédé à un échantillonnage équilibré en sélectionnant le \textbf{Top 39} des meilleurs athlètes par discipline et par sexe, seuil défini par l'effectif le plus restreint du jeu de données (lancer du disque féminin).
@@ -169,20 +162,21 @@ Le passage des données brutes à un échantillon exploitable a nécessité un p
 
 L'analyse repose sur un ensemble de variables structurées pour répondre à la problématique de l'évolution de la performance :
 
+```{=tex}
 \begin{description}
     \item[Age\_Pic\_Obs :] L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale.
     \item[Sex :] Pour comparer les performances entre les femmes et les hommes
     \item[Famille :] Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
     \item[Discipline :] Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
 \end{description}
-
+```
 \newpage
 
 # Etude 1 : statistiques descriptives
 
 ## Méthodologie
 
-## Résultats 
+## Résultats
 
 ## Discussion
 
@@ -200,13 +194,11 @@ Dans son modèle, Dan H. Moore explique la relation entre l'âge et la performan
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-L'équation \eqref{eq:moore} est un modèle à double exponentielle, constitué de deux composantes : \
+L'équation \eqref{eq:moore} est un modèle à double exponentielle, constitué de deux composantes :\
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
 Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t.
-
-
 
 ### Modèle IMAP (2019)
 
@@ -214,7 +206,7 @@ Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) corresp
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
 
-On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d’âges dits « élevés » et très peu d’âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d’influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
 
 #### Descente de gradients {.unnumbered}
 
@@ -222,7 +214,7 @@ On note dans nos données un fort déséquilibre dans la distribution des âges 
 
 ##### Fonctionnement
 
-##### Optimum local 
+##### Optimum local
 
 La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
@@ -236,12 +228,9 @@ Le point de départ choisi jouant un rôle essentiel dans la détermination des 
 
 #### Choix du modèle le plus performant {.unnumbered}
 
-##### Critère d'optimisation 
+##### Critère d'optimisation
 
-Une fois les modèles estimés, il va nous falloir déterminer les paramètres optimaux pour chaque modèle afin de résumer au mieux les données et obtenir une courbe la plus représentative possible. Il nous faut donc un critère d'optimisation.
-Le critère d'optimisation que nous allons utiliser est assez classique : il s'agit de l'erreur quadratique (ou méthode des moindres carrés). Ce critère consiste à minimiser la somme des erreurs quadratiques, notée :
-$$S(\theta) = \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$
-On cherche donc : $$\arg\min_{\theta} \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$.
+Une fois les modèles estimés, il va nous falloir déterminer les paramètres optimaux pour chaque modèle afin de résumer au mieux les données et obtenir une courbe la plus représentative possible. Il nous faut donc un critère d'optimisation. Le critère d'optimisation que nous allons utiliser est assez classique : il s'agit de l'erreur quadratique (ou méthode des moindres carrés). Ce critère consiste à minimiser la somme des erreurs quadratiques, notée : $$S(\theta) = \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$ On cherche donc : $$\arg\min_{\theta} \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$.
 
 Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
 
@@ -263,7 +252,7 @@ Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents
 
 \newpage
 
-# Références  {.unnumbered}
+# Références {.unnumbered}
 
 Voici la liste de toutes les références bibliographiques utiles à la rédaction de ce rapport :
 
@@ -273,4 +262,3 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 \newpage
 
 # Annexes {.unnumbered}
-
