@@ -69,71 +69,71 @@ df_women_100_Metres$meilleure_perf <- 100/df_women_100_Metres$meilleure_perf
 df_women_100_Metres$meilleure_perf_km_par_h <- df_women_100_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_200_Metres$meilleure_perf <- -df_men_200_Metres$meilleure_perf
-df_men_200_Metres$meilleure_perf <- 100/df_men_200_Metres$meilleure_perf
+df_men_200_Metres$meilleure_perf <- 200/df_men_200_Metres$meilleure_perf
 df_men_200_Metres$meilleure_perf_km_par_h <- df_men_200_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_200_Metres$meilleure_perf <- -df_women_200_Metres$meilleure_perf
-df_women_200_Metres$meilleure_perf <- 100/df_women_200_Metres$meilleure_perf
+df_women_200_Metres$meilleure_perf <- 200/df_women_200_Metres$meilleure_perf
 df_women_200_Metres$meilleure_perf_km_par_h <- df_women_200_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_400_Metres$meilleure_perf <- -df_men_400_Metres$meilleure_perf
-df_men_400_Metres$meilleure_perf <- 100/df_men_400_Metres$meilleure_perf
+df_men_400_Metres$meilleure_perf <- 400/df_men_400_Metres$meilleure_perf
 df_men_400_Metres$meilleure_perf_km_par_h <- df_men_400_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_400_Metres$meilleure_perf <- -df_women_400_Metres$meilleure_perf
-df_women_400_Metres$meilleure_perf <- 100/df_women_400_Metres$meilleure_perf
+df_women_400_Metres$meilleure_perf <- 400/df_women_400_Metres$meilleure_perf
 df_women_400_Metres$meilleure_perf_km_par_h <- df_women_400_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_5000_Metres$meilleure_perf <- -df_men_5000_Metres$meilleure_perf
-df_men_5000_Metres$meilleure_perf <- 100/df_men_5000_Metres$meilleure_perf
+df_men_5000_Metres$meilleure_perf <- 5000/df_men_5000_Metres$meilleure_perf
 df_men_5000_Metres$meilleure_perf_km_par_h <- df_men_5000_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_5000_Metres$meilleure_perf <- -df_women_5000_Metres$meilleure_perf
-df_women_5000_Metres$meilleure_perf <- 100/df_women_5000_Metres$meilleure_perf
+df_women_5000_Metres$meilleure_perf <- 5000/df_women_5000_Metres$meilleure_perf
 df_women_5000_Metres$meilleure_perf_km_par_h <- df_women_5000_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_1500_Metres$meilleure_perf <- -df_men_1500_Metres$meilleure_perf
-df_men_1500_Metres$meilleure_perf <- 100/df_men_1500_Metres$meilleure_perf
+df_men_1500_Metres$meilleure_perf <- 1500/df_men_1500_Metres$meilleure_perf
 df_men_1500_Metres$meilleure_perf_km_par_h <- df_men_1500_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_1500_Metres$meilleure_perf <- -df_women_1500_Metres$meilleure_perf
-df_women_1500_Metres$meilleure_perf <- 100/df_women_1500_Metres$meilleure_perf
+df_women_1500_Metres$meilleure_perf <- 1500/df_women_1500_Metres$meilleure_perf
 df_women_1500_Metres$meilleure_perf_km_par_h <- df_women_1500_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_800_Metres$meilleure_perf <- -df_men_800_Metres$meilleure_perf
-df_men_800_Metres$meilleure_perf <- 100/df_men_800_Metres$meilleure_perf
+df_men_800_Metres$meilleure_perf <- 800/df_men_800_Metres$meilleure_perf
 df_men_800_Metres$meilleure_perf_km_par_h <- df_men_800_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_800_Metres$meilleure_perf <- -df_women_800_Metres$meilleure_perf
-df_women_800_Metres$meilleure_perf <- 100/df_women_800_Metres$meilleure_perf
+df_women_800_Metres$meilleure_perf <- 800/df_women_800_Metres$meilleure_perf
 df_women_800_Metres$meilleure_perf_km_par_h <- df_women_800_Metres$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_3000_Metres_Steeplechase$meilleure_perf <- -df_men_3000_Metres_Steeplechase$meilleure_perf
-df_men_3000_Metres_Steeplechase$meilleure_perf <- 100/df_men_3000_Metres_Steeplechase$meilleure_perf
+df_men_3000_Metres_Steeplechase$meilleure_perf <- 3000/df_men_3000_Metres_Steeplechase$meilleure_perf
 df_men_3000_Metres_Steeplechase$meilleure_perf_km_par_h <- df_men_3000_Metres_Steeplechase$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_3000_Metres_Steeplechase$meilleure_perf <- -df_women_3000_Metres_Steeplechase$meilleure_perf
-df_women_3000_Metres_Steeplechase$meilleure_perf <- 100/df_women_3000_Metres_Steeplechase$meilleure_perf
+df_women_3000_Metres_Steeplechase$meilleure_perf <- 3000/df_women_3000_Metres_Steeplechase$meilleure_perf
 df_women_3000_Metres_Steeplechase$meilleure_perf_km_par_h <- df_women_3000_Metres_Steeplechase$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_Marathon$meilleure_perf <- -df_men_Marathon$meilleure_perf
-df_men_Marathon$meilleure_perf <- 100/df_men_Marathon$meilleure_perf
+df_men_Marathon$meilleure_perf <- 42195/df_men_Marathon$meilleure_perf
 df_men_Marathon$meilleure_perf_km_par_h <- df_men_Marathon$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_Marathon$meilleure_perf <- -df_women_Marathon$meilleure_perf
-df_women_Marathon$meilleure_perf <- 100/df_women_Marathon$meilleure_perf
+df_women_Marathon$meilleure_perf <- 42195/df_women_Marathon$meilleure_perf
 df_women_Marathon$meilleure_perf_km_par_h <- df_women_Marathon$meilleure_perf*(10^(-3)/(1/3600))
 
 `df_men_10,000_Metres`$meilleure_perf <- -`df_men_10,000_Metres`$meilleure_perf
-`df_men_10,000_Metres`$meilleure_perf <- 100/`df_men_10,000_Metres`$meilleure_perf
+`df_men_10,000_Metres`$meilleure_perf <- 10000/`df_men_10,000_Metres`$meilleure_perf
 `df_men_10,000_Metres`$meilleure_perf_km_par_h <- `df_men_10,000_Metres`$meilleure_perf*(10^(-3)/(1/3600))
 
 `df_women_10,000_Metres`$meilleure_perf <- -`df_women_10,000_Metres`$meilleure_perf
-`df_women_10,000_Metres`$meilleure_perf <- 100/`df_women_10,000_Metres`$meilleure_perf
+`df_women_10,000_Metres`$meilleure_perf <- 10000/`df_women_10,000_Metres`$meilleure_perf
 `df_women_10,000_Metres`$meilleure_perf_km_par_h <- `df_women_10,000_Metres`$meilleure_perf*(10^(-3)/(1/3600))
 
 df_men_110_Metres_Hurdles$meilleure_perf <- -df_men_110_Metres_Hurdles$meilleure_perf
-df_men_110_Metres_Hurdles$meilleure_perf <- 100/df_men_110_Metres_Hurdles$meilleure_perf
+df_men_110_Metres_Hurdles$meilleure_perf <- 110/df_men_110_Metres_Hurdles$meilleure_perf
 df_men_110_Metres_Hurdles$meilleure_perf_km_par_h <- df_men_110_Metres_Hurdles$meilleure_perf*(10^(-3)/(1/3600))
 
 df_women_100_Metres_Hurdles$meilleure_perf <- -df_women_100_Metres_Hurdles$meilleure_perf
