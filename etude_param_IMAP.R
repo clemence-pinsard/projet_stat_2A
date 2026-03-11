@@ -16,12 +16,12 @@ ui <- fluidPage(
       
       hr(),
       h4("Paramètres IMAP"),
-      sliderInput("alpha0", "α₀ (taux initial de croissance) :", min = 0, max = 1000, value = 50, step = 1),
-      sliderInput("alphar", "αᵣ (vitesse de saturation) :", min = 0, max = 100, value = 20, step = 0.1),
-      sliderInput("beta0", "β₀ (taux initial de déclin) :", min = 0, max = 10, value = 1, step = 0.01),
-      sliderInput("betar", "βᵣ (vitesse de déclin) :", min = 0, max = 20, value = 2, step = 0.01),
-      sliderInput("Ninf", "N∞ (population cellulaire asymptotique) :", min = 0, max = 100, value = 10, step = 0.1),
-      sliderInput("td", "tᵈ (âge de décès estimé) :", min = 50, max = 200, value = 110, step = 1),
+      sliderInput("alpha0", "α₀ (taux initial de croissance) :", min = 0, max = 2, value = 0, step = 0.01),
+      sliderInput("alphar", "αᵣ (vitesse de saturation) :", min = 0, max = 2, value = 0, step = 0.01),
+      sliderInput("beta0", "β₀ (taux initial de déclin) :", min = 0, max = 2, value = 1, step = 0.01),
+      sliderInput("betar", "βᵣ (vitesse de déclin) :", min = 0, max = 2, value = 2, step = 0.01),
+      sliderInput("Ninf", "N∞ (population cellulaire asymptotique) :", min = 0, max = 5, value = 0, step = 0.01),
+      sliderInput("td", "tᵈ (âge de décès estimé) :", min = 30, max = 90 , value = 30, step = 0.5),
       
       hr(),
       sliderInput("t_max", "Horizon temporel (t) :", min = 1, max = 100, value = 50)
