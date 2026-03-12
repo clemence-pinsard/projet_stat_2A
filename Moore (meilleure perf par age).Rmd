@@ -23,15 +23,15 @@ library(dplyr)
 ### Utile
 
 ```{r}
-generate_starts <- function(max){
-  start_a <- runif(1, 0.9*max, 1.2*max)
+generate_starts <- function(max_val){
+  start_a <- runif(1, 0.9*max_val, 1.2*max_val)
   start_b <- runif(1, 0.08, 0.1)
-  start_c <- runif(1, start_a/100 - 0.25, start_a/100 + 0.25)
+  start_c <- runif(1, start_a/100 - start_a/1000, start_a/100 + start_a/1000)
   start_d <- runif(1, 0.06, 0.07)
   return(list(a = start_a, b = start_b, c = start_c, d = start_d))
 }
 
-lower_bounds <- c(a = 5, b = 0.001, c = -100, d = 0.001)
+lower_bounds <- c(a = 0.05, b = 0.001, c = -100, d = 0.001)
 
 n_iterations <- 1000
 ```
@@ -1506,4 +1506,911 @@ print(t_pic_f_400h)
 # 5. Visualisation
 plot(df_women_400_Metres_Hurdles$Age, df_women_400_Metres_Hurdles$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
 lines(df_women_400_Metres_Hurdles$Age, predict(best_fit_f_400h), col="red", lwd=2)
+```
+
+### Homme Décathlon
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_long <- NULL
+min_rmse_h_long <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_long <- max(df_men_Long_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Long_Jump,
+      start = generate_starts(max_perf_h_long),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_long) {
+      min_rmse_h_long <- current_rmse
+      best_fit_h_long <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_long)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_long, "\n")
+  summary(best_fit_h_long)
+  params_h_long <- coef(best_fit_h_long)
+  print(params_h_long)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_long)
+
+t_pic_h_long <- log(params_h_long["a"]*params_h_long["b"]/(params_h_long["c"]*params_h_long["d"]))/(params_h_long["b"]+params_h_long["d"])
+print(t_pic_h_long)
+
+# 5. Visualisation
+plot(df_men_Long_Jump$Age, df_men_Long_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Long_Jump$Age, predict(best_fit_h_long), col="red", lwd=2)
+```
+
+### Femme Longueur
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_long <- NULL
+min_rmse_f_long <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_long <- max(df_women_Long_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Long_Jump,
+      start = generate_starts(max_perf_f_long),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_long) {
+      min_rmse_f_long <- current_rmse
+      best_fit_f_long <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_long)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_long, "\n")
+  summary(best_fit_f_long)
+  params_f_long <- coef(best_fit_f_long)
+  print(params_f_long)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_long)
+
+t_pic_f_long <- log(params_f_long["a"]*params_f_long["b"]/(params_f_long["c"]*params_f_long["d"]))/(params_f_long["b"]+params_f_long["d"])
+print(t_pic_f_long)
+
+# 5. Visualisation
+plot(df_women_Long_Jump$Age, df_women_Long_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Long_Jump$Age, predict(best_fit_f_long), col="red", lwd=2)
+```
+
+### Hommes Triple
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_triple <- NULL
+min_rmse_h_triple <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_triple <- max(df_men_Triple_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Triple_Jump,
+      start = generate_starts(max_perf_h_triple),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_triple) {
+      min_rmse_h_triple <- current_rmse
+      best_fit_h_triple <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_triple)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_triple, "\n")
+  summary(best_fit_h_triple)
+  params_h_triple <- coef(best_fit_h_triple)
+  print(params_h_triple)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_triple)
+
+t_pic_h_triple <- log(params_h_triple["a"]*params_h_triple["b"]/(params_h_triple["c"]*params_h_triple["d"]))/(params_h_triple["b"]+params_h_triple["d"])
+print(t_pic_h_triple)
+
+# 5. Visualisation
+plot(df_men_Triple_Jump$Age, df_men_Triple_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Triple_Jump$Age, predict(best_fit_h_triple), col="red", lwd=2)
+```
+
+### Femme Triple
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_triple <- NULL
+min_rmse_f_triple <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_triple <- max(df_women_Triple_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Triple_Jump,
+      start = generate_starts(max_perf_f_triple),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_triple) {
+      min_rmse_f_triple <- current_rmse
+      best_fit_f_triple <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_triple)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_triple, "\n")
+  summary(best_fit_f_triple)
+  params_f_triple <- coef(best_fit_f_triple)
+  print(params_f_triple)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_f_triple)
+
+t_pic_f_triple <- log(params_f_triple["a"]*params_f_triple["b"]/(params_f_triple["c"]*params_f_triple["d"]))/(params_f_triple["b"]+params_f_triple["d"])
+print(t_pic_f_triple)
+
+# 5. Visualisation
+plot(df_women_Triple_Jump$Age, df_women_Triple_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Triple_Jump$Age, predict(best_fit_f_triple), col="red", lwd=2)
+```
+
+### Homme hauteur 
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_haut <- NULL
+min_rmse_h_haut <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_haut <- max(df_men_High_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_High_Jump,
+      start = generate_starts(max_perf_h_haut),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_haut) {
+      min_rmse_h_haut <- current_rmse
+      best_fit_h_haut <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_haut)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_haut, "\n")
+  summary(best_fit_h_haut)
+  params_h_haut <- coef(best_fit_h_haut)
+  print(params_h_haut)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_h_haut)
+
+t_pic_h_haut <- log(params_h_haut["a"]*params_h_haut["b"]/(params_h_haut["c"]*params_h_haut["d"]))/(params_h_haut["b"]+params_h_haut["d"])
+print(t_pic_h_haut)
+
+# 5. Visualisation
+plot(df_men_High_Jump$Age, df_men_High_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_High_Jump$Age, predict(best_fit_h_haut), col="red", lwd=2)
+```
+
+### Femme Hauteur 
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_haut <- NULL
+min_rmse_f_haut <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_haut <- max(df_women_High_Jump$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_High_Jump,
+      start = generate_starts(max_perf_f_haut),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_haut) {
+      min_rmse_f_haut <- current_rmse
+      best_fit_f_haut <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_haut)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_haut, "\n")
+  summary(best_fit_f_haut)
+  params_f_haut <- coef(best_fit_f_haut)
+  print(params_f_haut)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_f_haut)
+
+t_pic_f_haut <- log(params_f_haut["a"]*params_f_haut["b"]/(params_f_haut["c"]*params_f_haut["d"]))/(params_f_haut["b"]+params_f_haut["d"])
+print(t_pic_f_haut)
+
+# 5. Visualisation
+plot(df_women_High_Jump$Age, df_women_High_Jump$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_High_Jump$Age, predict(best_fit_f_haut), col="red", lwd=2)
+```
+
+### Homme Perche
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_per <- NULL
+min_rmse_h_per <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_per <- max(df_men_Pole_Vault$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Pole_Vault,
+      start = generate_starts(max_perf_h_per),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_per) {
+      min_rmse_h_per <- current_rmse
+      best_fit_h_per <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_per)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_per, "\n")
+  summary(best_fit_h_per)
+  params_h_per <- coef(best_fit_h_per)
+  print(params_h_per)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_h_per)
+
+t_pic_h_per <- log(params_h_per["a"]*params_h_per["b"]/(params_h_per["c"]*params_h_per["d"]))/(params_h_per["b"]+params_h_per["d"])
+print(t_pic_h_per)
+
+# 5. Visualisation
+plot(df_men_Pole_Vault$Age, df_men_Pole_Vault$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Pole_Vault$Age, predict(best_fit_h_per), col="red", lwd=2)
+```
+
+### Femme Perche
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_per <- NULL
+min_rmse_f_per <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_per <- max(df_women_Pole_Vault$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Pole_Vault,
+      start = generate_starts(max_perf_f_per),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_per) {
+      min_rmse_f_per <- current_rmse
+      best_fit_f_per <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_per)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_per, "\n")
+  summary(best_fit_f_per)
+  params_f_per <- coef(best_fit_f_per)
+  print(params_f_per)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_per)
+
+t_pic_f_per <- log(params_f_per["a"]*params_f_per["b"]/(params_f_per["c"]*params_f_per["d"]))/(params_f_per["b"]+params_f_per["d"])
+print(t_pic_f_per)
+
+# 5. Visualisation
+plot(df_women_Pole_Vault$Age, df_women_Pole_Vault$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Pole_Vault$Age, predict(best_fit_f_per), col="red", lwd=2)
+```
+
+### Homme Décathlon
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_deca <- NULL
+min_rmse_h_deca <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_deca <- max(df_men_Decathlon$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Decathlon,
+      start = generate_starts(max_perf_h_deca),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_deca) {
+      min_rmse_h_deca <- current_rmse
+      best_fit_h_deca <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_deca)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_deca, "\n")
+  summary(best_fit_h_deca)
+  params_h_deca <- coef(best_fit_h_deca)
+  print(params_h_deca)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_h_deca)
+
+t_pic_h_deca <- log(params_h_deca["a"]*params_h_deca["b"]/(params_h_deca["c"]*params_h_deca["d"]))/(params_h_deca["b"]+params_h_deca["d"])
+print(t_pic_h_deca)
+
+# 5. Visualisation
+plot(df_men_Decathlon$Age, df_men_Decathlon$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_men_Decathlon$Age, predict(best_fit_h_deca), col="red", lwd=2)
+```
+
+### Femme Heptatlon
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_hep <- NULL
+min_rmse_f_hep <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_hep <- max(df_women_Heptathlon$meilleure_perf)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Heptathlon,
+      start = generate_starts(max_perf_f_hep),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_hep) {
+      min_rmse_f_hep <- current_rmse
+      best_fit_f_hep <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_hep)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_hep, "\n")
+  summary(best_fit_f_hep)
+  params_f_hep <- coef(best_fit_f_hep)
+  print(params_f_hep)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+```{r}
+summary(best_fit_f_hep)
+
+t_pic_f_hep <- log(params_f_hep["a"]*params_f_hep["b"]/(params_f_hep["c"]*params_f_hep["d"]))/(params_f_hep["b"]+params_f_hep["d"])
+print(t_pic_f_hep)
+
+# 5. Visualisation
+plot(df_women_Heptathlon$Age, df_women_Heptathlon$meilleure_perf, main="Ajustement du modèle", pch=16)
+lines(df_women_Heptathlon$Age, predict(best_fit_f_hep), col="red", lwd=2)
+```
+
+# Homme Marche
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_marc <- NULL
+min_rmse_h_marc <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_marc <- max(df_men_20_Kilometres_Race_Walk$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_20_Kilometres_Race_Walk,
+      start = generate_starts(max_perf_h_marc),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_marc) {
+      min_rmse_h_marc <- current_rmse
+      best_fit_h_marc <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_marc)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_marc, "\n")
+  summary(best_fit_h_marc)
+  params_h_marc <- coef(best_fit_h_marc)
+  print(params_h_marc)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_h_marc)
+
+t_pic_h_marc <- log(params_h_marc["a"]*params_h_marc["b"]/(params_h_marc["c"]*params_h_marc["d"]))/(params_h_marc["b"]+params_h_marc["d"])
+print(t_pic_h_marc)
+
+# 5. Visualisation
+plot(df_men_20_Kilometres_Race_Walk$Age, df_men_20_Kilometres_Race_Walk$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(df_men_20_Kilometres_Race_Walk$Age, predict(best_fit_h_marc), col="red", lwd=2)
+```
+
+### Femme Marche
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_marc <- NULL
+min_rmse_f_marc <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_marc <- max(df_women_20_Kilometres_Race_Walk$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_20_Kilometres_Race_Walk,
+      start = generate_starts(max_perf_f_marc),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_marc) {
+      min_rmse_f_marc <- current_rmse
+      best_fit_f_marc <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_marc)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_marc, "\n")
+  summary(best_fit_f_marc)
+  params_f_marc <- coef(best_fit_f_marc)
+  print(params_f_marc)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_f_marc)
+
+t_pic_f_marc <- log(params_f_marc["a"]*params_f_marc["b"]/(params_f_marc["c"]*params_f_marc["d"]))/(params_f_marc["b"]+params_f_marc["d"])
+print(t_pic_f_marc)
+
+# 5. Visualisation
+plot(df_women_20_Kilometres_Race_Walk$Age, df_women_20_Kilometres_Race_Walk$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(df_women_20_Kilometres_Race_Walk$Age, predict(best_fit_f_marc), col="red", lwd=2)
+```
+
+### Homme marathon
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_mara <- NULL
+min_rmse_h_mara <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_mara <- max(df_men_Marathon$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_men_Marathon,
+      start = generate_starts(max_perf_h_mara),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_mara) {
+      min_rmse_h_mara <- current_rmse
+      best_fit_h_mara <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_mara)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_mara, "\n")
+  summary(best_fit_h_mara)
+  params_h_mara <- coef(best_fit_h_mara)
+  print(params_h_mara)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_h_mara)
+
+t_pic_h_mara <- log(params_h_mara["a"]*params_h_mara["b"]/(params_h_mara["c"]*params_h_mara["d"]))/(params_h_mara["b"]+params_h_mara["d"])
+print(t_pic_h_mara)
+
+# 5. Visualisation
+plot(df_men_Marathon$Age, df_men_Marathon$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(df_men_Marathon$Age, predict(best_fit_h_mara), col="red", lwd=2)
+```
+
+### Femme marathon
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_mara <- NULL
+min_rmse_f_mara <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_mara <- max(df_women_Marathon$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = df_women_Marathon,
+      start = generate_starts(max_perf_f_mara),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_mara) {
+      min_rmse_f_mara <- current_rmse
+      best_fit_f_mara <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_mara)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_mara, "\n")
+  summary(best_fit_f_mara)
+  params_f_mara <- coef(best_fit_f_mara)
+  print(params_f_mara)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_f_mara)
+
+t_pic_f_mara <- log(params_f_mara["a"]*params_f_mara["b"]/(params_f_mara["c"]*params_f_mara["d"]))/(params_f_mara["b"]+params_f_mara["d"])
+print(t_pic_f_mara)
+
+# 5. Visualisation
+plot(df_women_Marathon$Age, df_women_Marathon$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(df_women_Marathon$Age, predict(best_fit_f_mara), col="red", lwd=2)
+```
+
+
+### Homme 10000m
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_h_10000 <- NULL
+min_rmse_h_10000 <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_h_10000 <- max(`df_men_10,000_Metres`$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = `df_men_10,000_Metres`,
+      start = generate_starts(max_perf_h_10000),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_h_10000) {
+      min_rmse_h_10000 <- current_rmse
+      best_fit_h_10000 <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_h_10000)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_h_10000, "\n")
+  summary(best_fit_h_10000)
+  params_h_10000 <- coef(best_fit_h_10000)
+  print(params_h_10000)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_h_10000)
+
+t_pic_h_10000 <- log(params_h_10000["a"]*params_h_10000["b"]/(params_h_10000["c"]*params_h_10000["d"]))/(params_h_10000["b"]+params_h_10000["d"])
+print(t_pic_h_10000)
+
+# 5. Visualisation
+plot(`df_men_10,000_Metres`$Age, `df_men_10,000_Metres`$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(`df_men_10,000_Metres`$Age, predict(best_fit_h_10000), col="red", lwd=2)
+```
+
+### Femme 10000m
+
+```{r}
+# Initialisation des variables pour stocker le meilleur résultat
+best_fit_f_10000 <- NULL
+min_rmse_f_10000 <- Inf # On commence avec une erreur infinie
+
+# On récupère le max une seule fois pour l'efficacité
+max_perf_f_10000 <- max(`df_women_10,000_Metres`$meilleure_perf_km_par_h)
+
+for (i in 1:n_iterations) {
+  
+  # Utilisation de tryCatch pour ignorer les erreurs de convergence
+  result <- tryCatch({
+    nlsLM(
+      meilleure_perf_km_par_h~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
+      data = `df_women_10,000_Metres`,
+      start = generate_starts(max_perf_f_10000),
+      lower = lower_bounds,
+      control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+    )
+  }, error = function(e) return(NULL)) # Si erreur, on retourne NULL
+  
+  # Si le modèle a convergé, on compare l'erreur
+  if (!is.null(result)) {
+    current_rmse <- summary(result)$sigma # L'erreur résiduelle standard
+    
+    if (current_rmse < min_rmse_f_10000) {
+      min_rmse_f_10000 <- current_rmse
+      best_fit_f_10000 <- result
+    }
+  }
+}
+
+# --- Affichage des résultats finaux ---
+if (!is.null(best_fit_f_10000)) {
+  cat("Meilleur modèle trouvé avec une RMSE de :", min_rmse_f_10000, "\n")
+  summary(best_fit_f_10000)
+  params_f_10000 <- coef(best_fit_f_10000)
+  print(params_f_10000)
+} else {
+  print("Le modèle n'a jamais convergé. Vérifiez vos bornes ou vos fonctions de départ.")
+}
+```
+
+
+```{r}
+summary(best_fit_f_10000)
+
+t_pic_f_10000 <- log(params_f_10000["a"]*params_f_10000["b"]/(params_f_10000["c"]*params_f_10000["d"]))/(params_f_10000["b"]+params_f_10000["d"])
+print(t_pic_f_10000)
+
+# 5. Visualisation
+plot(`df_women_10,000_Metres`$Age, `df_women_10,000_Metres`$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
+lines(`df_women_10,000_Metres`$Age, predict(best_fit_f_10000), col="red", lwd=2)
 ```
