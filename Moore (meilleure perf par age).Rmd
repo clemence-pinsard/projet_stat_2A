@@ -85,6 +85,9 @@ if (!is.null(best_fit)) {
 ```{r}
 summary(best_fit)
 
+AIC(best_fit)
+BIC(best_fit)
+
 t_pic <- log(params["a"]*params["b"]/(params["c"]*params["d"]))/(params["b"]+params["d"])
 print(t_pic)
 
@@ -140,6 +143,9 @@ if (!is.null(best_fit_f_d)) {
 
 ```{r}
 summary(best_fit_f_d)
+
+AIC(best_fit_f_d)
+BIC(best_fit_f_d)
 
 t_pic_f_d <- log(params_f_d["a"]*params_f_d["b"]/(params_f_d["c"]*params_f_d["d"]))/(params_f_d["b"]+params_f_d["d"])
 print(t_pic_f_d)
@@ -197,6 +203,9 @@ if (!is.null(best_fit_h_m)) {
 ```{r}
 summary(best_fit_h_m)
 
+AIC(best_fit_h_m)
+BIC(best_fit_h_m)
+
 t_pic_h_m <- log(params_h_m["a"]*params_h_m["b"]/(params_h_m["c"]*params_h_m["d"]))/(params_h_m["b"]+params_h_m["d"])
 print(t_pic_h_m)
 
@@ -252,6 +261,9 @@ if (!is.null(best_fit_f_m)) {
 
 ```{r}
 summary(best_fit_f_m)
+
+AIC(best_fit_f_m)
+BIC(best_fit_f_m)
 
 t_pic_f_m <- log(params_f_m["a"]*params_f_m["b"]/(params_f_m["c"]*params_f_m["d"]))/(params_f_m["b"]+params_f_m["d"])
 print(t_pic_f_m)
@@ -309,6 +321,9 @@ if (!is.null(best_fit_h_j)) {
 ```{r}
 summary(best_fit_h_j)
 
+AIC(best_fit_h_j)
+BIC(best_fit_h_j)
+
 t_pic_h_j <- log(params_h_j["a"]*params_h_j["b"]/(params_h_j["c"]*params_h_j["d"]))/(params_h_j["b"]+params_h_j["d"])
 print(t_pic_h_j)
 
@@ -364,6 +379,9 @@ if (!is.null(best_fit_f_j)) {
 
 ```{r}
 summary(best_fit_f_j)
+
+AIC(best_fit_f_j)
+BIC(best_fit_f_j)
 
 t_pic_f_j <- log(params_f_j["a"]*params_f_j["b"]/(params_f_j["c"]*params_f_j["d"]))/(params_f_j["b"]+params_f_j["d"])
 print(t_pic_f_j)
@@ -421,6 +439,9 @@ if (!is.null(best_fit_h_p)) {
 ```{r}
 summary(best_fit_h_p)
 
+AIC(best_fit_h_p)
+BIC(best_fit_h_p)
+
 t_pic_h_p <- log(params_h_p["a"]*params_h_p["b"]/(params_h_p["c"]*params_h_p["d"]))/(params_h_p["b"]+params_h_p["d"])
 print(t_pic_h_p)
 
@@ -476,6 +497,9 @@ if (!is.null(best_fit_f_p)) {
 
 ```{r}
 summary(best_fit_f_p)
+
+AIC(best_fit_f_p)
+BIC(best_fit_f_p)
 
 t_pic_f_p <- log(params_f_p["a"]*params_f_p["b"]/(params_f_p["c"]*params_f_p["d"]))/(params_f_p["b"]+params_f_p["d"])
 print(t_pic_f_p)
@@ -535,6 +559,9 @@ if (!is.null(best_fit_h_100)) {
 ```{r}
 summary(best_fit_h_100)
 
+AIC(best_fit_h_100)
+BIC(best_fit_h_100)
+
 t_pic_h_100 <- log(params_h_100["a"]*params_h_100["b"]/(params_h_100["c"]*params_h_100["d"]))/(params_h_100["b"]+params_h_100["d"])
 print(t_pic_h_100)
 
@@ -591,6 +618,9 @@ if (!is.null(best_fit_f_100)) {
 
 ```{r}
 summary(best_fit_f_100)
+
+AIC(best_fit_f_100)
+BIC(best_fit_f_100)
 
 t_pic_f_100 <- log(params_f_100["a"]*params_f_100["b"]/(params_f_100["c"]*params_f_100["d"]))/(params_f_100["b"]+params_f_100["d"])
 print(t_pic_f_100)
@@ -1508,7 +1538,7 @@ plot(df_women_400_Metres_Hurdles$Age, df_women_400_Metres_Hurdles$meilleure_perf
 lines(df_women_400_Metres_Hurdles$Age, predict(best_fit_f_400h), col="red", lwd=2)
 ```
 
-### Homme Décathlon
+### Homme Longueur
 
 ```{r}
 # Initialisation des variables pour stocker le meilleur résultat

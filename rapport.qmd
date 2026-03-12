@@ -222,17 +222,17 @@ La descente de gradient est une méthode permettant d'obtenir un optimum local q
 
 Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés 1 000 modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
 
-##### Pour le modèle de Moore
+##### L'aléatoire dans le modèle de Moore
 
-##### Pour le modèle IMAP
+##### L'aléatoire dans le modèle IMAP
 
-#### Choix du modèle le plus performant {.unnumbered}
-
-##### Critère d'optimisation
+#### Choix du modèle le plus performant : Critère d'optimisation {.unnumbered}
 
 Une fois les modèles estimés, il va nous falloir déterminer les paramètres optimaux pour chaque modèle afin de résumer au mieux les données et obtenir une courbe la plus représentative possible. Il nous faut donc un critère d'optimisation. Le critère d'optimisation que nous allons utiliser est assez classique : il s'agit de l'erreur quadratique (ou méthode des moindres carrés). Ce critère consiste à minimiser la somme des erreurs quadratiques, notée : $$S(\theta) = \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$ On cherche donc : $$\arg\min_{\theta} \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$.
 
 Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
+
+#### Comparaison des modèles : BIC et AIC {.unnumbered}
 
 ## Résultats
 
