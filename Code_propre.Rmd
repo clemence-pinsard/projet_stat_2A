@@ -73,7 +73,16 @@ df_final <- df_retraites %>%
   mutate(Famille = case_when(
     Group_Discipline == "sprints" ~ "Sprint",
     Group_Discipline == "throws"  ~ "Lancers",
-    Group_Discipline %in% c("middlelong", "road-running") ~ "Endurance",
+    Group_Discipline == "combinee" ~ "Epreuves combinées",
+    Group_Discipline == "hurdles" ~ "Haies",
+    Group_Discipline == "jumps" ~ "Sauts",
+    Group_Discipline == "race-walks" ~ "Marche",
+    discipline == "800 Metres" ~ "800 - 1500 - steeple",
+    discipline == "1500 Metres" ~ "800 - 1500 - steeple",
+    discipline == "3000 Metres Steeplechase" ~ "800 - 1500 - steeple",
+    discipline == "5000 Metres" ~ "5000 - 10000",
+    discipline == "10,000 Metres" ~ "5000 - 10000",
+    discipline == "Marathon" ~ "Marathon",
     TRUE ~ "A exclure"
   )) %>%
   # On ne garde que les 3 groupes d'intérêt pour le rapport
