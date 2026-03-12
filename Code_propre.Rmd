@@ -3,7 +3,7 @@ title: "Code_propre"
 author: "Arthur Deletang"
 date: "2026-01-26"
 output: html_document
----
+---l
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
