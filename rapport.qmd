@@ -168,8 +168,10 @@ L'analyse repose sur un ensemble de variables structurées pour répondre à la 
     \item[Sex :] Pour comparer les performances entre les femmes et les hommes
     \item[Famille :] Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
     \item[Discipline :] Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
+    \item[meilleure\_perf\_km\_par\_h :] Conversion de la performance en kilomètre par heure afin d'avoir des valeurs positives à maximiser dans nos modèles
 \end{description}
 ```
+
 \newpage
 
 # Etude 1 : statistiques descriptives
@@ -247,7 +249,16 @@ Le point de départ choisi jouant un rôle essentiel dans la détermination des 
 
 ##### L'aléatoire dans le modèle de Moore
 
+## Initialisation des paramètres du modèle
 
+Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
+
+* **$a$** est tiré uniformément entre 0,9 et 1,2 fois la valeur de performance maximale observée, reflétant le fait que le plateau asymptotique du terme montant est légèrement supérieur au pic ;
+* **$b$** est tiré uniformément autour du rapport $\frac{\text{pente initiale}}{a}$, conformément à l'approximation $f'(0) \approx ab$ valable lorsque $c \ll a$ ;
+* **$c$** est tiré uniformément dans un voisinage étroit de $a/100$, traduisant l'hypothèse que le terme descendant est une petite perturbation devant le terme montant ;
+* **$d$** est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points situés dans la phase descendante de la courbe.
+
+Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
 ##### L'aléatoire dans le modèle IMAP
 
@@ -300,3 +311,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 \newpage
 
 # Annexes {.unnumbered}
+
+## Annexe : Modèles de Moore
+
+![Lancers](annexes/ajustement_lancer.png){width=80%}

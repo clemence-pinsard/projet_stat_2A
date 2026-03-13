@@ -23,11 +23,12 @@ library(dplyr)
 ### Utile
 
 ```{r}
-generate_starts <- function(max_val){
+generate_starts <- function(max_val, pente_initiale, f_t3, f_t4, t3, t4){
   start_a <- runif(1, 0.9*max_val, 1.2*max_val)
-  start_b <- runif(1, 0.08, 0.1)
-  start_c <- runif(1, start_a/100 - start_a/1000, start_a/100 + start_a/1000)
-  start_d <- runif(1, 0.06, 0.07)
+  start_b <- runif(1, 0.8*abs(pente_initiale), 1.2*abs(pente_initiale))
+  pente_tardive <- log((f_t3 - start_a)/(f_t4 - start_a))/(t3 - t4)
+  start_c <- runif(1, 0.8*start_a/100, 1.2*start_a/100)
+  start_d <- runif(1, 0.8*abs(pente_tardive), 1.2*abs(pente_tardive))
   return(list(a = start_a, b = start_b, c = start_c, d = start_d))
 }
 
@@ -44,8 +45,13 @@ n_iterations <- 1000
 best_fit <- NULL
 min_rmse <- Inf # On commence avec une erreur infinie
 
-# On récupère le max une seule fois pour l'efficacité
+# On récupère le max une seule fois pour l'efficacité et les autres valeurs pour générer les points de départ 
 max_perf <- max(df_men_Discus_Throw$meilleure_perf)
+pente_init_h_d <- (df_men_Discus_Throw$meilleure_perf[2]-df_men_Discus_Throw$meilleure_perf[1])/(df_men_Discus_Throw$meilleure_perf[2] - df_men_Discus_Throw$meilleure_perf[1])
+f_t3_h_d <- df_men_Discus_Throw$meilleure_perf[-2]
+f_t4_h_d <- df_men_Discus_Throw$meilleure_perf[-1]
+t3_h_d <- df_men_Discus_Throw$meilleure_perf[-1]
+t4_h_d <- df_men_Discus_Throw$meilleure_perf[-2]
 
 for (i in 1:n_iterations) {
   
@@ -54,7 +60,7 @@ for (i in 1:n_iterations) {
     nlsLM(
       meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
       data = df_men_Discus_Throw,
-      start = generate_starts(max_perf),
+      start = generate_starts(max_perf, pente_init_h_d, f_t3_h_d, f_t4_h_d, t3_h_d, t4_h_d),
       lower = lower_bounds,
       control = nls.lm.control(maxiter = 1000, maxfev = 2000)
     )
@@ -2591,7 +2597,7 @@ df_total_lancers <- bind_rows(
 ```
 
 ```{r}
-ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
+p_lancer <- ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2609,6 +2615,8 @@ ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_lancer.png", plot = p_lancer, width = 12, height = 9)
 ```
 
 #### Pour les sauts
@@ -2640,7 +2648,7 @@ df_total_sauts <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
+p_saut <- ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2658,6 +2666,8 @@ ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_saut.png", plot = p_saut, width = 12, height = 9)
 ```
 
 #### Pour les sprints
@@ -2685,7 +2695,7 @@ df_total_sprints <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_sprint <- ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2703,6 +2713,8 @@ ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_sprint.png", plot = p_sprint, width = 12, height = 9)
 ```
 
 #### Pour les haies
@@ -2726,7 +2738,7 @@ df_total_haies <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_haies <- ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2744,6 +2756,8 @@ ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_haies.png", plot = p_haies, width = 12, height = 9)
 ```
 
 #### Pour les épreuves combinées
@@ -2763,7 +2777,7 @@ df_total_epreuves_combinees <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_epreuves_combinees, aes(x = Age, y = meilleure_perf)) +
+p_epreuves_combinees <- ggplot(df_total_epreuves_combinees, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2781,7 +2795,10 @@ ggplot(df_total_epreuves_combinees, aes(x = Age, y = meilleure_perf)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_epreuves_combinees.png", plot = p_epreuves_combinees, width = 12, height = 9)
 ```
+
 
 #### Pour le demi-fond
 
@@ -2808,7 +2825,7 @@ df_total_demi_fond <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_demi_fond <- ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2826,6 +2843,8 @@ ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_demi_fond.png", plot = p_demi_fond, width = 12, height = 9)
 ```
 
 #### Pour le 5000/10000
@@ -2849,7 +2868,7 @@ df_total_5000_10000 <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_5000_10000 <- ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2867,6 +2886,8 @@ ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_5000_10000.png", plot = p_5000_10000, width = 12, height = 9)
 ```
 
 #### Pour le marathon
@@ -2886,7 +2907,7 @@ df_total_marathon <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_marathon <- ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2904,6 +2925,8 @@ ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_marathon.png", plot = p_marathon, width = 12, height = 9)
 ```
 
 #### Pour la marche
@@ -2923,7 +2946,7 @@ df_total_marche <- bind_rows(
 
 
 ```{r}
-ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
+p_marche <- ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
   
@@ -2941,6 +2964,8 @@ ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
     strip.background = element_rect(fill = "gray90"),
     strip.text = element_text(face = "bold")
   )
+
+ggsave("annexes/ajustement_marche.png", plot = p_marche, width = 12, height = 9)
 ```
 
 
