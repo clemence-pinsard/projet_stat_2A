@@ -678,6 +678,9 @@ if (!is.null(best_fit_h_200)) {
 ```{r}
 summary(best_fit_h_200)
 
+AIC(best_fit_h_200)
+BIC(best_fit_h_200)
+
 t_pic_h_200 <- log(params_h_200["a"]*params_h_200["b"]/(params_h_200["c"]*params_h_200["d"]))/(params_h_200["b"]+params_h_200["d"])
 print(t_pic_h_200)
 
@@ -733,6 +736,9 @@ if (!is.null(best_fit_f_200)) {
 
 ```{r}
 summary(best_fit_f_200)
+
+AIC(best_fit_f_200)
+BIC(best_fit_f_200)
 
 t_pic_f_200 <- log(params_f_200["a"]*params_f_200["b"]/(params_f_200["c"]*params_f_200["d"]))/(params_f_200["b"]+params_f_200["d"])
 print(t_pic_f_200)
@@ -791,6 +797,9 @@ if (!is.null(best_fit_h_400)) {
 ```{r}
 summary(best_fit_h_400)
 
+AIC(best_fit_h_400)
+BIC(best_fit_h_400)
+
 t_pic_h_400 <- log(params_h_400["a"]*params_h_400["b"]/(params_h_400["c"]*params_h_400["d"]))/(params_h_400["b"]+params_h_400["d"])
 print(t_pic_h_400)
 
@@ -846,6 +855,9 @@ if (!is.null(best_fit_f_400)) {
 
 ```{r}
 summary(best_fit_f_400)
+
+AIC(best_fit_f_400)
+BIC(best_fit_f_400)
 
 t_pic_f_400 <- log(params_f_400["a"]*params_f_400["b"]/(params_f_400["c"]*params_f_400["d"]))/(params_f_400["b"]+params_f_400["d"])
 print(t_pic_f_400)
@@ -903,6 +915,9 @@ if (!is.null(best_fit_h_800)) {
 
 ```{r}
 summary(best_fit_h_800)
+
+AIC(best_fit_h_800)
+BIC(best_fit_h_800)
 
 t_pic_h_800 <- log(params_h_800["a"]*params_h_800["b"]/(params_h_800["c"]*params_h_800["d"]))/(params_h_800["b"]+params_h_800["d"])
 print(t_pic_h_800)
@@ -962,6 +977,9 @@ if (!is.null(best_fit_f_800)) {
 ```{r}
 summary(best_fit_f_800)
 
+AIC(best_fit_f_800)
+BIC(best_fit_f_800)
+
 t_pic_f_800 <- log(params_f_800["a"]*params_f_800["b"]/(params_f_800["c"]*params_f_800["d"]))/(params_f_800["b"]+params_f_800["d"])
 print(t_pic_f_800)
 
@@ -1019,6 +1037,9 @@ if (!is.null(best_fit_h_1500)) {
 ```{r}
 summary(best_fit_h_1500)
 
+AIC(best_fit_h_1500)
+BIC(best_fit_h_1500)
+
 t_pic_h_1500 <- log(params_h_1500["a"]*params_h_1500["b"]/(params_h_1500["c"]*params_h_1500["d"]))/(params_h_1500["b"]+params_h_1500["d"])
 print(t_pic_h_1500)
 
@@ -1075,6 +1096,9 @@ if (!is.null(best_fit_f_1500)) {
 ```{r}
 summary(best_fit_f_1500)
 
+AIC(best_fit_f_1500)
+BIC(best_fit_f_1500)
+
 t_pic_f_1500 <- log(params_f_1500["a"]*params_f_1500["b"]/(params_f_1500["c"]*params_f_1500["d"]))/(params_f_1500["b"]+params_f_1500["d"])
 print(t_pic_f_1500)
 
@@ -1130,6 +1154,9 @@ if (!is.null(best_fit_h_5000)) {
 
 ```{r}
 summary(best_fit_h_5000)
+
+AIC(best_fit_h_5000)
+BIC(best_fit_h_5000)
 
 t_pic_h_5000 <- log(params_h_5000["a"]*params_h_5000["b"]/(params_h_5000["c"]*params_h_5000["d"]))/(params_h_5000["b"]+params_h_5000["d"])
 print(t_pic_h_5000)
@@ -1188,6 +1215,9 @@ if (!is.null(best_fit_f_5000)) {
 ```{r}
 summary(best_fit_f_5000)
 
+AIC(best_fit_f_5000)
+BIC(best_fit_f_5000)
+
 t_pic_f_5000 <- log(params_f_5000["a"]*params_f_5000["b"]/(params_f_5000["c"]*params_f_5000["d"]))/(params_f_5000["b"]+params_f_5000["d"])
 print(t_pic_f_5000)
 
@@ -1243,6 +1273,9 @@ if (!is.null(best_fit_h_3000s)) {
 
 ```{r}
 summary(best_fit_h_3000s)
+
+AIC(best_fit_h_3000s)
+BIC(best_fit_h_3000s)
 
 t_pic_h_3000s <- log(params_h_3000s["a"]*params_h_3000s["b"]/(params_h_3000s["c"]*params_h_3000s["d"]))/(params_h_3000s["b"]+params_h_3000s["d"])
 print(t_pic_h_3000s)
@@ -1302,6 +1335,9 @@ if (!is.null(best_fit_f_3000s)) {
 ```{r}
 summary(best_fit_f_3000s)
 
+AIC(best_fit_f_3000s)
+BIC(best_fit_f_3000s)
+
 t_pic_f_3000s <- log(params_f_3000s["a"]*params_f_3000s["b"]/(params_f_3000s["c"]*params_f_3000s["d"]))/(params_f_3000s["b"]+params_f_3000s["d"])
 print(t_pic_f_3000s)
 
@@ -1358,6 +1394,9 @@ if (!is.null(best_fit_h_110h)) {
 
 ```{r}
 summary(best_fit_h_110h)
+
+AIC(best_fit_h_110h)
+BIC(best_fit_h_110h)
 
 t_pic_h_110h <- log(params_h_110h["a"]*params_h_110h["b"]/(params_h_110h["c"]*params_h_110h["d"]))/(params_h_110h["b"]+params_h_110h["d"])
 print(t_pic_h_110h)
@@ -1417,6 +1456,9 @@ if (!is.null(best_fit_f_100h)) {
 ```{r}
 summary(best_fit_f_100h)
 
+AIC(best_fit_f_100h)
+BIC(best_fit_f_100h)
+
 t_pic_f_100h <- log(params_f_100h["a"]*params_f_100h["b"]/(params_f_100h["c"]*params_f_100h["d"]))/(params_f_100h["b"]+params_f_100h["d"])
 print(t_pic_f_100h)
 
@@ -1474,6 +1516,9 @@ if (!is.null(best_fit_h_400h)) {
 ```{r}
 summary(best_fit_h_400h)
 
+AIC(best_fit_h_400h)
+BIC(best_fit_h_400h)
+
 t_pic_h_400h <- log(params_h_400h["a"]*params_h_400h["b"]/(params_h_400h["c"]*params_h_400h["d"]))/(params_h_400h["b"]+params_h_400h["d"])
 print(t_pic_h_400h)
 
@@ -1529,6 +1574,9 @@ if (!is.null(best_fit_f_400h)) {
 
 ```{r}
 summary(best_fit_f_400h)
+
+AIC(best_fit_f_400h)
+BIC(best_fit_f_400h)
 
 t_pic_f_400h <- log(params_f_400h["a"]*params_f_400h["b"]/(params_f_400h["c"]*params_f_400h["d"]))/(params_f_400h["b"]+params_f_400h["d"])
 print(t_pic_f_400h)
@@ -1586,6 +1634,9 @@ if (!is.null(best_fit_h_long)) {
 ```{r}
 summary(best_fit_h_long)
 
+AIC(best_fit_h_long)
+BIC(best_fit_h_long)
+
 t_pic_h_long <- log(params_h_long["a"]*params_h_long["b"]/(params_h_long["c"]*params_h_long["d"]))/(params_h_long["b"]+params_h_long["d"])
 print(t_pic_h_long)
 
@@ -1642,6 +1693,9 @@ if (!is.null(best_fit_f_long)) {
 ```{r}
 summary(best_fit_f_long)
 
+AIC(best_fit_f_long)
+BIC(best_fit_f_long)
+
 t_pic_f_long <- log(params_f_long["a"]*params_f_long["b"]/(params_f_long["c"]*params_f_long["d"]))/(params_f_long["b"]+params_f_long["d"])
 print(t_pic_f_long)
 
@@ -1697,6 +1751,9 @@ if (!is.null(best_fit_h_triple)) {
 
 ```{r}
 summary(best_fit_h_triple)
+
+AIC(best_fit_h_triple)
+BIC(best_fit_h_triple)
 
 t_pic_h_triple <- log(params_h_triple["a"]*params_h_triple["b"]/(params_h_triple["c"]*params_h_triple["d"]))/(params_h_triple["b"]+params_h_triple["d"])
 print(t_pic_h_triple)
@@ -1755,6 +1812,9 @@ if (!is.null(best_fit_f_triple)) {
 ```{r}
 summary(best_fit_f_triple)
 
+AIC(best_fit_f_triple)
+BIC(best_fit_f_triple)
+
 t_pic_f_triple <- log(params_f_triple["a"]*params_f_triple["b"]/(params_f_triple["c"]*params_f_triple["d"]))/(params_f_triple["b"]+params_f_triple["d"])
 print(t_pic_f_triple)
 
@@ -1810,6 +1870,9 @@ if (!is.null(best_fit_h_haut)) {
 
 ```{r}
 summary(best_fit_h_haut)
+
+AIC(best_fit_h_haut)
+BIC(best_fit_h_haut)
 
 t_pic_h_haut <- log(params_h_haut["a"]*params_h_haut["b"]/(params_h_haut["c"]*params_h_haut["d"]))/(params_h_haut["b"]+params_h_haut["d"])
 print(t_pic_h_haut)
@@ -1868,6 +1931,9 @@ if (!is.null(best_fit_f_haut)) {
 ```{r}
 summary(best_fit_f_haut)
 
+AIC(best_fit_f_haut)
+BIC(best_fit_f_haut)
+
 t_pic_f_haut <- log(params_f_haut["a"]*params_f_haut["b"]/(params_f_haut["c"]*params_f_haut["d"]))/(params_f_haut["b"]+params_f_haut["d"])
 print(t_pic_f_haut)
 
@@ -1925,6 +1991,9 @@ if (!is.null(best_fit_h_per)) {
 ```{r}
 summary(best_fit_h_per)
 
+AIC(best_fit_h_per)
+BIC(best_fit_h_per)
+
 t_pic_h_per <- log(params_h_per["a"]*params_h_per["b"]/(params_h_per["c"]*params_h_per["d"]))/(params_h_per["b"]+params_h_per["d"])
 print(t_pic_h_per)
 
@@ -1980,6 +2049,9 @@ if (!is.null(best_fit_f_per)) {
 
 ```{r}
 summary(best_fit_f_per)
+
+AIC(best_fit_f_per)
+BIC(best_fit_f_per)
 
 t_pic_f_per <- log(params_f_per["a"]*params_f_per["b"]/(params_f_per["c"]*params_f_per["d"]))/(params_f_per["b"]+params_f_per["d"])
 print(t_pic_f_per)
@@ -2038,6 +2110,9 @@ if (!is.null(best_fit_h_deca)) {
 ```{r}
 summary(best_fit_h_deca)
 
+AIC(best_fit_h_deca)
+BIC(best_fit_h_deca)
+
 t_pic_h_deca <- log(params_h_deca["a"]*params_h_deca["b"]/(params_h_deca["c"]*params_h_deca["d"]))/(params_h_deca["b"]+params_h_deca["d"])
 print(t_pic_h_deca)
 
@@ -2093,6 +2168,9 @@ if (!is.null(best_fit_f_hep)) {
 
 ```{r}
 summary(best_fit_f_hep)
+
+AIC(best_fit_f_hep)
+BIC(best_fit_f_hep)
 
 t_pic_f_hep <- log(params_f_hep["a"]*params_f_hep["b"]/(params_f_hep["c"]*params_f_hep["d"]))/(params_f_hep["b"]+params_f_hep["d"])
 print(t_pic_f_hep)
@@ -2151,6 +2229,10 @@ if (!is.null(best_fit_h_marc)) {
 ```{r}
 summary(best_fit_h_marc)
 
+AIC(best_fit_h_marc)
+BIC(best_fit_h_marc)
+
+
 t_pic_h_marc <- log(params_h_marc["a"]*params_h_marc["b"]/(params_h_marc["c"]*params_h_marc["d"]))/(params_h_marc["b"]+params_h_marc["d"])
 print(t_pic_h_marc)
 
@@ -2207,6 +2289,9 @@ if (!is.null(best_fit_f_marc)) {
 
 ```{r}
 summary(best_fit_f_marc)
+
+AIC(best_fit_f_marc)
+BIC(best_fit_f_marc)
 
 t_pic_f_marc <- log(params_f_marc["a"]*params_f_marc["b"]/(params_f_marc["c"]*params_f_marc["d"]))/(params_f_marc["b"]+params_f_marc["d"])
 print(t_pic_f_marc)
@@ -2265,6 +2350,9 @@ if (!is.null(best_fit_h_mara)) {
 ```{r}
 summary(best_fit_h_mara)
 
+AIC(best_fit_h_mara)
+BIC(best_fit_h_mara)
+
 t_pic_h_mara <- log(params_h_mara["a"]*params_h_mara["b"]/(params_h_mara["c"]*params_h_mara["d"]))/(params_h_mara["b"]+params_h_mara["d"])
 print(t_pic_h_mara)
 
@@ -2321,6 +2409,9 @@ if (!is.null(best_fit_f_mara)) {
 
 ```{r}
 summary(best_fit_f_mara)
+
+AIC(best_fit_f_mara)
+BIC(best_fit_f_mara)
 
 t_pic_f_mara <- log(params_f_mara["a"]*params_f_mara["b"]/(params_f_mara["c"]*params_f_mara["d"]))/(params_f_mara["b"]+params_f_mara["d"])
 print(t_pic_f_mara)
@@ -2380,6 +2471,9 @@ if (!is.null(best_fit_h_10000)) {
 ```{r}
 summary(best_fit_h_10000)
 
+AIC(best_fit_h_10000)
+BIC(best_fit_h_10000)
+
 t_pic_h_10000 <- log(params_h_10000["a"]*params_h_10000["b"]/(params_h_10000["c"]*params_h_10000["d"]))/(params_h_10000["b"]+params_h_10000["d"])
 print(t_pic_h_10000)
 
@@ -2436,6 +2530,9 @@ if (!is.null(best_fit_f_10000)) {
 
 ```{r}
 summary(best_fit_f_10000)
+
+AIC(best_fit_f_10000)
+BIC(best_fit_f_10000)
 
 t_pic_f_10000 <- log(params_f_10000["a"]*params_f_10000["b"]/(params_f_10000["c"]*params_f_10000["d"]))/(params_f_10000["b"]+params_f_10000["d"])
 print(t_pic_f_10000)
