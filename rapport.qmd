@@ -202,6 +202,15 @@ Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) corresp
 
 ### Modèle IMAP (2019)
 
+Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et al. en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors donnée par :
+
+\begin{equation}
+\label{eq:imap}
+P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})} \cdot \left(1 - e^{\beta_r(t - t_d)}\right)
+\end{equation}
+
+où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
+
 ### Méthode générale
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
@@ -212,7 +221,19 @@ On note dans nos données un fort déséquilibre dans la distribution des âges 
 
 ##### Pourquoi cette méthode ?
 
+La méthode de la descente de gradient est nécessaire car dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
+
 ##### Fonctionnement
+
+La descente de gradient est un algorithme d'optimisation itératif du premier ordre. Son objectif est de déterminer le jeu de paramètres $\theta={\theta_1, ...,\theta_n}$ qui minimise une fonction de coût (ou fonction de perte), notée $J(\theta)$. Dans ce cadre, nous utilisons l'Erreur Quadratique Moyenne (MSE), qui mesure l'écart entre les prédictions du modèle et les observations réelles.
+Le gradient, noté $\nabla J(\theta)$, est le vecteur regroupant les dérivées partielles de la fonction de coût par rapport à chaque paramètre : $$\nabla J(\theta) = \begin{pmatrix} \frac{\partial J}{\partial \theta_1} \\ \vdots \\ \frac{\partial J}{\partial \theta_n} \end{pmatrix}$$
+Mathématiquement, ce vecteur pointe toujours vers la direction de la plus forte augmentation de la fonction. Par conséquent, pour minimiser l'erreur, l'algorithme doit se déplacer dans la direction opposée au gradient.
+L'algorithme démarre d'une initialisation arbitraire et met à jour les paramètres de manière itérative selon la règle suivante : $\theta_{next} = \theta_{current} – \eta \cdot \nabla J(\theta)$.
+Dans cette formule, $\eta$ représente le taux d'apprentissage (learning rate). C'est un hyperparamètre crucial qui détermine la taille du pas effectué à chaque étape :
+-	S'il est trop grand, l'algorithme risque d'osciller et de ne jamais converger.
+-	S'il est trop petit, la progression sera extrêmement lente.
+L'opération est répétée jusqu'à la convergence, c'est-à-dire lorsque le gradient devient proche de zéro (indiquant que nous avons atteint un minimum) ou lorsque le nombre maximal d'itérations est atteint.
+
 
 ##### Optimum local
 
@@ -232,7 +253,20 @@ Une fois les modèles estimés, il va nous falloir déterminer les paramètres o
 
 Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
 
-#### Comparaison des modèles : BIC et AIC {.unnumbered}
+#### Comparaison des modèles : AIC et BIC {.unnumbered}
+
+Afin de comparer les différents modèles de régression linéaire considérés dans cette étude, les critères d'information AIC (Akaike Information Criterion) et BIC (Bayesian Information Criterion) sont utilisés. Ces deux critères reposent sur une logique commune : pénaliser la complexité du modèle afin d'éviter le surapprentissage, tout en cherchant à minimiser l'erreur de prévision sur de nouvelles observations.
+
+##### AIC : Akaike Information Criterion
+
+L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne le nombre d'observations, p le nombre de variables explicatives retenues dans le modèle, et SCR la somme des carrés des résidus. Cette formule, valable sous hypothèse de normalité des erreurs, quantifie l'erreur de prévision via la divergence de Kullback-Leibler.
+
+##### BIC : Bayesian Information Criterion
+
+Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $$\ln (n)$$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents. 
+
+Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.
+
 
 ## Résultats
 

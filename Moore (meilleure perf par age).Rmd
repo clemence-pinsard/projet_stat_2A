@@ -2541,3 +2541,24 @@ print(t_pic_f_10000)
 plot(`df_women_10,000_Metres`$Age, `df_women_10,000_Metres`$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
 lines(`df_women_10,000_Metres`$Age, predict(best_fit_f_10000), col="red", lwd=2)
 ```
+
+## Code graphiques propres
+
+```{r}
+library(ggplot2)
+
+# Création du graphique
+ggplot(`df_women_10,000_Metres`, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  # Ajout des points (équivalent à pch=16)
+  geom_point(alpha = 0.6) + 
+  # Ajout de la ligne de prédiction (équivalent à lines())
+  geom_line(aes(y = predict(best_fit_f_10000)), color = "red", size = 1) +
+  # Titre et labels
+  labs(title = "Ajustement du modèle",
+       x = "Age",
+       y = "Meilleure performance (km/h)") +
+  # Un thème épuré
+  theme_minimal()
+```
+
+
