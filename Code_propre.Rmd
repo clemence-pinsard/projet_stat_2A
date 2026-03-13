@@ -3,7 +3,7 @@ title: "Code_propre"
 author: "Arthur Deletang"
 date: "2026-01-26"
 output: html_document
----l
+---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -85,7 +85,6 @@ df_final <- df_retraites %>%
     discipline == "Marathon" ~ "Marathon",
     TRUE ~ "A exclure"
   )) %>%
-  # On ne garde que les 3 groupes d'intérêt pour le rapport
   filter(Famille != "A exclure")
 
 # --- VÉRIFICATION ---
