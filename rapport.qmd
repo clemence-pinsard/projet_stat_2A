@@ -221,6 +221,10 @@ où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0
 
 On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
 
+![Top 32](donnees_reelles_top32/brut_10_000_Metres_men.png){width=80%}
+![Meilleure par age](donnees_reelles_meilleure_par_age/brut_10_000_Metres_men.png){width=80%}
+
+
 #### Descente de gradients {.unnumbered}
 
 ##### Pourquoi cette méthode ?
