@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r libraries}
 library(tidyverse)
+install.packages("minpack.lm")
 library(minpack.lm)
 library(zoo)
 ```
@@ -20,8 +21,8 @@ library(zoo)
 
 ```{r parametres}
 # Âge de décès fixé selon le sexe (espérance de vie)
-TD_MEN   <- 76
-TD_WOMEN <- 82
+TD_MEN   <- 71
+TD_WOMEN <- 65
 
 N_ITERATIONS <- 1000
 
@@ -442,4 +443,208 @@ if (nrow(non_convergees) > 0) {
   cat("\nDisciplines sans convergence :\n")
   print(non_convergees %>% select(Sex, discipline))
 }
+```
+```{r}
+# Test rapide sur une discipline : hommes disque
+df_test <- df_men_Discus_Throw
+perf_var <- "meilleure_perf"
+
+cat("Nombre de lignes :", nrow(df_test), "\n")
+cat("Age range :", min(df_test$Age), "-", max(df_test$Age), "\n")
+cat("Perf range :", min(df_test[[perf_var]]), "-", max(df_test[[perf_var]]), "\n")
+cat("Valeurs négatives :", sum(df_test[[perf_var]] < 0), "\n")
+cat("NA :", sum(is.na(df_test[[perf_var]])), "\n")
+
+# Essai manuel avec des paramètres fixes "raisonnables"
+library(minpack.lm)
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ beta0 * Ninf * exp((alpha0/alphar) * (1 - exp(-alphar * Age))) * (1 - exp(betar * (Age - 76))),
+    data = df_test,
+    start = list(alpha0 = 0.1, alphar = 0.1, beta0 = 0.01, betar = 0.05, Ninf = 70),
+    control = nls.lm.control(maxiter = 1000)
+  )
+  cat("Convergence OK\n")
+  print(coef(fit_test))
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+```{r}
+# Test rapide hommes disque
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ beta0 * Ninf * exp((alpha0/alphar) * (1 - exp(-alphar * Age))) * (1 - exp(betar * (Age - td))),
+    data  = df_men_Discus_Throw,
+    start = list(alpha0=0.1, alphar=0.1, beta0=0.01, betar=0.05, Ninf=70, td=50),
+    lower = c(alpha0=0.001, alphar=0.001, beta0=0.001, betar=0.001, Ninf=0.001, td=30),
+    upper = c(alpha0=5, alphar=5, beta0=5, betar=5, Ninf=500, td=90)
+  )
+  cat("OK\n"); print(coef(fit_test))
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+
+
+```{r}
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ beta0 * Ninf * 
+      exp((alpha0 / 0.15) * (1 - exp(-0.15 * Age))) * 
+      (1 - exp(0.08 * (Age - td))),
+    data  = df_men_Discus_Throw,
+    start = list(alpha0 = 0.1, beta0 = 0.01, Ninf = 70, td = 50),
+    lower = c(alpha0 = 0.001, beta0 = 0.001, Ninf = 0.001, td = 30),
+    upper = c(alpha0 = 5,     beta0 = 5,     Ninf = 500,   td = 90)
+  )
+  cat("OK\n"); print(coef(fit_test))
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+
+```
+
+
+```{r}
+# Avec les données brutes top 39 (sans agréger par âge)
+df_test_brut <- stats_pic_equilibre %>%   # ou table_finale selon ce qui est en mémoire
+  filter(discipline == "Discus Throw", Sex == "men") %>%
+  inner_join(df_final %>% select(ID, Age, mark_numeric, discipline), 
+             by = c("ID", "discipline")) %>%
+  filter(Age >= 16, Age <= 40, mark_numeric > 0) %>%
+  rename(meilleure_perf = mark_numeric)
+
+cat("Nombre de lignes :", nrow(df_test_brut), "\n")
+
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ beta0 * Ninf * 
+      exp((alpha0 / 0.15) * (1 - exp(-0.15 * Age))) * 
+      (1 - exp(0.08 * (Age - 50))),
+    data  = df_test_brut,
+    start = list(alpha0 = 0.1, beta0 = 0.01, Ninf = 70),
+    lower = c(alpha0 = 0.001, beta0 = 0.001, Ninf = 1),
+    upper = c(alpha0 = 5,     beta0 = 5,     Ninf = 500)
+  )
+  cat("OK\n"); print(coef(fit_test))
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+
+```
+
+
+```{r}
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ A * 
+      exp((alpha0 / 0.15) * (1 - exp(-0.15 * Age))) * 
+      (1 - exp(0.08 * (Age - 42))),
+    data  = df_test_brut,
+    start = list(A = 1, alpha0 = 0.1),
+    lower = c(A = 0.001, alpha0 = 0.001),
+    upper = c(A = 500,   alpha0 = 5)
+  )
+  cat("OK\n"); print(coef(fit_test))
+  plot(df_test_brut$Age, df_test_brut$meilleure_perf, pch=16)
+  lines(sort(df_test_brut$Age), 
+        predict(fit_test)[order(df_test_brut$Age)], col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+
+
+print(coef(fit_test))  # le fit avec alphar et betar fixés
+cat("RMSE :", summary(fit_test)$sigma, "\n")
+cat("AIC :", AIC(fit_test), "\n")
+cat("BIC :", BIC(fit_test), "\n")
+```
+
+
+
+```{r}
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ A * 
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) * 
+      (1 - exp(betar * (Age - 42))),
+    data  = df_test_brut,
+    start = list(A = 70, alpha0 = 0.3, alphar = 0.15, betar = 0.08),
+    lower = c(A = 1,   alpha0 = 0.001, alphar = 0.001, betar = 0.001),
+    upper = c(A = 500, alpha0 = 5,     alphar = 5,     betar = 2)
+  )
+  cat("OK\n"); print(coef(fit_test))
+  plot(df_test_brut$Age, df_test_brut$meilleure_perf, pch=16)
+  lines(sort(df_test_brut$Age), 
+        predict(fit_test)[order(df_test_brut$Age)], col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+
+
+
+```{r}
+tryCatch({
+  fit_test2 <- nlsLM(
+    meilleure_perf ~ A * 
+      exp((alpha0 / 0.15) * (1 - exp(-0.15 * Age))) * 
+      (1 - exp(0.08 * (Age - 42))),
+    data  = df_test_brut,
+    start = list(A = -100, alpha0 = 0.3),
+    lower = c(A = -10000, alpha0 = 0.001),
+    upper = c(A = -0.001, alpha0 = 5)
+  )
+  cat("OK\n"); print(coef(fit_test2))
+  cat("RMSE :", summary(fit_test2)$sigma, "\n")
+  plot(df_test_brut$Age, df_test_brut$meilleure_perf, pch=16)
+  lines(sort(df_test_brut$Age), 
+        predict(fit_test2)[order(df_test_brut$Age)], col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+
+
+
+
+
+```{r}
+tryCatch({
+  fit_test3 <- nlsLM(
+    meilleure_perf ~ A * 
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) * 
+      (1 - exp(betar * (Age - 52))),
+    data  = df_test_brut,
+    start = list(A = -500, alpha0 = 0.3, alphar = 0.15, betar = -0.3),
+    lower = c(A = -10000, alpha0 = 0.001, alphar = 0.001, betar = -5),
+    upper = c(A = -0.001, alpha0 = 5,     alphar = 5,     betar = -0.001)
+  )
+  cat("OK\n"); print(coef(fit_test3))
+  cat("RMSE :", summary(fit_test3)$sigma, "\n")
+  plot(df_test_brut$Age, df_test_brut$meilleure_perf, pch=16)
+  lines(sort(df_test_brut$Age), 
+        predict(fit_test3)[order(df_test_brut$Age)], col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+```{r}
+print(coef(fit_test3))
+cat("RMSE :", summary(fit_test3)$sigma, "\n")
+cat("AIC :", AIC(fit_test3), "\n")
+cat("BIC :", BIC(fit_test3), "\n")
+
+# t_pic
+params3 <- coef(fit_test3)
+optimize(function(t) -params3["A"] * 
+  exp((params3["alpha0"]/params3["alphar"]) * (1 - exp(-params3["alphar"]*t))) *
+  (1 - exp(params3["betar"]*(t - 52))),
+  interval = c(10, 51))$minimum
+```
+
+
+```{r}
+tryCatch({
+  fit_test4 <- nlsLM(
+    meilleure_perf ~ A * 
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) * 
+      (1 - exp(betar * (Age - 52))),
+    data  = df_test_brut,
+    start = list(A = -500, alpha0 = 0.3, alphar = 0.15, betar = -0.3),
+    lower = c(A = -100000, alpha0 = 0.001, alphar = 0.001, betar = -5),
+    upper = c(A = -0.001,  alpha0 = 5,     alphar = 5,     betar = -0.001),
+    control = nls.lm.control(maxiter = 2000, maxfev = 5000)
+  )
+  cat("OK\n"); print(coef(fit_test4))
+  cat("RMSE :", summary(fit_test4)$sigma, "\n")
+  plot(df_test_brut$Age, df_test_brut$meilleure_perf, pch=16)
+  lines(sort(df_test_brut$Age), 
+        predict(fit_test4)[order(df_test_brut$Age)], col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
 ```

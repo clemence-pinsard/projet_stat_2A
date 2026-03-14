@@ -307,3 +307,28 @@ plot_famille_imap(
   "annexes/imap_combinees.png"
 )
 ```
+```{r}
+# 1. Tableau comparatif IMAP vs Moore (t_pic)
+# Colle le résultat de :
+print(resultats_imap %>% 
+  select(Sex, discipline, t_pic_imap = t_pic, AIC_imap = AIC, BIC_imap = BIC) %>%
+  arrange(Sex, discipline))
+
+# 2. Résultats Moore (pour comparaison) — adapte selon ton objet
+print(resultats_sexe_discipline %>%
+  select(Sex, discipline, t_pic_moore = age_pic) %>%
+  arrange(Sex, discipline))
+
+# 3. Paramètres du meilleur fit IMAP pour les sauts
+for (disc in c("Long Jump", "Triple Jump", "High Jump", "Pole Vault")) {
+  for (sex in c("men", "women")) {
+    fit_name <- paste0("best_fit_imap_", sex, "_", gsub("[ ,]", "_", disc))
+    if (!exists(fit_name)) next
+    cat("\n---", sex, disc, "---\n")
+    fit <- get(fit_name)
+    print(coef(fit))
+    cat("RMSE:", summary(fit)$sigma, "| AIC:", AIC(fit), "| BIC:", BIC(fit), "\n")
+    cat("t_pic:", resultats_imap %>% filter(Sex==sex, discipline==disc) %>% pull(t_pic), "\n")
+  }
+}
+```
