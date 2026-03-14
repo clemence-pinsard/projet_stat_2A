@@ -23,11 +23,12 @@ library(dplyr)
 ### Utile
 
 ```{r}
-generate_starts <- function(max_val){
+generate_starts <- function(max_val, pente_initiale, f_t3, f_t4, t3, t4){
   start_a <- runif(1, 0.9*max_val, 1.2*max_val)
-  start_b <- runif(1, 0.08, 0.1)
-  start_c <- runif(1, start_a/100 - start_a/1000, start_a/100 + start_a/1000)
-  start_d <- runif(1, 0.06, 0.07)
+  start_b <- runif(1, 0.8*abs(pente_initiale), 1.2*abs(pente_initiale))
+  pente_tardive <- log((f_t3 - start_a)/(f_t4 - start_a))/(t3 - t4)
+  start_c <- runif(1, 0.8*start_a/100, 1.2*start_a/100)
+  start_d <- runif(1, 0.8*abs(pente_tardive), 1.2*abs(pente_tardive))
   return(list(a = start_a, b = start_b, c = start_c, d = start_d))
 }
 
@@ -44,8 +45,13 @@ n_iterations <- 1000
 best_fit <- NULL
 min_rmse <- Inf # On commence avec une erreur infinie
 
-# On récupère le max une seule fois pour l'efficacité
+# On récupère le max une seule fois pour l'efficacité et les autres valeurs pour générer les points de départ 
 max_perf <- max(df_men_Discus_Throw$meilleure_perf)
+pente_init_h_d <- (df_men_Discus_Throw$meilleure_perf[2]-df_men_Discus_Throw$meilleure_perf[1])/(df_men_Discus_Throw$meilleure_perf[2] - df_men_Discus_Throw$meilleure_perf[1])
+f_t3_h_d <- df_men_Discus_Throw$meilleure_perf[-2]
+f_t4_h_d <- df_men_Discus_Throw$meilleure_perf[-1]
+t3_h_d <- df_men_Discus_Throw$meilleure_perf[-1]
+t4_h_d <- df_men_Discus_Throw$meilleure_perf[-2]
 
 for (i in 1:n_iterations) {
   
@@ -54,7 +60,7 @@ for (i in 1:n_iterations) {
     nlsLM(
       meilleure_perf ~ a * (1 - exp(-b * Age)) + c * (1 - exp(d * Age)),
       data = df_men_Discus_Throw,
-      start = generate_starts(max_perf),
+      start = generate_starts(max_perf, pente_init_h_d, f_t3_h_d, f_t4_h_d, t3_h_d, t4_h_d),
       lower = lower_bounds,
       control = nls.lm.control(maxiter = 1000, maxfev = 2000)
     )
@@ -2560,5 +2566,408 @@ ggplot(`df_women_10,000_Metres`, aes(x = Age, y = meilleure_perf_km_par_h)) +
   # Un thème épuré
   theme_minimal()
 ```
+
+### Pour mettre en annexes
+
+#### Pour les lancers 
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_Discus_Throw$pred   <- predict(best_fit)
+df_men_Hammer_Throw$pred   <- predict(best_fit_h_m)
+df_men_Javelin_Throw$pred  <- predict(best_fit_h_j)
+df_men_Shot_Put$pred       <- predict(best_fit_h_p)
+
+df_women_Discus_Throw$pred  <- predict(best_fit_f_d)
+df_women_Hammer_Throw$pred  <- predict(best_fit_f_m)
+df_women_Javelin_Throw$pred <- predict(best_fit_f_j)
+df_women_Shot_Put$pred      <- predict(best_fit_f_p) # Supposé pour le 8ème graphique
+
+# On combine tout dans un seul gros dataframe
+df_total_lancers <- bind_rows(
+  mutate(df_men_Discus_Throw, Epreuve = "Disque", Sexe = "Hommes"),
+  mutate(df_men_Hammer_Throw, Epreuve = "Marteau", Sexe = "Hommes"),
+  mutate(df_men_Javelin_Throw, Epreuve = "Javelot", Sexe = "Hommes"),
+  mutate(df_men_Shot_Put, Epreuve = "Poids", Sexe = "Hommes"),
+  mutate(df_women_Discus_Throw, Epreuve = "Disque", Sexe = "Femmes"),
+  mutate(df_women_Hammer_Throw, Epreuve = "Marteau", Sexe = "Femmes"),
+  mutate(df_women_Javelin_Throw, Epreuve = "Javelot", Sexe = "Femmes"),
+  mutate(df_women_Shot_Put, Epreuve = "Poids", Sexe = "Femmes")
+)
+```
+
+```{r}
+p_lancer <- ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 4, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (lancers)",
+    x = "Âge",
+    y = "Performance (mètres)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_lancer.png", plot = p_lancer, width = 12, height = 9)
+```
+
+#### Pour les sauts
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_Long_Jump$pred   <- predict(best_fit_h_long)
+df_men_Triple_Jump$pred   <- predict(best_fit_h_triple)
+df_men_High_Jump$pred  <- predict(best_fit_h_haut)
+df_men_Pole_Vault$pred       <- predict(best_fit_h_per)
+
+df_women_Long_Jump$pred   <- predict(best_fit_f_long)
+df_women_Triple_Jump$pred   <- predict(best_fit_f_triple)
+df_women_High_Jump$pred  <- predict(best_fit_f_haut)
+df_women_Pole_Vault$pred       <- predict(best_fit_f_per)
+
+# On combine tout dans un seul gros dataframe
+df_total_sauts <- bind_rows(
+  mutate(df_men_Long_Jump, Epreuve = "Longueur", Sexe = "Hommes"),
+  mutate(df_men_Triple_Jump, Epreuve = "Triple saut", Sexe = "Hommes"),
+  mutate(df_men_High_Jump, Epreuve = "Hauteur", Sexe = "Hommes"),
+  mutate(df_men_Pole_Vault, Epreuve = "Perche", Sexe = "Hommes"),
+  mutate(df_women_Long_Jump, Epreuve = "Longueur", Sexe = "Femmes"),
+  mutate(df_women_Triple_Jump, Epreuve = "Triple saut", Sexe = "Femmes"),
+  mutate(df_women_High_Jump, Epreuve = "Hauteur", Sexe = "Femmes"),
+  mutate(df_women_Pole_Vault, Epreuve = "Perche", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_saut <- ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 4, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (sauts)",
+    x = "Âge",
+    y = "Performance (mètres)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_saut.png", plot = p_saut, width = 12, height = 9)
+```
+
+#### Pour les sprints
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_100_Metres$pred   <- predict(best_fit_h_100)
+df_men_200_Metres$pred   <- predict(best_fit_h_200)
+df_men_400_Metres$pred  <- predict(best_fit_h_400)
+
+df_women_100_Metres$pred   <- predict(best_fit_f_100)
+df_women_200_Metres$pred   <- predict(best_fit_f_200)
+df_women_400_Metres$pred  <- predict(best_fit_f_400)
+
+# On combine tout dans un seul gros dataframe
+df_total_sprints <- bind_rows(
+  mutate(df_men_100_Metres, Epreuve = "100m", Sexe = "Hommes"),
+  mutate(df_men_200_Metres, Epreuve = "200m", Sexe = "Hommes"),
+  mutate(df_men_400_Metres, Epreuve = "400m", Sexe = "Hommes"),
+  mutate(df_women_100_Metres, Epreuve = "100m", Sexe = "Femmes"),
+  mutate(df_women_200_Metres, Epreuve = "200m", Sexe = "Femmes"),
+  mutate(df_women_400_Metres, Epreuve = "400m", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_sprint <- ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 3, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (sprints)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_sprint.png", plot = p_sprint, width = 12, height = 9)
+```
+
+#### Pour les haies
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_110_Metres_Hurdles$pred   <- predict(best_fit_h_110h)
+df_men_400_Metres_Hurdles$pred  <- predict(best_fit_h_400h)
+
+df_women_100_Metres_Hurdles$pred   <- predict(best_fit_f_100h)
+df_women_400_Metres_Hurdles$pred  <- predict(best_fit_f_400h)
+
+# On combine tout dans un seul gros dataframe
+df_total_haies <- bind_rows(
+  mutate(df_men_110_Metres_Hurdles, Epreuve = "110m haies", Sexe = "Hommes"),
+  mutate(df_men_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Hommes"),
+  mutate(df_women_100_Metres_Hurdles, Epreuve = "100m haies", Sexe = "Femmes"),
+  mutate(df_women_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_haies <- ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (haies)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_haies.png", plot = p_haies, width = 12, height = 9)
+```
+
+#### Pour les épreuves combinées
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_Decathlon$pred   <- predict(best_fit_h_deca)
+
+df_women_Heptathlon$pred   <- predict(best_fit_f_hep)
+
+# On combine tout dans un seul gros dataframe
+df_total_epreuves_combinees <- bind_rows(
+  mutate(df_men_Decathlon, Epreuve = "Décathlon", Sexe = "Hommes"),
+  mutate(df_women_Heptathlon, Epreuve = "Heptathlon", Sexe = "Femmes"),
+)
+```
+
+
+```{r}
+p_epreuves_combinees <- ggplot(df_total_epreuves_combinees, aes(x = Age, y = meilleure_perf)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 4, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (épreuves combinées)",
+    x = "Âge",
+    y = "Performance (points)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_epreuves_combinees.png", plot = p_epreuves_combinees, width = 12, height = 9)
+```
+
+
+#### Pour le demi-fond
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_800_Metres$pred <- predict(best_fit_h_800)
+df_men_1500_Metres$pred <- predict(best_fit_h_1500)
+df_men_3000_Metres_Steeplechase$pred  <- predict(best_fit_h_3000s)
+
+df_women_800_Metres$pred <- predict(best_fit_f_800)
+df_women_1500_Metres$pred <- predict(best_fit_f_1500)
+df_women_3000_Metres_Steeplechase$pred  <- predict(best_fit_f_3000s)
+
+# On combine tout dans un seul gros dataframe
+df_total_demi_fond <- bind_rows(
+  mutate(df_men_800_Metres, Epreuve = "800m", Sexe = "Hommes"),
+  mutate(df_men_1500_Metres, Epreuve = "1500m", Sexe = "Hommes"),
+  mutate(df_men_3000_Metres_Steeplechase, Epreuve = "3000m steeple", Sexe = "Hommes"),
+  mutate(df_women_800_Metres, Epreuve = "800m", Sexe = "Femmes"),
+  mutate(df_women_1500_Metres, Epreuve = "1500m", Sexe = "Femmes"),
+  mutate(df_women_3000_Metres_Steeplechase, Epreuve = "3000m steeple", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_demi_fond <- ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 3, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (demi-fond)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_demi_fond.png", plot = p_demi_fond, width = 12, height = 9)
+```
+
+#### Pour le 5000/10000
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_5000_Metres$pred <- predict(best_fit_h_5000)
+`df_men_10,000_Metres`$pred <- predict(best_fit_h_10000)
+
+df_women_5000_Metres$pred <- predict(best_fit_f_5000)
+`df_women_10,000_Metres`$pred <- predict(best_fit_f_10000)
+
+# On combine tout dans un seul gros dataframe
+df_total_5000_10000 <- bind_rows(
+  mutate(df_men_5000_Metres, Epreuve = "5000m", Sexe = "Hommes"),
+  mutate(`df_men_10,000_Metres`, Epreuve = "10000m", Sexe = "Hommes"),
+  mutate(df_women_5000_Metres, Epreuve = "5000m", Sexe = "Femmes"),
+  mutate(`df_women_10,000_Metres`, Epreuve = "10000m", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_5000_10000 <- ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (5000m-10000m)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_5000_10000.png", plot = p_5000_10000, width = 12, height = 9)
+```
+
+#### Pour le marathon
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_Marathon$pred <- predict(best_fit_h_mara)
+
+df_women_Marathon$pred <- predict(best_fit_f_mara)
+
+# On combine tout dans un seul gros dataframe
+df_total_marathon <- bind_rows(
+  mutate(df_men_Marathon, Epreuve = "Marathon", Sexe = "Hommes"),
+  mutate(df_women_Marathon, Epreuve = "Marathon", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_marathon <- ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (marathon)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_marathon.png", plot = p_marathon, width = 12, height = 9)
+```
+
+#### Pour la marche
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_20_Kilometres_Race_Walk$pred <- predict(best_fit_h_marc)
+
+df_women_20_Kilometres_Race_Walk$pred <- predict(best_fit_f_marc)
+
+# On combine tout dans un seul gros dataframe
+df_total_marche <- bind_rows(
+  mutate(df_men_20_Kilometres_Race_Walk, Epreuve = "Marche", Sexe = "Hommes"),
+  mutate(df_women_20_Kilometres_Race_Walk, Epreuve = "Marche", Sexe = "Femmes")
+)
+```
+
+
+```{r}
+p_marche <- ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle : Détail par discipline (marche)",
+    x = "Âge",
+    y = "Performance (km/h)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/ajustement_marche.png", plot = p_marche, width = 12, height = 9)
+```
+
+
 
 

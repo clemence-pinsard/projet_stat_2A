@@ -175,10 +175,22 @@ Une limite méthodologique inhérente à la base de données doit être soulign�
 
 L'analyse repose sur un ensemble de variables structurées pour répondre à la problématique de l'évolution de la performance :
 
+<<<<<<< HEAD
 - **Age_Pic_Obs :** L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale.
 - **Sex :** Pour comparer les performances entre les femmes et les hommes.
 - **Famille :** Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
 - **Discipline :** Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
+=======
+```{=tex}
+\begin{description}
+    \item[Age\_Pic\_Obs :] L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale.
+    \item[Sex :] Pour comparer les performances entre les femmes et les hommes
+    \item[Famille :] Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
+    \item[Discipline :] Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
+    \item[meilleure\_perf\_km\_par\_h :] Conversion de la performance en kilomètre par heure afin d'avoir des valeurs positives à maximiser dans nos modèles
+\end{description}
+```
+>>>>>>> 6a468e714207fe49701505da3b2a5dc4d343762a
 
 \newpage
 
@@ -341,11 +353,55 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
 
+#### Adaptation du modèle IMAP à nos données {.unnumbered}
+
+Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour 
+des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ. 
+Dans ce cadre, les six paramètres du modèle --- $\alpha_0$, $\alpha_r$, 
+$\beta_0$, $N_\infty$, $\beta_r$ et $t_d$ --- sont tous identifiables car 
+la courbe observée présente à la fois une phase de croissance complète, 
+un pic prononcé et une phase de déclin étendue.
+
+Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte, 
+de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette 
+troncature crée un problème d'**identifiabilité** : plusieurs paramètres 
+deviennent colinéaires sur cette plage d'âges, rendant la matrice de gradient 
+singulière et empêchant la convergence de l'algorithme.
+
+Deux ajustements ont été nécessaires. Premièrement, les paramètres $\beta_0$ 
+et $N_\infty$ n'apparaissant que sous forme de produit $\beta_0 N_\infty$ 
+dans la formule, ils ont été fusionnés en un unique paramètre d'amplitude 
+$A = \beta_0 N_\infty$, ramenant le nombre de paramètres libres à quatre : 
+$A$, $\alpha_0$, $\alpha_r$ et $\beta_r$.
+
+Deuxièmement, le paramètre $t_d$, qui représente dans le modèle original 
+l'espérance de vie de l'athlète, ne peut pas être estimé de façon fiable 
+sur des données tronquées à 40 ans : la phase de déclin terminal est trop 
+peu visible pour contraindre ce paramètre. Nous avons donc fixé $t_d$ à 
+une valeur légèrement supérieure à l'âge maximal observé dans chaque groupe 
+(discipline $\times$ sexe), en testant trois valeurs --- $\max(\text{Age}) + 5$, 
+$\max(\text{Age}) + 10$ et $\max(\text{Age}) + 15$ --- et en retenant celle 
+qui minimise le RMSE. Cette approche garantit que le terme de déclin est 
+suffisamment visible dans la fenêtre d'observation pour que le modèle 
+soit identifiable, tout en restant cohérente avec l'interprétation biologique 
+de $t_d$ comme horizon de déclin accéléré.
+
+Il convient de noter que cette adaptation modifie partiellement 
+l'interprétation des paramètres par rapport au modèle original de Berthelot 
+et al. : $t_d$ ne représente plus l'âge de décès biologique mais un 
+paramètre de calibration lié à l'horizon temporel des données. 
+Les résultats doivent donc être interprétés avec cette nuance à l'esprit, 
+et la comparaison avec le modèle de Moore reste l'objectif central.
+
 ### Méthode générale
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
 
 On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+
+![Top 32](donnees_reelles_top32/brut_10_000_Metres_men.png){width=80%}
+![Meilleure par age](donnees_reelles_meilleure_par_age/brut_10_000_Metres_men.png){width=80%}
+
 
 #### Descente de gradients {.unnumbered}
 
@@ -374,6 +430,17 @@ La descente de gradient est une méthode permettant d'obtenir un optimum local q
 Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés 1 000 modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
 
 ##### L'aléatoire dans le modèle de Moore
+
+## Initialisation des paramètres du modèle
+
+Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
+
+* **$a$** est tiré uniformément entre 0,9 et 1,2 fois la valeur de performance maximale observée, reflétant le fait que le plateau asymptotique du terme montant est légèrement supérieur au pic ;
+* **$b$** est tiré uniformément autour du rapport $\frac{\text{pente initiale}}{a}$, conformément à l'approximation $f'(0) \approx ab$ valable lorsque $c \ll a$ ;
+* **$c$** est tiré uniformément dans un voisinage étroit de $a/100$, traduisant l'hypothèse que le terme descendant est une petite perturbation devant le terme montant ;
+* **$d$** est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points situés dans la phase descendante de la courbe.
+
+Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
 ##### L'aléatoire dans le modèle IMAP
 
@@ -427,6 +494,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 # Annexes {.unnumbered}
 
+<<<<<<< HEAD
 ## Compléments de l'analyse de distribution
 
 Cette section regroupe les graphiques de diagnostic complémentaires permettant de valider les choix statistiques effectués dans le corps du rapport.
@@ -452,3 +520,8 @@ Les graphiques Quantile-Quantile (QQ-plots) permettent de visualiser l'écart en
 
 
 
+=======
+## Annexe : Modèles de Moore
+
+![Lancers](annexes/ajustement_lancer.png){width=80%}
+>>>>>>> 6a468e714207fe49701505da3b2a5dc4d343762a
