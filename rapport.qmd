@@ -215,6 +215,46 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
 
+#### Adaptation du modèle IMAP à nos données {.unnumbered}
+
+Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour 
+des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ. 
+Dans ce cadre, les six paramètres du modèle --- $\alpha_0$, $\alpha_r$, 
+$\beta_0$, $N_\infty$, $\beta_r$ et $t_d$ --- sont tous identifiables car 
+la courbe observée présente à la fois une phase de croissance complète, 
+un pic prononcé et une phase de déclin étendue.
+
+Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte, 
+de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette 
+troncature crée un problème d'**identifiabilité** : plusieurs paramètres 
+deviennent colinéaires sur cette plage d'âges, rendant la matrice de gradient 
+singulière et empêchant la convergence de l'algorithme.
+
+Deux ajustements ont été nécessaires. Premièrement, les paramètres $\beta_0$ 
+et $N_\infty$ n'apparaissant que sous forme de produit $\beta_0 N_\infty$ 
+dans la formule, ils ont été fusionnés en un unique paramètre d'amplitude 
+$A = \beta_0 N_\infty$, ramenant le nombre de paramètres libres à quatre : 
+$A$, $\alpha_0$, $\alpha_r$ et $\beta_r$.
+
+Deuxièmement, le paramètre $t_d$, qui représente dans le modèle original 
+l'espérance de vie de l'athlète, ne peut pas être estimé de façon fiable 
+sur des données tronquées à 40 ans : la phase de déclin terminal est trop 
+peu visible pour contraindre ce paramètre. Nous avons donc fixé $t_d$ à 
+une valeur légèrement supérieure à l'âge maximal observé dans chaque groupe 
+(discipline $\times$ sexe), en testant trois valeurs --- $\max(\text{Age}) + 5$, 
+$\max(\text{Age}) + 10$ et $\max(\text{Age}) + 15$ --- et en retenant celle 
+qui minimise le RMSE. Cette approche garantit que le terme de déclin est 
+suffisamment visible dans la fenêtre d'observation pour que le modèle 
+soit identifiable, tout en restant cohérente avec l'interprétation biologique 
+de $t_d$ comme horizon de déclin accéléré.
+
+Il convient de noter que cette adaptation modifie partiellement 
+l'interprétation des paramètres par rapport au modèle original de Berthelot 
+et al. : $t_d$ ne représente plus l'âge de décès biologique mais un 
+paramètre de calibration lié à l'horizon temporel des données. 
+Les résultats doivent donc être interprétés avec cette nuance à l'esprit, 
+et la comparaison avec le modèle de Moore reste l'objectif central.
+
 ### Méthode générale
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
