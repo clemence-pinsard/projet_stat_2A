@@ -1,0 +1,613 @@
+---
+title: "IMAP - Toutes disciplines"
+output: html_document
+date: "2026-03-14"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(minpack.lm)
+```
+
+# IMAP — Toutes disciplines (automatisé)
+
+## Paramètres globaux
+
+```{r parametres}
+N_ITER_PAR_TD <- 500
+
+# Offsets testés pour td : max(Age) + offset
+TD_OFFSETS <- seq(10, 45, by = 5)  # +10, +15, +20, +25, +30, +35, +40, +45
+
+lower_imap <- c(A = -100000, alpha0 = 0.001, alphar = 0.001, betar = -5)
+upper_imap <- c(A = -0.001,  alpha0 = 5,     alphar = 5,     betar = -0.001)
+```
+
+## Fonctions utilitaires
+
+```{r fonctions}
+# Initialisation proportionnelle à td (logique de Berthelot adaptée)
+generer_parametres_IMAP <- function(td) {
+  list(
+    A      = -runif(1, 0.0020, 0.0030) * td,
+    alpha0 =  runif(1, 0.00075, 0.00325) * td,
+    alphar =  runif(1, 0.00225, 0.00325) * td,
+    betar  = -runif(1, 0.0005,  0.0015)  * td
+  )
+}
+
+# Formule IMAP (td fixé)
+imap_pred <- function(Age, A, alpha0, alphar, betar, td) {
+  A * exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) *
+    (1 - exp(betar * (Age - td)))
+}
+
+# Calcul numérique du t_pic
+calc_t_pic_imap <- function(params, td) {
+  tryCatch(
+    optimize(
+      function(t) -imap_pred(t,
+                              A      = params["A"],
+                              alpha0 = params["alpha0"],
+                              alphar = params["alphar"],
+                              betar  = params["betar"],
+                              td     = td),
+      interval = c(10, td - 0.1)
+    )$minimum,
+    error = function(e) NA_real_
+  )
+}
+```
+
+## Disciplines et récupération des données
+
+```{r disciplines}
+# Noms des disciplines tels qu'ils apparaissent dans les df_sex_discipline
+# (créés par preparation des donnees pour les modeles.R)
+# Courses : variable meilleure_perf_km_par_h
+# Terrain : variable meilleure_perf
+
+disciplines_courses <- c(
+  "100_Metres", "200_Metres", "400_Metres",
+  "800_Metres", "1500_Metres", "5000_Metres",
+  "10,000_Metres", "3000_Metres_Steeplechase",
+  "Marathon", "110_Metres_Hurdles", "100_Metres_Hurdles",
+  "400_Metres_Hurdles", "20_Kilometres_Race_Walk"
+)
+
+disciplines_terrain <- c(
+  "Discus_Throw", "Hammer_Throw", "Javelin_Throw", "Shot_Put",
+  "Long_Jump", "Triple_Jump", "High_Jump", "Pole_Vault",
+  "Decathlon", "Heptathlon"
+)
+
+toutes_disciplines <- unique(c(disciplines_courses, disciplines_terrain))
+
+# Récupère le df et la variable de performance pour un couple (sex, disc)
+get_df_and_var <- function(sex, disc) {
+  df_name <- paste0("df_", sex, "_", disc)
+  if (!exists(df_name, envir = .GlobalEnv)) return(NULL)
+  df <- get(df_name, envir = .GlobalEnv)
+  perf_var <- if ("meilleure_perf_km_par_h" %in% names(df)) {
+    "meilleure_perf_km_par_h"
+  } else {
+    "meilleure_perf"
+  }
+  # Nettoyage minimal
+  df <- df %>%
+    filter(!is.na(Age), !is.na(.data[[perf_var]]),
+           is.finite(.data[[perf_var]]),
+           .data[[perf_var]] > 0)
+  if (nrow(df) < 5) return(NULL)
+  list(df = df, perf_var = perf_var)
+}
+```
+
+## Estimation IMAP — Boucle principale
+
+```{r estimation_imap, warning=FALSE, message=FALSE}
+sexes <- c("men", "women")
+resultats_imap <- data.frame()
+
+for (sex in sexes) {
+  for (disc in toutes_disciplines) {
+
+    # Disciplines mono-sexe
+    if (sex == "men"   && disc == "Heptathlon")          next
+    if (sex == "men"   && disc == "100_Metres_Hurdles")  next
+    if (sex == "women" && disc == "Decathlon")           next
+    if (sex == "women" && disc == "110_Metres_Hurdles")  next
+
+    info <- get_df_and_var(sex, disc)
+    if (is.null(info)) next
+
+    df_disc  <- info$df
+    perf_var <- info$perf_var
+    max_age  <- max(df_disc$Age)
+
+    best_fit_global <- NULL
+    min_rmse_global <- Inf
+    best_td         <- NA
+
+    # --- Boucle sur les valeurs de td ---
+    for (offset in TD_OFFSETS) {
+      td_val <- max_age + offset
+
+      formule <- as.formula(paste0(
+        perf_var,
+        " ~ A * exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) * (1 - exp(betar * (Age - ",
+        td_val, ")))"
+      ))
+
+      best_fit_td <- NULL
+      min_rmse_td <- Inf
+
+      for (i in 1:N_ITER_PAR_TD) {
+        result <- tryCatch({
+          nlsLM(
+            formule,
+            data    = df_disc,
+            start   = generer_parametres_IMAP(td_val),
+            lower   = lower_imap,
+            upper   = upper_imap,
+            control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+          )
+        }, error = function(e) NULL)
+
+        if (!is.null(result)) {
+          rmse <- summary(result)$sigma
+          if (rmse < min_rmse_td) {
+            min_rmse_td <- rmse
+            best_fit_td <- result
+          }
+        }
+      }
+
+      # On retient ce td s'il améliore le RMSE global
+      if (!is.null(best_fit_td) && min_rmse_td < min_rmse_global) {
+        min_rmse_global <- min_rmse_td
+        best_fit_global <- best_fit_td
+        best_td         <- td_val
+      }
+    }
+
+    # --- Stockage ---
+    if (!is.null(best_fit_global)) {
+      params <- coef(best_fit_global)
+      t_pic  <- calc_t_pic_imap(params, td = best_td)
+
+      resultats_imap <- bind_rows(resultats_imap, data.frame(
+        Sex        = sex,
+        discipline = disc,
+        A          = params["A"],
+        alpha0     = params["alpha0"],
+        alphar     = params["alphar"],
+        betar      = params["betar"],
+        td         = best_td,
+        t_pic      = t_pic,
+        RMSE       = min_rmse_global,
+        AIC        = AIC(best_fit_global),
+        BIC        = BIC(best_fit_global),
+        converge   = TRUE
+      ))
+
+      assign(paste0("best_fit_imap_", sex, "_", gsub(",", "", disc)),
+             best_fit_global, envir = .GlobalEnv)
+      assign(paste0("td_imap_", sex, "_", gsub(",", "", disc)),
+             best_td, envir = .GlobalEnv)
+
+    } else {
+      resultats_imap <- bind_rows(resultats_imap, data.frame(
+        Sex = sex, discipline = disc,
+        A = NA, alpha0 = NA, alphar = NA, betar = NA,
+        td = NA, t_pic = NA, RMSE = NA, AIC = NA, BIC = NA,
+        converge = FALSE
+      ))
+    }
+
+    cat("Traité :", sex, "-", disc,
+        "| Converge :", !is.null(best_fit_global),
+        if (!is.null(best_fit_global)) paste0(
+          " | RMSE : ", round(min_rmse_global, 4),
+          " | td : ", best_td,
+          " | t_pic : ", round(t_pic, 1)
+        ) else "",
+        "\n")
+  }
+}
+```
+
+## Résultats globaux
+
+```{r resultats_global}
+cat("=== Tableau récapitulatif IMAP ===\n")
+print(resultats_imap %>%
+  select(Sex, discipline, t_pic, td, RMSE, AIC, BIC, converge) %>%
+  arrange(Sex, discipline))
+
+non_conv <- resultats_imap %>% filter(!converge)
+if (nrow(non_conv) > 0) {
+  cat("\nDisciplines sans convergence :\n")
+  print(non_conv %>% select(Sex, discipline))
+} else {
+  cat("\nToutes les disciplines ont convergé.\n")
+}
+```
+
+## Visualisations
+
+```{r helper_graph}
+# Fonction générique : graphique par discipline pour une famille
+plot_famille_imap <- function(disciplines_h, disciplines_f,
+                               titre, ylabel, ncol_graph = 3, filename) {
+  rows <- list()
+
+  for (sex in c("men", "women")) {
+    discs <- if (sex == "men") disciplines_h else disciplines_f
+    for (disc in discs) {
+      fit_name <- paste0("best_fit_imap_", sex, "_", gsub(",", "", disc))
+      td_name  <- paste0("td_imap_",       sex, "_", gsub(",", "", disc))
+      if (!exists(fit_name, envir = .GlobalEnv)) next
+
+      info <- get_df_and_var(sex, disc)
+      if (is.null(info)) next
+
+      df   <- info$df
+      pvar <- info$perf_var
+      fit  <- get(fit_name, envir = .GlobalEnv)
+
+      df$pred    <- predict(fit)
+      df$perf_   <- df[[pvar]]
+      df$Epreuve <- gsub("_", " ", disc)
+      df$Sexe    <- ifelse(sex == "men", "Hommes", "Femmes")
+      rows[[length(rows) + 1]] <- df %>% select(Age, perf_, pred, Epreuve, Sexe)
+    }
+  }
+
+  if (length(rows) == 0) {
+    message("Aucune donnée pour : ", titre)
+    return(invisible(NULL))
+  }
+
+  df_total <- bind_rows(rows)
+
+  p <- ggplot(df_total, aes(x = Age, y = perf_)) +
+    geom_point(alpha = 0.6, color = "darkblue", size = 1.5) +
+    geom_line(aes(y = pred), color = "red", size = 1) +
+    facet_wrap(~ Sexe + Epreuve, ncol = ncol_graph, scales = "free_y") +
+    theme_bw() +
+    labs(title = titre, x = "Âge", y = ylabel) +
+    theme(
+      strip.background = element_rect(fill = "gray90"),
+      strip.text       = element_text(face = "bold"),
+      plot.title       = element_text(face = "bold", size = 13)
+    )
+
+  print(p)
+  ggsave(filename, plot = p, width = 12, height = 9, dpi = 300)
+  invisible(p)
+}
+```
+
+### Lancers
+
+```{r graph_lancers}
+plot_famille_imap(
+  disciplines_h = c("Discus_Throw", "Hammer_Throw", "Javelin_Throw", "Shot_Put"),
+  disciplines_f = c("Discus_Throw", "Hammer_Throw", "Javelin_Throw", "Shot_Put"),
+  titre      = "IMAP : Lancers",
+  ylabel     = "Performance (m)",
+  ncol_graph = 4,
+  filename   = "annexes/imap_lancers.png"
+)
+```
+
+### SautsShow in New Window
+Traité : men - 100_Metres | Converge : TRUE  | RMSE : 0.4427 | td : 85 | t_pic : 29.2 
+Traité : men - 200_Metres | Converge : TRUE  | RMSE : 0.6827 | td : 84 | t_pic : 25.3 
+Traité : men - 400_Metres | Converge : TRUE  | RMSE : 0.3955 | td : 84 | t_pic : 26.6 
+Traité : men - 800_Metres | Converge : TRUE  | RMSE : 0.3423 | td : 81 | t_pic : 25.2 
+Traité : men - 1500_Metres | Converge : TRUE  | RMSE : 0.238 | td : 84 | t_pic : 27.7 
+Traité : men - 5000_Metres | Converge : TRUE  | RMSE : 0.1757 | td : 85 | t_pic : 25.4 
+Traité : men - 10,000_Metres | Converge : TRUE  | RMSE : 0.2765 | td : 84 | t_pic : 24.9 
+Traité : men - 3000_Metres_Steeplechase | Converge : TRUE  | RMSE : 0.2336 | td : 58 | t_pic : 26.8 
+Traité : men - Marathon | Converge : TRUE  | RMSE : 0.1007 | td : 65 | t_pic : 29.5 
+Traité : men - 110_Metres_Hurdles | Converge : TRUE  | RMSE : 0.3633 | td : 83 | t_pic : 26.9 
+Traité : men - 400_Metres_Hurdles | Converge : TRUE  | RMSE : 0.0936 | td : 83 | t_pic : 27 
+Traité : men - 20_Kilometres_Race_Walk | Converge : TRUE  | RMSE : 0.0018 | td : 85 | t_pic : 28.2 
+Traité : men - Discus_Throw | Converge : TRUE  | RMSE : 1.6634 | td : 85 | t_pic : 30 
+Traité : men - Hammer_Throw | Converge : TRUE  | RMSE : 1.3191 | td : 85 | t_pic : 28.9 
+Traité : men - Javelin_Throw | Converge : TRUE  | RMSE : 2.8747 | td : 85 | t_pic : 26.8 
+Traité : men - Shot_Put | Converge : TRUE  | RMSE : 0.4194 | td : 84 | t_pic : 28.7 
+Traité : men - Long_Jump | Converge : TRUE  | RMSE : 0.1778 | td : 83 | t_pic : 26.3 
+Traité : men - Triple_Jump | Converge : TRUE  | RMSE : 0.1904 | td : 85 | t_pic : 28 
+Traité : men - High_Jump | Converge : TRUE  | RMSE : 0.0395 | td : 85 | t_pic : 26.3 
+Traité : men - Pole_Vault | Converge : TRUE  | RMSE : 0.0994 | td : 85 | t_pic : 28.4 
+Traité : men - Decathlon | Converge : TRUE  | RMSE : 134.6386 | td : 83 | t_pic : 26.6 
+Traité : women - 100_Metres | Converge : TRUE  | RMSE : 0.2572 | td : 59 | t_pic : 28.2 
+Traité : women - 200_Metres | Converge : TRUE  | RMSE : 0.4273 | td : 59 | t_pic : 26.9 
+Traité : women - 400_Metres | Converge : TRUE  | RMSE : 0.4132 | td : 59 | t_pic : 26.8 
+Traité : women - 800_Metres | Converge : TRUE  | RMSE : 0.4474 | td : 85 | t_pic : 26.4 
+Traité : women - 1500_Metres | Converge : TRUE  | RMSE : 0.3455 | td : 85 | t_pic : 27.1 
+Traité : women - 5000_Metres | Converge : TRUE  | RMSE : 0.2338 | td : 84 | t_pic : 25.8 
+Traité : women - 10,000_Metres | Converge : TRUE  | RMSE : 0.5072 | td : 84 | t_pic : 28.3 
+Traité : women - 3000_Metres_Steeplechase | Converge : TRUE  | RMSE : 0.4117 | td : 82 | t_pic : 24.9 
+Traité : women - Marathon | Converge : TRUE  | RMSE : 0.1962 | td : 85 | t_pic : 29.8 
+Traité : women - 100_Metres_Hurdles | Converge : TRUE  | RMSE : 0.4279 | td : 84 | t_pic : 28 
+Traité : women - 400_Metres_Hurdles | Converge : TRUE  | RMSE : 0.063 | td : 51 | t_pic : 26.4 
+Traité : women - 20_Kilometres_Race_Walk | Converge : TRUE  | RMSE : 0.0014 | td : 85 | t_pic : 27.3 
+Traité : women - Discus_Throw | Converge : TRUE  | RMSE : 1.7145 | td : 80 | t_pic : 28.3 
+Traité : women - Hammer_Throw | Converge : TRUE  | RMSE : 1.1739 | td : 60 | t_pic : 27.2 
+Traité : women - Javelin_Throw | Converge : TRUE  | RMSE : 1.5154 | td : 85 | t_pic : 27.6 
+Traité : women - Shot_Put | Converge : TRUE  | RMSE : 0.2265 | td : 85 | t_pic : 27.2 
+Traité : women - Long_Jump | Converge : TRUE  | RMSE : 0.1501 | td : 64 | t_pic : 27 
+Traité : women - Triple_Jump | Converge : TRUE  | RMSE : 0.1976 | td : 85 | t_pic : 28.2 
+Traité : women - High_Jump | Converge : TRUE  | RMSE : 0.0201 | td : 85 | t_pic : 27.8 
+Traité : women - Pole_Vault | Converge : TRUE  | RMSE : 0.0817 | td : 85 | t_pic : 28.7 
+Traité : women - Heptathlon | Converge : TRUE  | RMSE : 138.9833 | td : 83 | t_pic : 25.3 
+Show in New Window
+=== Tableau récapitulatif IMAP ===
+         Sex               discipline    t_pic td         RMSE         AIC
+A...1    men            10,000_Metres 24.89321 84 2.765333e-01   11.747389
+A...2    men               100_Metres 29.23890 85 4.427279e-01   35.848098
+A...3    men       110_Metres_Hurdles 26.92873 83 3.633366e-01   24.305326
+A...4    men              1500_Metres 27.73266 84 2.379793e-01    4.825893
+A...5    men               200_Metres 25.32489 84 6.826801e-01   55.410341
+A...6    men  20_Kilometres_Race_Walk 28.16205 85 1.793209e-03 -229.806602
+A...7    men 3000_Metres_Steeplechase 26.83615 58 2.335546e-01    3.977281
+A...8    men               400_Metres 26.63056 84 3.954866e-01   29.206693
+A...9    men       400_Metres_Hurdles 27.04105 83 9.364840e-02  -38.060665
+A...10   men              5000_Metres 25.42791 85 1.757427e-01   -9.725906
+A...11   men               800_Metres 25.16434 81 3.422532e-01   20.125345
+A...12   men                Decathlon 26.64209 83 1.346386e+02  271.066896
+A...13   men             Discus_Throw 30.02921 85 1.663357e+00  102.029977
+A...14   men             Hammer_Throw 28.93197 85 1.319150e+00   90.437470
+A...15   men                High_Jump 26.25302 85 3.953982e-02  -84.934255
+A...16   men            Javelin_Throw 26.83572 85 2.874735e+00  129.386121
+A...17   men                Long_Jump 26.28208 83 1.778001e-01   -8.569496
+A...18   men                 Marathon 29.47914 65 1.006509e-01  -33.009745
+A...19   men               Pole_Vault 28.37501 85 9.936847e-02  -38.857931
+A...20   men                 Shot_Put 28.74750 84 4.193867e-01   32.023158
+A...21   men              Triple_Jump 28.01685 85 1.903895e-01   -6.346063
+A...22 women            10,000_Metres 28.34132 84 5.071814e-01   39.648124
+A...23 women               100_Metres 28.21562 59 2.572109e-01    8.556105
+A...24 women       100_Metres_Hurdles 27.95536 84 4.279033e-01   32.988147
+A...25 women              1500_Metres 27.10936 85 3.455310e-01   23.454446
+A...26 women               200_Metres 26.89438 59 4.273011e-01   32.920550
+A...27 women  20_Kilometres_Race_Walk 27.31890 85 1.396600e-03 -252.097651
+A...28 women 3000_Metres_Steeplechase 24.85996 82 4.116523e-01   28.965186
+A...29 women               400_Metres 26.80467 59 4.132232e-01   31.312493
+A...30 women       400_Metres_Hurdles 26.39735 51 6.299961e-02  -50.956397
+A...31 women              5000_Metres 25.75295 84 2.337591e-01    3.967053
+A...32 women               800_Metres 26.35194 85 4.474151e-01   36.374672
+A...33 women             Discus_Throw 28.26495 80 1.714497e+00  103.544065
+A...34 women             Hammer_Throw 27.19520 60 1.173941e+00   84.606416
+A...35 women               Heptathlon 25.33108 83 1.389833e+02  297.857175
+A...36 women                High_Jump 27.80766 85 2.011016e-02 -118.738422
+A...37 women            Javelin_Throw 27.58442 85 1.515385e+00   97.371558
+A...38 women                Long_Jump 26.98332 64 1.500626e-01  -17.308401
+A...39 women                 Marathon 29.83970 85 1.962021e-01   -4.039169
+A...40 women               Pole_Vault 28.65504 85 8.172332e-02  -48.632699
+A...41 women                 Shot_Put 27.17341 85 2.264971e-01    2.336941
+A...42 women              Triple_Jump 28.17272 85 1.976297e-01   -4.479929
+                BIC converge
+A...1    17.4248601     TRUE
+A...2    41.9424774     TRUE
+A...3    29.9827968     TRUE
+A...4    10.7161619     TRUE
+A...5    61.3006106     TRUE
+A...6  -223.9163333     TRUE
+A...7     9.6547521     TRUE
+A...8    35.0969621     TRUE
+A...9   -32.3831942     TRUE
+A...10   -3.8356367     TRUE
+A...11   25.3479568     TRUE
+A...12  276.2895079     TRUE
+A...13  108.1243565     TRUE
+A...14   96.5318488     TRUE
+A...15  -78.8398758     TRUE
+A...16  135.4805005     TRUE
+A...17   -2.8920253     TRUE
+A...18  -27.5545326     TRUE
+A...19  -32.7635517     TRUE
+A...20   37.9134272     TRUE
+A...21   -0.2516839     TRUE
+A...22   45.3255947     TRUE
+A...23   14.4463738     TRUE
+A...24   38.8784162     TRUE
+A...25   29.5488247     TRUE
+A...26   38.8108195     TRUE
+A...27 -246.0032723     TRUE
+A...28   34.4203980     TRUE
+A...29   37.2027624     TRUE
+A...30  -45.7337848     TRUE
+A...31    9.8573222     TRUE
+A...32   42.4690514     TRUE
+A...33  109.6384444     TRUE
+A...34   90.7007951     TRUE
+A...35  303.5346463     TRUE
+A...36 -112.6440430     TRUE
+A...37  103.4659368     TRUE
+A...38  -11.4181316     TRUE
+A...39    1.6383020     TRUE
+A...40  -42.5383202     TRUE
+A...41    8.4313201     TRUE
+A...42    1.6144504     TRUE
+
+Toutes les disciplines ont convergé.
+
+```{r graph_sauts}
+plot_famille_imap(
+  disciplines_h = c("Long_Jump", "Triple_Jump", "High_Jump", "Pole_Vault"),
+  disciplines_f = c("Long_Jump", "Triple_Jump", "High_Jump", "Pole_Vault"),
+  titre      = "IMAP : Sauts",
+  ylabel     = "Performance (m)",
+  ncol_graph = 4,
+  filename   = "annexes/imap_sauts.png"
+)
+```
+
+### Sprints
+
+```{r graph_sprints}
+plot_famille_imap(
+  disciplines_h = c("100_Metres", "200_Metres", "400_Metres"),
+  disciplines_f = c("100_Metres", "200_Metres", "400_Metres"),
+  titre      = "IMAP : Sprints",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 3,
+  filename   = "annexes/imap_sprints.png"
+)
+```
+
+### Haies
+
+```{r graph_haies}
+plot_famille_imap(
+  disciplines_h = c("110_Metres_Hurdles", "400_Metres_Hurdles"),
+  disciplines_f = c("100_Metres_Hurdles", "400_Metres_Hurdles"),
+  titre      = "IMAP : Haies",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 2,
+  filename   = "annexes/imap_haies.png"
+)
+```
+
+### Demi-fond
+
+```{r graph_demi_fond}
+plot_famille_imap(
+  disciplines_h = c("800_Metres", "1500_Metres", "3000_Metres_Steeplechase"),
+  disciplines_f = c("800_Metres", "1500_Metres", "3000_Metres_Steeplechase"),
+  titre      = "IMAP : Demi-fond",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 3,
+  filename   = "annexes/imap_demi_fond.png"
+)
+```
+
+### 5000m — 10 000m
+
+```{r graph_fond}
+plot_famille_imap(
+  disciplines_h = c("5000_Metres", "10,000_Metres"),
+  disciplines_f = c("5000_Metres", "10,000_Metres"),
+  titre      = "IMAP : 5000m — 10 000m",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 2,
+  filename   = "annexes/imap_fond.png"
+)
+```
+
+### Marathon
+
+```{r graph_marathon}
+plot_famille_imap(
+  disciplines_h = c("Marathon"),
+  disciplines_f = c("Marathon"),
+  titre      = "IMAP : Marathon",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 2,
+  filename   = "annexes/imap_marathon.png"
+)
+```
+
+### Marche
+
+```{r graph_marche}
+plot_famille_imap(
+  disciplines_h = c("20_Kilometres_Race_Walk"),
+  disciplines_f = c("20_Kilometres_Race_Walk"),
+  titre      = "IMAP : Marche athlétique",
+  ylabel     = "Performance (km/h)",
+  ncol_graph = 2,
+  filename   = "annexes/imap_marche.png"
+)
+```
+
+### Épreuves combinées
+
+```{r graph_combinees}
+plot_famille_imap(
+  disciplines_h = c("Decathlon"),
+  disciplines_f = c("Heptathlon"),
+  titre      = "IMAP : Épreuves combinées",
+  ylabel     = "Performance (points)",
+  ncol_graph = 2,
+  filename   = "annexes/imap_combinees.png"
+)
+```
+
+## Tableau récapitulatif par discipline
+
+```{r tableau_discipline}
+resultats_imap %>%
+  select(Sex, discipline, t_pic, td, RMSE, AIC, BIC) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  arrange(Sex, discipline) %>%
+  print(n = 50)
+```
+```{r}
+resultats_imap %>%
+  select(Sex, discipline, t_pic, td, RMSE, AIC, BIC) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2))) %>%
+  arrange(Sex, discipline) %>%
+  head(50)
+```
+## Tableau récapitulatif par groupe de disciplines
+
+```{r tableau_groupe}
+# Correspondance discipline -> groupe
+groupes <- tibble(
+  discipline = toutes_disciplines,
+  Groupe = case_when(
+    discipline %in% c("100_Metres", "200_Metres", "400_Metres") ~ "Sprint",
+    discipline %in% c("110_Metres_Hurdles", "100_Metres_Hurdles", "400_Metres_Hurdles") ~ "Haies",
+    discipline %in% c("800_Metres", "1500_Metres", "3000_Metres_Steeplechase") ~ "Demi-fond",
+    discipline %in% c("5000_Metres", "10,000_Metres") ~ "Fond",
+    discipline == "Marathon" ~ "Marathon",
+    discipline == "20_Kilometres_Race_Walk" ~ "Marche",
+    discipline %in% c("Discus_Throw", "Hammer_Throw", "Javelin_Throw", "Shot_Put") ~ "Lancers",
+    discipline %in% c("Long_Jump", "Triple_Jump", "High_Jump", "Pole_Vault") ~ "Sauts",
+    discipline %in% c("Decathlon", "Heptathlon") ~ "Combinées",
+    TRUE ~ "Autre"
+  )
+)
+
+resultats_imap %>%
+  left_join(groupes, by = "discipline") %>%
+  filter(converge) %>%
+  group_by(Groupe, Sex) %>%
+  summarise(
+    N            = n(),
+    t_pic_moyen  = round(mean(t_pic, na.rm = TRUE), 1),
+    t_pic_min    = round(min(t_pic,  na.rm = TRUE), 1),
+    t_pic_max    = round(max(t_pic,  na.rm = TRUE), 1),
+    RMSE_moyen   = round(mean(RMSE,  na.rm = TRUE), 3),
+    .groups = "drop"
+  ) %>%
+  arrange(Groupe, Sex) %>%
+  print(n = 30)
+```
+```{r}
+# Paramètres et stats marathon
+for (sex in c("men", "women")) {
+  fit_name <- paste0("best_fit_imap_", sex, "_Marathon")
+  cat("\n---", sex, "Marathon ---\n")
+  fit <- get(fit_name)
+  print(coef(fit))
+  cat("RMSE :", round(summary(fit)$sigma, 4), "\n")
+  cat("AIC  :", round(AIC(fit), 2), "\n")
+  cat("BIC  :", round(BIC(fit), 2), "\n")
+  cat("td   :", get(paste0("td_imap_", sex, "_Marathon")), "\n")
+  cat("t_pic:", round(
+    resultats_imap %>% filter(Sex==sex, discipline=="Marathon") %>% pull(t_pic), 2
+  ), "\n")
+}
+
+
+```

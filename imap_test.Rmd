@@ -1,0 +1,99 @@
+---
+title: "imap (meilleur perf par age"
+output: html_document
+---
+d'abord test : 
+```{r}
+generer_parametres_IMAP <- function(td) {
+  list(
+    A      = -runif(1, 0.0020, 0.0030) * td,   
+    alpha0 =  runif(1, 0.00075, 0.00325) * td,
+    alphar =  runif(1, 0.00225, 0.00325) * td,
+    betar  = -runif(1, 0.0005, 0.0015) * td    
+  )
+}
+
+td_test <- max(df_men_Discus_Throw$Age) + 10
+
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ A *
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) *
+      (1 - exp(betar * (Age - td_test))),
+    data  = df_men_Discus_Throw,
+    start = generer_parametres_IMAP(td_test),
+    lower = c(A = -100000, alpha0 = 0.001, alphar = 0.001, betar = -5),
+    upper = c(A = -0.001,  alpha0 = 5,     alphar = 5,     betar = -0.001),
+    control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+  )
+  cat("OK\n"); print(coef(fit_test))
+  cat("RMSE :", summary(fit_test)$sigma, "\n")
+  plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, pch=16)
+  lines(df_men_Discus_Throw$Age, predict(fit_test), col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+
+
+
+
+```{r}
+generer_parametres_IMAP <- function(td) {
+  list(
+    A      = -runif(1, 0.0020, 0.0030) * td,   # A négatif
+    alpha0 =  runif(1, 0.00075, 0.00325) * td,
+    alphar =  runif(1, 0.00225, 0.00325) * td,
+    betar  = -runif(1, 0.0005, 0.0015) * td    # betar négatif
+  )
+}
+
+td_test <- max(df_men_Discus_Throw$Age) + 15
+
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ A *
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) *
+      (1 - exp(betar * (Age - td_test))),
+    data  = df_men_Discus_Throw,
+    start = generer_parametres_IMAP(td_test),
+    lower = c(A = -100000, alpha0 = 0.001, alphar = 0.001, betar = -5),
+    upper = c(A = -0.001,  alpha0 = 5,     alphar = 5,     betar = -0.001),
+    control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+  )
+  cat("OK\n"); print(coef(fit_test))
+  cat("RMSE :", summary(fit_test)$sigma, "\n")
+  plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, pch=16)
+  lines(df_men_Discus_Throw$Age, predict(fit_test), col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+```
+
+
+```{r}
+generer_parametres_IMAP <- function(td) {
+  list(
+    A      = -runif(1, 0.0020, 0.0030) * td,   # A négatif
+    alpha0 =  runif(1, 0.00075, 0.00325) * td,
+    alphar =  runif(1, 0.00225, 0.00325) * td,
+    betar  = -runif(1, 0.0005, 0.0015) * td    # betar négatif
+  )
+}
+
+td_test <- max(df_men_Discus_Throw$Age) + 45
+
+tryCatch({
+  fit_test <- nlsLM(
+    meilleure_perf ~ A *
+      exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) *
+      (1 - exp(betar * (Age - td_test))),
+    data  = df_men_Discus_Throw,
+    start = generer_parametres_IMAP(td_test),
+    lower = c(A = -100000, alpha0 = 0.001, alphar = 0.001, betar = -5),
+    upper = c(A = -0.001,  alpha0 = 5,     alphar = 5,     betar = -0.001),
+    control = nls.lm.control(maxiter = 1000, maxfev = 2000)
+  )
+  cat("OK\n"); print(coef(fit_test))
+  cat("RMSE :", summary(fit_test)$sigma, "\n")
+  plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, pch=16)
+  lines(df_men_Discus_Throw$Age, predict(fit_test), col="red", lwd=2)
+}, error = function(e) cat("Erreur :", conditionMessage(e), "\n"))
+
+```
