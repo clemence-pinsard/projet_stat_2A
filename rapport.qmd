@@ -334,9 +334,16 @@ Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) corresp
 
 En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre.
 Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Sous l'hypothèse c << a, a est le paramètre dominant : il fixe à lui seul l'ordre de grandeur du pic, et c n'en est qu'une correction.
+
+![Effet de a et c](methodo/a_et_c.png){width=80%}
+
 Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et tardif. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
 
+![Effet de b et d](methodo/b_et_d.png){width=80%}
+
 La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. Sous l'hypothèse c << a, on a cd << ab, donc R >> 1, ln(R) > 0 et t* est bien positif — le pic existe. Plus c est faible devant a, plus R est grand et plus le pic est tardif : la descente, peu vigoureuse, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab > cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
+
+![Effet des paramètres sur t\_pic](methodo/effets_params_t_pic.png){width=80%}
 
 ### Modèle IMAP (2019)
 
@@ -354,9 +361,12 @@ où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
 
-On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. 
 
 ![Top 32](donnees_reelles_top32/brut_10_000_Metres_men.png){width=80%}
+
+Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+
 ![Meilleure par age](donnees_reelles_meilleure_par_age/brut_10_000_Metres_men.png){width=80%}
 
 
@@ -388,7 +398,7 @@ Le point de départ choisi jouant un rôle essentiel dans la détermination des 
 
 ##### L'aléatoire dans le modèle de Moore
 
-## Initialisation des paramètres du modèle
+###### Initialisation des paramètres du modèle
 
 Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
 
@@ -399,7 +409,7 @@ Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'alg
 
 Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
-#### Adaptation du modèle IMAP à nos données {.unnumbered}
+##### Adaptation du modèle IMAP à nos données {.unnumbered}
 
 Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour
 des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ.
@@ -420,7 +430,7 @@ La formule estimée est ainsi :
 $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 \cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
 
-#### Choix du paramètre $t_d$ {.unnumbered}
+###### Choix du paramètre $t_d$ {.unnumbered}
 
 Le paramètre $t_d$, qui représente dans le modèle original l'espérance de
 vie de l'athlète, ne peut pas être estimé de façon fiable sur des données
@@ -608,7 +618,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 # Annexes {.unnumbered}
 
-<<<<<<< HEAD
+
 ## Compléments de l'analyse de distribution
 
 Cette section regroupe les graphiques de diagnostic complémentaires permettant de valider les choix statistiques effectués dans le corps du rapport.
@@ -637,5 +647,30 @@ Les graphiques Quantile-Quantile (QQ-plots) permettent de visualiser l'écart en
 =======
 ## Annexe : Modèles de Moore
 
+
 ![Lancers](annexes/ajustement_lancer.png){width=80%}
->>>>>>> 6a468e714207fe49701505da3b2a5dc4d343762a
+
+
+![Sauts](annexes/ajustement_saut.png){width=80%}
+
+
+![Sprint](annexes/ajustement_sprint.png){width=80%}
+
+
+![Haies](annexes/ajustement_haies.png){width=80%}
+
+
+![Demi-fond](annexes/ajustement_demi_fond.png){width=80%}
+
+
+![5000m - 10000m](annexes/ajustement_5000_10000.png){width=80%}
+
+
+![Marathon](annexes/ajustement_marathon.png){width=80%}
+
+
+![Marche](annexes/ajustement_marche.png){width=80%}
+
+
+![Epreuves combinées](annexes/ajustement_epreuves_combinees.png){width=80%}
+

@@ -98,40 +98,87 @@ fig2 <- ggplot(courbes_f2, aes(x = t, y = P, color = label)) +
   theme(legend.position = "bottom")
 
 
-# ── Figure 3 ── Relation linéaire entre ln(R) et t* ──────────────────────────
+# ── Figure 3 (remplacée) ── t* en fonction de chaque paramètre ────────────────
 
-lnR_f3 <- seq(-0.5, 3, length.out = 300)
+install.packages("patchwork")
+library(patchwork)
 
-scenarios_f3 <- list(
-  list(bd = 0.3, label = "b+d = 0.3 (dynamique lente)"),
-  list(bd = 0.7, label = "b+d = 0.7 (dynamique rapide)")
+# Valeurs de référence
+a0 <- 6; b0 <- 0.5; c0 <- 0.5; d0 <- 0.2
+
+tpic_calc <- function(a, b, c, d) {
+  R <- (a * b) / (c * d)
+  if (R <= 1) return(NA)
+  log(R) / (b + d)
+}
+
+# Grilles de variation pour chaque paramètre (les autres fixés à leur valeur ref)
+grille_a <- data.frame(x = seq(1, 12, length.out = 200)) |>
+  mutate(tpic = sapply(x, function(v) tpic_calc(v, b0, c0, d0)),
+         param = "a  (b, c, d fixés)")
+
+grille_b <- data.frame(x = seq(0.05, 1.5, length.out = 200)) |>
+  mutate(tpic = sapply(x, function(v) tpic_calc(a0, v, c0, d0)),
+         param = "b  (a, c, d fixés)")
+
+grille_c <- data.frame(x = seq(0.05, 3, length.out = 200)) |>
+  mutate(tpic = sapply(x, function(v) tpic_calc(a0, b0, v, d0)),
+         param = "c  (a, b, d fixés)")
+
+grille_d <- data.frame(x = seq(0.02, 1, length.out = 200)) |>
+  mutate(tpic = sapply(x, function(v) tpic_calc(a0, b0, c0, v)),
+         param = "d  (a, b, c fixés)")
+
+# Points de référence
+refs <- data.frame(
+  x     = c(a0, b0, c0, d0),
+  tpic  = c(tpic_calc(a0, b0, c0, d0),
+            tpic_calc(a0, b0, c0, d0),
+            tpic_calc(a0, b0, c0, d0),
+            tpic_calc(a0, b0, c0, d0)),
+  param = c("a  (b, c, d fixés)", "b  (a, c, d fixés)",
+            "c  (a, b, d fixés)", "d  (a, b, c fixés)")
 )
 
-droites_f3 <- bind_rows(lapply(scenarios_f3, function(s) {
-  data.frame(
-    lnR   = lnR_f3,
-    tpic  = lnR_f3 / s$bd,
-    label = s$label
+couleurs <- c(
+  "a  (b, c, d fixés)" = "#3266ad",
+  "b  (a, c, d fixés)" = "#c85a30",
+  "c  (a, b, d fixés)" = "#1d9e75",
+  "d  (a, b, c fixés)" = "#ba7517"
+)
+
+xlabs <- c(
+  "a  (b, c, d fixés)" = "a",
+  "b  (a, c, d fixés)" = "b",
+  "c  (a, b, d fixés)" = "c",
+  "d  (a, b, c fixés)" = "d"
+)
+
+make_panel <- function(grille, ref, param_name) {
+  ggplot(grille, aes(x = x, y = tpic)) +
+    geom_line(color = couleurs[param_name], linewidth = 1) +
+    geom_point(data = ref, aes(x = x, y = tpic),
+               color = "grey30", size = 3) +
+    geom_vline(data = ref, aes(xintercept = x),
+               linetype = "dashed", color = "grey60", linewidth = 0.5) +
+    geom_hline(data = ref, aes(yintercept = tpic),
+               linetype = "dashed", color = "grey60", linewidth = 0.5) +
+    labs(title = paste("t* en fonction de", xlabs[param_name]),
+         x = xlabs[param_name], y = "t*") +
+    theme_minimal(base_size = 11) +
+    theme(plot.title = element_text(size = 11))
+}
+
+panel_a <- make_panel(grille_a, refs[refs$param == "a  (b, c, d fixés)", ], "a  (b, c, d fixés)")
+panel_b <- make_panel(grille_b, refs[refs$param == "b  (a, c, d fixés)", ], "b  (a, c, d fixés)")
+panel_c <- make_panel(grille_c, refs[refs$param == "c  (a, b, d fixés)", ], "c  (a, b, d fixés)")
+panel_d <- make_panel(grille_d, refs[refs$param == "d  (a, b, c fixés)", ], "d  (a, b, c fixés)")
+
+fig3 <- (panel_a | panel_b) / (panel_c | panel_d) +
+  plot_annotation(
+    title    = "Effet de chaque paramètre sur la position du pic t*",
+    subtitle = "Le point gris indique la valeur de référence (a=6, b=0.5, c=0.5, d=0.2)"
   )
-})) |> filter(tpic >= 0)
-
-limite_f3 <- data.frame(lnR = 0, tpic = 0)
-
-fig3 <- ggplot(droites_f3, aes(x = lnR, y = tpic, color = label)) +
-  geom_line(linewidth = 1) +
-  geom_vline(xintercept = 0, linetype = "dashed",
-             color = "grey50", linewidth = 0.6) +
-  geom_point(data = limite_f3, aes(x = lnR, y = tpic),
-             color = "#e24b4a", size = 4, inherit.aes = FALSE) +
-  annotate("text", x = 0.08, y = 0.3,
-           label = "R = 1\n(t* = 0)", size = 3, color = "#e24b4a", hjust = 0) +
-  annotate("text", x = 2.5, y = 2.5,
-           label = "pente = 1/(b+d)", size = 3, color = "#3266ad", hjust = 0) +
-  scale_color_manual(values = c("#3266ad","#c85a30")) +
-  labs(title = "Position du pic en fonction du rapport R = ab/cd",
-       x = "ln(R) = ln(ab/cd)", y = "t*", color = NULL) +
-  theme_minimal(base_size = 12) +
-  theme(legend.position = "bottom")
 
 
 # ── Affichage ─────────────────────────────────────────────────────────────────
@@ -139,3 +186,13 @@ fig3 <- ggplot(droites_f3, aes(x = lnR, y = tpic, color = label)) +
 fig1
 fig2
 fig3
+
+
+ggsave("methodo/a_et_c.png", plot = fig1, width = 12, height = 9)
+ggsave("methodo/b_et_d.png", plot = fig2, width = 12, height = 9)
+ggsave("methodo/effets_params_t_pic.png", plot = fig3, width = 12, height = 9)
+
+
+
+
+
