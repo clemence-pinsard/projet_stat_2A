@@ -5,6 +5,7 @@ format:
     documentclass: article
     number-sections: true
     number-depth: 3
+    indent: true
     header-includes: |
       \usepackage{enumitem}
       \setlist[itemize]{label=$\bullet$}
@@ -70,7 +71,7 @@ nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’ex
 
 \rule{\textwidth}{0.5mm}\\
 \vspace{0.8cm}
-{\huge\bfseries Titre choisi pour mon rapport en Quarto}\\
+{\huge\bfseries Trajectoires de performance en athlétisme d'élite : modélisation de la relation âge-performance et identification de l'âge au pic}\\
 \vspace{0.8cm}
 \rule{\textwidth}{0.5mm}\\
 
@@ -141,11 +142,15 @@ Contrairement aux approches basées uniquement sur l'âge moyen des athlètes, q
 
 L'analyse de nos données vise à répondre à plusieurs interrogations fondamentales sur la dynamique de la performance athlétique. La littérature scientifique nous guide dans la formulation de nos attentes quant aux résultats escomptés.
 
-Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins\cite{Allen2015} ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond.
+Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins [@Allen2015] ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond.
 
-La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins\cite{Allen2015}, rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 \cite{Infographic2020} révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes.
+La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins [@Allen2015], rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 [@Infographic2020] révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes.
 
+<<<<<<< HEAD
 Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter \cite{Carter2019} décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \
+=======
+Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter [@Carter2019] décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \\
+>>>>>>> 3adb33a3ae72b53f08e8aa085488ad26db2c90d0
 
 \newpage
 
@@ -471,7 +476,9 @@ La formule estimée est ainsi :
 $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 \cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
 
-###### Choix du paramètre $t_d$ {.unnumbered}
+
+
+##### Choix du paramètre $t_d$ {.unnumbered}
 
 Le paramètre $t_d$, qui représente dans le modèle original l'espérance de
 vie de l'athlète, ne peut pas être estimé de façon fiable sur des données
@@ -545,9 +552,8 @@ Pour chacun de ces critères, le modèle retenu est celui présentant la valeur 
 ## Résultats
 ### Résultats du modèle IMAP {.unnumbered}
 
-Le modèle IMAP a convergé pour l'ensemble des 42 couples
-(sexe $\times$ discipline). Le Tableau 4 présente les âges au pic estimés
-par groupe de disciplines.
+
+Le modèle IMAP a convergé pour l'ensemble des 42 couples (sexe $\times$ discipline). Le Tableau 4 présente les âges au pic estimés par groupe de disciplines. 
 
 | Groupe | Sexe | $t_{\text{pic}}$ moyen | Min | Max |
 |---|---|---|---|---|
@@ -573,67 +579,202 @@ par groupe de disciplines.
 : Âge au pic estimé par le modèle IMAP selon le groupe de disciplines
 et le sexe {#tbl-imap-groupes}
 
-Plusieurs tendances se dégagent. Premièrement, le modèle IMAP identifie
-des âges au pic se situant entre 25 et 30 ans pour la majorité des estimations. 
+ 
 
-#### 
-Le marathon constitue l'exception la plus nette, avec un
-pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes ---
-valeurs cohérentes avec la littérature sur l'endurance longue, qui
-souligne le rôle de l'expérience et de la maturité physiologique dans
-cette discipline.
+Les estimations se situent entre 25 et 30 ans pour la majorité des groupes. Le marathon constitue l'exception la plus nette, avec un pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes. Les différences entre sexes sont faibles : les femmes présentent un pic légèrement plus tardif dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais légèrement plus précoce dans les épreuves de fond et les épreuves combinées, avec des écarts restant dans une marge de 1 à 2 ans.Concernant la qualité d'ajustement, le RMSE varie selon l'unité de mesure de la performance : les disciplines exprimées en mètres (lancers, RMSE moyen de 1,57 m chez les hommes) présentent des erreurs absolues plus élevées que les disciplines exprimées en km/h (marche athlétique, RMSE < 0,01).
 
-Les différences entre sexes sont faibles et non
-systématiques : les femmes présentent un pic légèrement plus tardif
-dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais
-légèrement plus précoce dans les épreuves de fond et les épreuves
-combinées. Ces écarts restent dans une marge de 1 à 2 ans, ce qui
-suggère que le sexe n'est pas un facteur déterminant de l'âge au pic
-de performance en athlétisme d'élite. (faire les tests)
 
-Concernant la qualité d'ajustement, le RMSE varie fortement selon la
-nature de la performance mesurée. Les disciplines techniques exprimées
-en mètres (lancers notamment, RMSE moyen de 1,57 m chez les hommes)
-présentent des erreurs absolues plus élevées que les disciplines où
-la performance est exprimée en km/h (marche athlétique, RMSE $<$ 0,01).
-Cette hétérogénéité peut s'expliquer par les différences d'échelle entre les
-variables de performance et ne reflète pas une moindre qualité
-d'ajustement relatif. 
 
 #### exemple du marathon 
 
-La Figure 5 présente les ajustements obtenus pour les marathoniens et
-marathoniennes du Top 39. Chez les hommes, le modèle estime un pic de
-performance à **29,5 ans**, avec un $t_d$ retenu de 65 ans. La courbe
-capture bien la phase de progression rapide entre 18 et 28 ans, le
-plateau autour de 29--31 ans, puis le déclin progressif jusqu'à 40 ans.
-L'ajustement est visuellement satisfaisant, les résidus ne présentant
-pas de structure systématique.
+La figure @fig-imap-marathon présente les ajustements obtenus pour les 
+marathoniens et marathoniennes du Top 39. Chez les hommes, le modèle 
+estime un pic de performance à **29,5 ans**, avec un $t_d$ retenu de 
+65 ans. La courbe capture la phase de progression entre 18 et 28 ans, 
+le plateau autour de 29--31 ans, puis le déclin progressif jusqu'à 
+40 ans. Chez les femmes, le pic estimé est légèrement plus tardif à 
+**29,8 ans**, avec un $t_d$ retenu de 85 ans. La dispersion des points 
+est plus importante que chez les hommes --- notamment une performance 
+à 35 ans (18,49 km/h) s'écartant nettement de la tendance centrale --- 
+ce qui se traduit par un RMSE légèrement plus élevé (0,20 km/h) et des 
+critères AIC et BIC moins favorables.
 
-Chez les femmes, le pic estimé est légèrement plus tardif à **29,8 ans**,
-avec un $t_d$ retenu de 85 ans. La dispersion des points est plus
-importante que chez les hommes --- notamment la présence d'une performance
-exceptionnelle à 35 ans (18,49 km/h) qui s'écarte nettement de la
-tendance centrale --- ce qui se traduit par un RMSE légèrement plus élevé
-(0,20 km/h) et des critères AIC et BIC moins favorables. La courbe
-capture néanmoins bien la dynamique générale, avec une phase de croissance
-plus progressive que chez les hommes et un déclin légèrement plus marqué
-après 32 ans.
+![Ajustement du modèle IMAP sur le marathon (hommes et femmes). Points : 
+meilleure performance annuelle par âge. Ligne rouge : courbe 
+ajustée.](annexes/imap_marathon.png){#fig-imap-marathon width=90%}
 
 
-La similitude des âges au pic entre hommes (29,5 ans) et femmes (29,8 ans)
-au marathon est cohérente avec la littérature sur l'endurance longue, qui
-souligne que cette discipline requiert une maturité physiologique et une
-expérience de course accumulée sur plusieurs années, indépendamment du sexe
-\cite{Allen2015}.
+
+### Comparaison des modèles Moore et IMAP {.unnumbered}
+
+#### Âges au pic {.unnumbered}
+
+Le Tableau @tbl-comparatif-pic présente les âges au pic estimés par les
+deux modèles pour l'ensemble des disciplines. 
+
+| Discipline | Moore H | IMAP H | Moore F | IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 27,6 | 29,2 | 28,1 | 28,2 |
+| 200m | 24,7 | 25,3 | 27,4 | 26,9 |
+| 400m | 25,1 | 26,6 | 25,1 | 26,8 |
+| Haies hautes | 27,2 | 26,9 | 27,0 | 28,0 |
+| 400m haies | 25,7 | 27,0 | 26,9 | 26,4 |
+| 800m | 23,8 | 25,2 | 25,1 | 26,4 |
+| 1500m | 26,0 | 27,7 | 25,6 | 27,1 |
+| 3000m steeple | 26,8 | 26,8 | 25,8 | 24,9 |
+| 5000m | 24,0 | 25,4 | 24,4 | 25,8 |
+| 10 000m | 22,3 | 24,9 | 28,1 | 28,3 |
+| Marathon | 29,7 | 29,5 | 29,3 | 29,8 |
+| Marche | 27,2 | 28,2 | 26,1 | 27,3 |
+| Longueur | 25,9 | 26,3 | 26,8 | 27,0 |
+| Triple saut | 26,9 | 28,0 | 27,0 | 28,2 |
+| Hauteur | 25,1 | 26,3 | 26,7 | 27,8 |
+| Perche | 27,9 | 28,4 | 28,5 | 28,7 |
+| Javelot | 28,5 | 26,8 | 27,5 | 27,6 |
+| Disque | 30,9 | 30,0 | 28,7 | 28,3 |
+| Poids | 29,9 | 28,7 | 28,7 | 27,2 |
+| Marteau | 29,5 | 28,9 | 27,1 | 27,2 |
+| Épreuves combinées | 27,2 | 26,6 | 27,0 | 25,3 |
+
+: Âges au pic estimés (en années) par les modèles Moore et IMAP,
+selon la discipline et le sexe {#tbl-comparatif-pic}
+
+Les deux modèles produisent des estimations globalement cohérentes, avec des écarts souvent inférieurs à 2 ans (@tbl-comparatif-pic). Les convergences les plus nettes apparaissent pour les disciplines d'endurance longue : au marathon, l'écart entre Moore et IMAP est inférieur à 0,5 an pour les deux sexes. Les divergences les plus importantes concernent le sprint et le demi-fond : au 100m hommes, Moore estime le pic à 27,6 ans contre 29,2 ans pour IMAP ; au 10 000m hommes, l'écart est inverse avec 22,3 ans (Moore) contre 24,9 ans (IMAP). Pour les lancers, les deux modèles s'accordent sur des pics tardifs, au-delà de 28 ans.
+
+#### Qualité d'ajustement : RMSE, AIC et BIC {.unnumbered}
+
+Le Tableau @tbl-comparatif-rmse présente les RMSE obtenus par les deux
+modèles. Les erreurs résiduelles sont proches entre les deux modèles. IMAP présente un RMSE inférieur sur plusieurs disciplines : au marteau hommes (1,319 contre 1,986, soit −34 %), au poids femmes (0,226 contre 0,446, soit −49 %), et au 10 000m hommes (0,277 contre 0,550). Moore présente en revanche un RMSE légèrement inférieur sur plusieurs disciplines de course courte et de demi-fond. 
 
 
-![Ajustement du modèle IMAP sur le marathon (hommes et femmes).
-Points : meilleure performance annuelle par âge. Ligne rouge : courbe
-ajustée.](annexes/imap_marathon.png){width=90%}
+| Discipline | RMSE Moore H | RMSE IMAP H | RMSE Moore F | RMSE IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 0,324 | 0,443 | 0,264 | 0,257 |
+| 200m | 0,683 | 0,683 | 0,311 | 0,427 |
+| 400m | 0,350 | 0,395 | 0,327 | 0,413 |
+| Haies hautes | 0,370 | 0,363 | 0,388 | 0,428 |
+| 400m haies | 0,084 | 0,094 | 0,053 | 0,063 |
+| 800m | 0,282 | 0,342 | 0,407 | 0,447 |
+| 1500m | 0,194 | 0,238 | 0,319 | 0,346 |
+| 3000m steeple | 0,214 | 0,234 | 0,397 | 0,412 |
+| 5000m | 0,148 | 0,176 | 0,205 | 0,234 |
+| 10 000m | 0,550 | 0,277 | 0,480 | 0,507 |
+| Marathon | 0,129 | 0,101 | 0,201 | 0,196 |
+| Marche | 0,002 | 0,002 | 0,001 | 0,001 |
+| Longueur | 0,171 | 0,178 | 0,149 | 0,150 |
+| Triple saut | 0,171 | 0,190 | 0,195 | 0,198 |
+| Hauteur | 0,037 | 0,040 | 0,019 | 0,020 |
+| Perche | 0,096 | 0,099 | 0,008 | 0,082 |
+| Javelot | 3,083 | 2,875 | 1,550 | 1,515 |
+| Disque | 1,726 | 1,663 | 1,697 | 1,714 |
+| Poids | 0,501 | 0,419 | 0,446 | 0,226 |
+| Marteau | 1,986 | 1,319 | 1,156 | 1,174 |
+| Épreuves combinées | 147,9 | 134,6 | 174,9 | 138,9 |
+
+: RMSE par modèle, discipline et sexe {#tbl-comparatif-rmse}
+
+La comparaison des critères AIC et BIC confirme cette absence de dominance systématique : IMAP obtient de meilleurs critères sur le marathon hommes, le 10 000m hommes et les épreuves combinées ; Moore obtient de meilleurs critères sur la majorité des disciplines de course courte et de demi-fond.
+
+| Discipline | AIC Moore H | AIC IMAP H | AIC Moore F | AIC IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 20,2 | 35,8 | 6,4 | 8,6 |
+| 200m | 55,5 | 55,4 | 17,7 | 32,9 |
+| 400m | 23,3 | 29,2 | 19,5 | 31,3 |
+| Haies hautes | 24,3 | 24,3 | 28,3 | 33,0 |
+| 400m haies | -43,0 | -38,1 | - 58,4 | - 51,0 |
+| 800m | 12,0 | 20,1 | 31,7 | 36,4 |
+| 1500m | - 5,1 | 4,8 | 19,5 | 23,5 |
+| 3000m steeple | 0,0 | 4,0 | 27,4 | 29,0 |
+| 5000m | - 18,0 | - 9,7 | - 2,4 | 4,0 |
+| 10 000m | 43,4 | 11,7 | 37,1 | 39,6 |
+| Marathon | - 20,8 | - 33,0 | - 2,9 | - 4,0 |
+| Marche | - 230,8 | - 229,8 | - 258,3 | - 252,1 |
+| Longueur | - 10,3 | - 8,6 | - 17,7 | - 17,3 |
+| Triple saut | - 11,7 | - 6,3 | - 5,1 | - 4,5 |
+| Hauteur | - 87,7 | - 84,9 | - 121,8 | - 118,7 |
+| Perche | - 40,6 | - 38,9 | - 48,8 | - 48,6 |
+| Javelot | 132,9 | 129,4 | 98,5 | 97,4 |
+| Disque | 103,9 | 102,0 | 103,0 | 103,5 |
+| Poids | 40,6 | 32,0 | 36,2 | 2,3 |
+| Marteau | 110,9 | 90,4 | 83,8 | 84,6 |
+| Épreuves combinées | 275,0 | 271,1 | 308,4 | 297,9 |
+
+: Critères AIC par modèle, discipline et sexe {#tbl-comparatif-aic}
+
+
+| Discipline | BIC Moore H | BIC IMAP H | BIC Moore F | BIC IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 26,3 | 41,9 | 12,3 | 14,4 |
+| 200m | 61,4 | 61,3 | 23,6 | 38,8 |
+| 400m | 29,2 | 35,1 | 25,2 | 37,2 |
+| Haies hautes | 29,7 | 30,0 | 34,2 | 38,9 |
+| 400m haies | - 37,3 | - 32,4 | -53,2 | -45,7 |
+| 800m | 17,2 | 25,3 | 37,8 | 42,5 |
+| 1500m | 0,8 | 10,7 | 25,6 | 29,5 |
+| 3000m steeple | 5,7 | 9,7 | 32,8 | 34,4 |
+| 5000m | -12,1 | -3,8 | 3,5 | 9,9 |
+| 10 000m | 49,1 | 17,4 | 42,8 | 45,3 |
+| Marathon | -15,6 | -27,6 | 2,8 | 1,6 |
+| Marche | -224,9 | -223,9 | -252,2 | -246,0 |
+| Longueur | -4,6 | -2,9 | -11,8 | -11,4 |
+| Triple saut | -5,6 | -0,3 | 1,0 | 1,6 |
+| Hauteur | -81,6 | -78,8 | -115,7 | -112,6 |
+| Perche | -34,5 | -32,8 | -42,7 | -42,5 |
+| Javelot | 139,0 | 135,5 | 104,6 | 103,5 |
+| Disque | 110,0 | 108,1 | 109,1 | 109,6 |
+| Poids | 46,5 | 38,0 | 42,3 | 8,4 |
+| Marteau | 117,0 | 96,5 | 89,9 | 90,7 |
+| Épreuves combinées | 280,2 | 276,3 | 314,1 | 303,5 |
+
+: Critères BIC par modèle, discipline et sexe {#tbl-comparatif-bic}
+
 
 ## Discussion
 
+### Âge au pic selon la famille de disciplines
+
+Les résultats confirment l'hypothèse d'une variabilité de l'âge au pic 
+selon la filière énergétique sollicitée, conformément aux travaux 
+d'Allen et Hopkins [@Allen2015]. Le pic plus tardif observé dans 
+les lancers (28--30 ans) s'explique par la dépendance de ces disciplines 
+à la force maximale, qui atteint son apogée plus tardivement que la 
+vitesse explosive [@Komi1992]. À l'inverse, la précocité relative 
+des épreuves de sprint et de demi-fond peut être associée à la 
+prédominance des fibres musculaires rapides et à la capacité anaérobie, 
+qualités qui culminent plus tôt dans la vie adulte [@Tanaka2003]. 
+Le marathon constitue un cas particulier : le pic tardif estimé à près 
+de 30 ans pour les deux sexes est cohérent avec la littérature sur 
+l'endurance longue, qui souligne le rôle déterminant de l'expérience 
+de course accumulée et de la maturité physiologique aérobie 
+[@Allen2015].
+
+### Différences entre sexes
+
+Les écarts observés entre hommes et femmes restent faibles (1 à 2 ans 
+au maximum) et non systématiques selon les disciplines, ce qui est 
+cohérent avec les conclusions d'Allen et Hopkins [@Allen2015]. 
+Ces différences pourraient partiellement s'expliquer par des 
+trajectoires de développement hormonal distinctes : la testostérone, 
+dont le pic survient plus tôt chez les hommes, favorise un gain de 
+masse musculaire et de puissance explosive précoce, tandis que les 
+adaptations physiologiques féminines, notamment cardiovasculaires, 
+se développeraient sur une fenêtre temporelle légèrement plus étendue 
+[@Deaner2012]. Toutefois, la faiblesse des écarts invite à nuancer 
+l'influence du sexe comme facteur déterminant de l'âge au pic en 
+athlétisme d'élite.
+
+### Comparaison des modèles Moore et IMAP
+
+L'absence de dominance systématique d'un modèle sur l'autre suggère 
+que les deux formulations capturent des dynamiques similaires sur la 
+fenêtre d'observation restreinte (16--40 ans). Les divergences les plus 
+marquées dans les disciplines de sprint et de demi-fond pourraient 
+s'expliquer par la sensibilité respective des deux modèles aux optima 
+locaux sur des données peu étendues aux âges extrêmes. La richesse 
+interprétative du modèle IMAP, dont les paramètres sont ancrés dans 
+une théorie biologique cellulaire [@Berthelot2019], constitue un 
+argument en sa faveur indépendamment des seuls critères statistiques, 
+notamment pour des usages prospectifs ou comparatifs entre populations.
 \newpage
 
 # Discussion générale
