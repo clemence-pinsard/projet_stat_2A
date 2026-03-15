@@ -71,7 +71,7 @@ nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’ex
 
 \rule{\textwidth}{0.5mm}\\
 \vspace{0.8cm}
-{\huge\bfseries Titre choisi pour mon rapport en Quarto}\\
+{\huge\bfseries Trajectoires de performance en athlétisme d'élite : modélisation de la relation âge-performance et identification de l'âge au pic}\\
 \vspace{0.8cm}
 \rule{\textwidth}{0.5mm}\\
 
