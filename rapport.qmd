@@ -5,6 +5,7 @@ format:
     documentclass: article
     number-sections: true
     number-depth: 3
+    indent: true
     header-includes: |
       \usepackage{enumitem}
       \setlist[itemize]{label=$\bullet$}
@@ -432,7 +433,9 @@ La formule estimée est ainsi :
 $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 \cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
 
-###### Choix du paramètre $t_d$ {.unnumbered}
+
+
+##### Choix du paramètre $t_d$ {.unnumbered}
 
 Le paramètre $t_d$, qui représente dans le modèle original l'espérance de
 vie de l'athlète, ne peut pas être estimé de façon fiable sur des données
@@ -592,6 +595,152 @@ expérience de course accumulée sur plusieurs années, indépendamment du sexe
 ![Ajustement du modèle IMAP sur le marathon (hommes et femmes).
 Points : meilleure performance annuelle par âge. Ligne rouge : courbe
 ajustée.](annexes/imap_marathon.png){width=90%}
+
+
+### Comparaison des modèles Moore et IMAP {.unnumbered}
+
+#### Âges au pic {.unnumbered}
+
+Le Tableau @tbl-comparatif-pic présente les âges au pic estimés par les
+deux modèles pour l'ensemble des disciplines. Les deux modèles convergent
+vers des estimations globalement cohérentes, avec des écarts souvent
+inférieurs à 2 ans. Quelques divergences notables méritent cependant
+d'être soulignées.
+
+| Discipline | Moore H | IMAP H | Moore F | IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 27,6 | 29,2 | 28,1 | 28,2 |
+| 200m | 24,7 | 25,3 | 27,4 | 26,9 |
+| 400m | 25,1 | 26,6 | 25,1 | 26,8 |
+| Haies hautes | 27,2 | 26,9 | 27,0 | 28,0 |
+| 400m haies | 25,7 | 27,0 | 26,9 | 26,4 |
+| 800m | 23,8 | 25,2 | 25,1 | 26,4 |
+| 1500m | 26,0 | 27,7 | 25,6 | 27,1 |
+| 3000m steeple | 26,8 | 26,8 | 25,8 | 24,9 |
+| 5000m | 24,0 | 25,4 | 24,4 | 25,8 |
+| 10 000m | 22,3 | 24,9 | 28,1 | 28,3 |
+| Marathon | 29,7 | 29,5 | 29,3 | 29,8 |
+| Marche | 27,2 | 28,2 | 26,1 | 27,3 |
+| Longueur | 25,9 | 26,3 | 26,8 | 27,0 |
+| Triple saut | 26,9 | 28,0 | 27,0 | 28,2 |
+| Hauteur | 25,1 | 26,3 | 26,7 | 27,8 |
+| Perche | 27,9 | 28,4 | 28,5 | 28,7 |
+| Javelot | 28,5 | 26,8 | 27,5 | 27,6 |
+| Disque | 30,9 | 30,0 | 28,7 | 28,3 |
+| Poids | 29,9 | 28,7 | 28,7 | 27,2 |
+| Marteau | 29,5 | 28,9 | 27,1 | 27,2 |
+| Épreuves combinées | 27,2 | 26,6 | 27,0 | 25,3 |
+
+: Âges au pic estimés (en années) par les modèles Moore et IMAP,
+selon la discipline et le sexe {#tbl-comparatif-pic}
+
+
+Pour les disciplines d'endurance longue, les deux modèles s'accordent
+remarquablement : au marathon, Moore estime un pic à 29,7 ans chez les
+hommes et 29,3 ans chez les femmes, contre 29,5 et 29,8 ans pour IMAP ---
+un écart inférieur à 0,5 an. Cette convergence renforce la robustesse des
+estimations pour cette discipline.
+
+Les divergences les plus importantes apparaissent dans les disciplines de
+sprint et de demi-fond. Au 100m hommes, Moore estime le pic à 27,6 ans
+contre 29,2 ans pour IMAP ; au 10 000m hommes, l'écart est inverse avec
+22,3 ans (Moore) contre 24,9 ans (IMAP). Ces différences s'expliquent
+par la structure paramétrique distincte des deux modèles, qui peuvent
+converger vers des optima locaux différents sur une fenêtre d'observation
+restreinte à 16--40 ans.
+
+Pour les lancers, les deux modèles s'accordent sur des pics tardifs,
+au-delà de 28 ans : au lancer du disque hommes, Moore donne 30,9 ans et
+IMAP 30,0 ans ; au lancer du poids hommes, 29,9 ans contre 28,7 ans.
+Cette convergence est cohérente avec la littérature qui souligne le rôle
+de la force maximale, qui atteint son pic plus tardivement que la vitesse
+explosive \cite{Allen2015}.
+
+#### Qualité d'ajustement : RMSE, AIC et BIC {.unnumbered}
+
+Le Tableau @tbl-comparatif-rmse présente les RMSE obtenus par les deux
+modèles. Dans l'ensemble, les erreurs résiduelles sont très proches entre
+Moore et IMAP, ce qui confirme que les deux formulations capturent des
+dynamiques similaires sur la fenêtre d'observation. On note néanmoins
+quelques avantages ponctuels d'IMAP : au marteau hommes, le RMSE passe
+de 1,986 (Moore) à 1,319 (IMAP), soit une réduction de 34 % ; au poids
+femmes, de 0,446 à 0,226, soit une réduction de 49 % ; au 10 000m hommes,
+de 0,550 à 0,277. À l'inverse, Moore présente un RMSE légèrement inférieur
+sur plusieurs disciplines de course (100m, 200m, 800m), où la variance
+résiduelle est plus élevée pour IMAP.
+
+
+| Discipline | AIC Moore H | AIC IMAP H | AIC Moore F | AIC IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 20,2 | 35,8 | 6,4 | 8,6 |
+| 200m | 55,5 | 55,4 | 17,7 | 32,9 |
+| 400m | 23,3 | 29,2 | 19,5 | 31,3 |
+| Haies hautes | 24,3 | 24,3 | 28,3 | 33,0 |
+| 400m haies | -43,0 | -38,1 | - 58,4 | - 51,0 |
+| 800m | 12,0 | 20,1 | 31,7 | 36,4 |
+| 1500m | - 5,1 | 4,8 | 19,5 | 23,5 |
+| 3000m steeple | 0,0 | 4,0 | 27,4 | 29,0 |
+| 5000m | - 18,0 | - 9,7 | - 2,4 | 4,0 |
+| 10 000m | 43,4 | 11,7 | 37,1 | 39,6 |
+| Marathon | - 20,8 | - 33,0 | - 2,9 | - 4,0 |
+| Marche | - 230,8 | - 229,8 | - 258,3 | - 252,1 |
+| Longueur | - 10,3 | - 8,6 | - 17,7 | - 17,3 |
+| Triple saut | - 11,7 | - 6,3 | - 5,1 | - 4,5 |
+| Hauteur | - 87,7 | - 84,9 | - 121,8 | - 118,7 |
+| Perche | - 40,6 | - 38,9 | - 48,8 | - 48,6 |
+| Javelot | 132,9 | 129,4 | 98,5 | 97,4 |
+| Disque | 103,9 | 102,0 | 103,0 | 103,5 |
+| Poids | 40,6 | 32,0 | 36,2 | 2,3 |
+| Marteau | 110,9 | 90,4 | 83,8 | 84,6 |
+| Épreuves combinées | 275,0 | 271,1 | 308,4 | 297,9 |
+
+: Critères AIC par modèle, discipline et sexe {#tbl-comparatif-aic}
+
+
+| Discipline | BIC Moore H | BIC IMAP H | BIC Moore F | BIC IMAP F |
+|---|:---:|:---:|:---:|:---:|
+| 100m | 26,3 | 41,9 | 12,3 | 14,4 |
+| 200m | 61,4 | 61,3 | 23,6 | 38,8 |
+| 400m | 29,2 | 35,1 | 25,2 | 37,2 |
+| Haies hautes | 29,7 | 30,0 | 34,2 | 38,9 |
+| 400m haies | - 37,3 | - 32,4 | -53,2 | -45,7 |
+| 800m | 17,2 | 25,3 | 37,8 | 42,5 |
+| 1500m | 0,8 | 10,7 | 25,6 | 29,5 |
+| 3000m steeple | 5,7 | 9,7 | 32,8 | 34,4 |
+| 5000m | -12,1 | -3,8 | 3,5 | 9,9 |
+| 10 000m | 49,1 | 17,4 | 42,8 | 45,3 |
+| Marathon | -15,6 | -27,6 | 2,8 | 1,6 |
+| Marche | -224,9 | -223,9 | -252,2 | -246,0 |
+| Longueur | -4,6 | -2,9 | -11,8 | -11,4 |
+| Triple saut | -5,6 | -0,3 | 1,0 | 1,6 |
+| Hauteur | -81,6 | -78,8 | -115,7 | -112,6 |
+| Perche | -34,5 | -32,8 | -42,7 | -42,5 |
+| Javelot | 139,0 | 135,5 | 104,6 | 103,5 |
+| Disque | 110,0 | 108,1 | 109,1 | 109,6 |
+| Poids | 46,5 | 38,0 | 42,3 | 8,4 |
+| Marteau | 117,0 | 96,5 | 89,9 | 90,7 |
+| Épreuves combinées | 280,2 | 276,3 | 314,1 | 303,5 |
+
+: Critères BIC par modèle, discipline et sexe {#tbl-comparatif-bic}
+
+
+La comparaison des critères AIC et BIC (Tableaux @tbl-comparatif-aic
+et @tbl-comparatif-bic) confirme cette absence de dominance systématique.
+IMAP obtient de meilleurs critères sur le marathon hommes (AIC de -33,0
+contre -20,8 pour Moore), le 10 000m hommes (11,7 contre 43,4) et les
+épreuves combinées (271,1 contre 275,0 chez les hommes ; 297,9 contre
+308,4 chez les femmes). Moore présente en revanche de meilleurs critères
+sur la majorité des disciplines de course courte et de demi-fond.
+
+Dans l'ensemble, aucun des deux modèles ne domine systématiquement l'autre.
+Ce résultat suggère que les deux formulations --- l'une purement empirique
+(Moore), l'autre biologiquement motivée (IMAP) --- capturent des dynamiques
+comparables sur la fenêtre 16--40 ans. La richesse interprétative des
+paramètres du modèle IMAP, ancrés dans une théorie biologique cellulaire,
+constitue en ce sens un argument complémentaire en sa faveur, indépendamment
+des seuls critères statistiques.
+
+
 
 ## Discussion
 
