@@ -193,6 +193,92 @@ ggsave("methodo/b_et_d.png", plot = fig2, width = 12, height = 9)
 ggsave("methodo/effets_params_t_pic.png", plot = fig3, width = 12, height = 9)
 
 
+#-------------------------------------------------------------------------------
 
+library(ggplot2)
 
+# --- Fonction avec beaucoup de minima locaux ---
+f <- function(x) {
+  0.05 * x^4 - 0.3 * x^3 - 0.2 * x^2 + 2 * sin(2.5 * x) + 1.8 * cos(1.2 * x) +
+    0.9 * sin(5 * x) + 0.4 * cos(7 * x) + 0.3 * x
+}
+
+x_vals <- seq(-3, 8, length.out = 1000)
+df_curve <- data.frame(x = x_vals, y = f(x_vals))
+
+# --- Trouver les minima locaux numériquement ---
+find_local_minima <- function(x, y) {
+  idx <- which(diff(sign(diff(y))) == 2) + 1
+  data.frame(x = x[idx], y = y[idx])
+}
+
+minima <- find_local_minima(x_vals, f(x_vals))
+global_min <- minima[which.min(minima$y), ]
+local_min  <- minima[minima$y > global_min$y, ]
+
+# --- 3 points de départ seulement ---
+set.seed(42)
+n_starts <- 3
+starts <- data.frame(x_start = runif(n_starts, -3, 8))
+starts$y_start <- f(starts$x_start)
+starts$label   <- paste("Départ", LETTERS[1:n_starts])
+
+nearest_optimum <- function(xs) {
+  dists <- abs(minima$x - xs)
+  minima[which.min(dists), ]
+}
+starts$x_optim  <- sapply(starts$x_start, function(x) nearest_optimum(x)$x)
+starts$y_optim  <- f(starts$x_optim)
+
+cols <- c("#E07B54", "#5B8DB8", "#B07FCC")
+
+# --- Graphique ---
+fig4 <- ggplot() +
+  geom_line(data = df_curve, aes(x = x, y = y),
+            color = "grey30", linewidth = 1.2) +
+  
+  # Tous les minima locaux
+  geom_point(data = local_min, aes(x = x, y = y),
+             shape = 4, size = 3, color = "grey60", stroke = 1.2) +
+  
+  # Optimum global
+  geom_point(data = global_min, aes(x = x, y = y),
+             shape = 8, size = 5, color = "#6DBF7E", stroke = 1.5) +
+  annotate("text", x = global_min$x, y = global_min$y - 0.6,
+           label = "Optimum global", color = "#6DBF7E",
+           fontface = "bold", size = 3.8, hjust = 0.5) +
+  
+  # Flèches départ → optimum
+  geom_segment(data = starts,
+               aes(x = x_start, y = y_start,
+                   xend = x_optim, yend = y_optim + 0.25,
+                   color = label),
+               arrow = arrow(length = unit(0.22, "cm"), type = "closed"),
+               linewidth = 0.9, linetype = "dashed") +
+  
+  # Points de départ
+  geom_point(data = starts,
+             aes(x = x_start, y = y_start, color = label),
+             shape = 21, fill = "white", size = 5, stroke = 1.8) +
+  geom_text(data = starts,
+            aes(x = x_start, y = y_start + 0.65, label = label, color = label),
+            fontface = "bold", size = 4) +
+  
+  scale_color_manual(values = setNames(cols, starts$label)) +
+  
+  labs(
+    title    = "Descente de gradient : influence du point de départ",
+    subtitle = "Selon le point de départ, l'algorithme converge vers des optima différents",
+    x        = "Paramètre θ",
+    y        = "Fonction de perte J(θ)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position  = "none",
+    plot.title       = element_text(face = "bold", size = 14),
+    plot.subtitle    = element_text(color = "grey40", size = 10),
+    panel.grid.minor = element_blank()
+  )
+
+ggsave("methodo/descente_gradient.png", plot = fig4, width = 12, height = 9)
 

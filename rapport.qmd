@@ -392,6 +392,8 @@ L'opération est répétée jusqu'à la convergence, c'est-à-dire lorsque le gr
 
 La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
+![Optimum local et descente de graident ](methodo/descente_gradient.png){width=80%}
+
 #### Introduction de l'aléatoire {.unnumbered}
 
 Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés 1 000 modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
