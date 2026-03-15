@@ -175,22 +175,12 @@ Une limite méthodologique inhérente à la base de données doit être soulign�
 
 L'analyse repose sur un ensemble de variables structurées pour répondre à la problématique de l'évolution de la performance :
 
-<<<<<<< HEAD
 - **Age_Pic_Obs :** L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale.
 - **Sex :** Pour comparer les performances entre les femmes et les hommes.
 - **Famille :** Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
-- **Discipline :** Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
-=======
-```{=tex}
-\begin{description}
-    \item[Age\_Pic\_Obs :] L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale.
-    \item[Sex :] Pour comparer les performances entre les femmes et les hommes
-    \item[Famille :] Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
-    \item[Discipline :] Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
-    \item[meilleure\_perf\_km\_par\_h :] Conversion de la performance en kilomètre par heure afin d'avoir des valeurs positives à maximiser dans nos modèles
-\end{description}
-```
->>>>>>> 6a468e714207fe49701505da3b2a5dc4d343762a
+- **Discipline :** Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme
+- **meilleure\_perf\_km\_par\_h :** Conversion de la performance en kilomètre par heure afin d'avoir des valeurs positives à maximiser dans nos modèles
+
 
 \newpage
 
@@ -342,6 +332,19 @@ L'équation \eqref{eq:moore} est un modèle à double exponentielle, constitué 
 
 Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t.
 
+En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre.
+Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Sous l'hypothèse c << a, a est le paramètre dominant : il fixe à lui seul l'ordre de grandeur du pic, et c n'en est qu'une correction.
+
+![Effet de a et c](methodo/a_et_c.png){width=80%}
+
+Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et tardif. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
+
+![Effet de b et d](methodo/b_et_d.png){width=80%}
+
+La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. Sous l'hypothèse c << a, on a cd << ab, donc R >> 1, ln(R) > 0 et t* est bien positif — le pic existe. Plus c est faible devant a, plus R est grand et plus le pic est tardif : la descente, peu vigoureuse, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab > cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
+
+![Effet des paramètres sur t\_pic](methodo/effets_params_t_pic.png){width=80%}
+
 ### Modèle IMAP (2019)
 
 Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et al. en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors donnée par :
@@ -353,53 +356,17 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
 
-#### Adaptation du modèle IMAP à nos données {.unnumbered}
-
-Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour 
-des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ. 
-Dans ce cadre, les six paramètres du modèle --- $\alpha_0$, $\alpha_r$, 
-$\beta_0$, $N_\infty$, $\beta_r$ et $t_d$ --- sont tous identifiables car 
-la courbe observée présente à la fois une phase de croissance complète, 
-un pic prononcé et une phase de déclin étendue.
-
-Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte, 
-de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette 
-troncature crée un problème d'**identifiabilité** : plusieurs paramètres 
-deviennent colinéaires sur cette plage d'âges, rendant la matrice de gradient 
-singulière et empêchant la convergence de l'algorithme.
-
-Deux ajustements ont été nécessaires. Premièrement, les paramètres $\beta_0$ 
-et $N_\infty$ n'apparaissant que sous forme de produit $\beta_0 N_\infty$ 
-dans la formule, ils ont été fusionnés en un unique paramètre d'amplitude 
-$A = \beta_0 N_\infty$, ramenant le nombre de paramètres libres à quatre : 
-$A$, $\alpha_0$, $\alpha_r$ et $\beta_r$.
-
-Deuxièmement, le paramètre $t_d$, qui représente dans le modèle original 
-l'espérance de vie de l'athlète, ne peut pas être estimé de façon fiable 
-sur des données tronquées à 40 ans : la phase de déclin terminal est trop 
-peu visible pour contraindre ce paramètre. Nous avons donc fixé $t_d$ à 
-une valeur légèrement supérieure à l'âge maximal observé dans chaque groupe 
-(discipline $\times$ sexe), en testant trois valeurs --- $\max(\text{Age}) + 5$, 
-$\max(\text{Age}) + 10$ et $\max(\text{Age}) + 15$ --- et en retenant celle 
-qui minimise le RMSE. Cette approche garantit que le terme de déclin est 
-suffisamment visible dans la fenêtre d'observation pour que le modèle 
-soit identifiable, tout en restant cohérente avec l'interprétation biologique 
-de $t_d$ comme horizon de déclin accéléré.
-
-Il convient de noter que cette adaptation modifie partiellement 
-l'interprétation des paramètres par rapport au modèle original de Berthelot 
-et al. : $t_d$ ne représente plus l'âge de décès biologique mais un 
-paramètre de calibration lié à l'horizon temporel des données. 
-Les résultats doivent donc être interprétés avec cette nuance à l'esprit, 
-et la comparaison avec le modèle de Moore reste l'objectif central.
 
 ### Méthode générale
 
 #### Précautions pour gérer le déséquilibre des âges {.unnumbered}
 
-On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. 
 
 ![Top 32](donnees_reelles_top32/brut_10_000_Metres_men.png){width=80%}
+
+Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+
 ![Meilleure par age](donnees_reelles_meilleure_par_age/brut_10_000_Metres_men.png){width=80%}
 
 
@@ -425,13 +392,15 @@ L'opération est répétée jusqu'à la convergence, c'est-à-dire lorsque le gr
 
 La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
+![Optimum local et descente de graident ](methodo/descente_gradient.png){width=80%}
+
 #### Introduction de l'aléatoire {.unnumbered}
 
 Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés 1 000 modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
 
 ##### L'aléatoire dans le modèle de Moore
 
-## Initialisation des paramètres du modèle
+###### Initialisation des paramètres du modèle
 
 Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
 
@@ -442,7 +411,76 @@ Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'alg
 
 Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
+##### Adaptation du modèle IMAP à nos données {.unnumbered}
+
+Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour
+des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ.
+Dans ce cadre, les six paramètres --- $\alpha_0$, $\alpha_r$, $\beta_0$,
+$N_\infty$, $\beta_r$ et $t_d$ --- sont tous identifiables car la courbe
+présente à la fois une phase de croissance complète, un pic prononcé et
+une phase de déclin étendue.
+
+Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte,
+de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette
+troncature crée un problème d'**identifiabilité** : les paramètres $\beta_0$
+et $N_\infty$ n'apparaissant que sous forme de produit dans la formule,
+ils ne peuvent pas être estimés séparément. Ils ont donc été fusionnés en
+un unique paramètre d'amplitude $A = \beta_0 N_\infty$, ramenant le nombre
+de paramètres libres à quatre : $A$, $\alpha_0$, $\alpha_r$ et $\beta_r$.
+La formule estimée est ainsi :
+
+$$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
+\cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
+
+###### Choix du paramètre $t_d$ {.unnumbered}
+
+Le paramètre $t_d$, qui représente dans le modèle original l'espérance de
+vie de l'athlète, ne peut pas être estimé de façon fiable sur des données
+tronquées à 40 ans : la phase de déclin terminal est trop peu visible dans
+la fenêtre d'observation pour contraindre ce paramètre. Des tests ont
+confirmé que laisser $t_d$ libre conduit systématiquement à une matrice
+de gradient singulière et à l'absence de convergence.
+
+Nous avons donc fixé $t_d$ à une valeur supérieure à l'âge maximal observé
+dans chaque groupe (discipline $\times$ sexe), en testant huit valeurs :
+$t_d = \max(\text{Age}) + \delta$ avec $\delta \in \{10, 15, 20, 25, 30,
+35, 40, 45\}$. Pour chaque valeur de $\delta$, 500 estimations sont lancées
+avec des points de départ aléatoires, et la valeur retenue est celle qui
+minimise le RMSE sur l'ensemble des huit candidats.
+
+Cette approche garantit que le terme de déclin est suffisamment visible
+dans la fenêtre d'observation pour que le gradient soit non singulier,
+tout en restant cohérente avec l'interprétation de $t_d$ comme horizon
+temporel au-delà duquel la performance décline rapidement. Il convient
+de noter que $t_d$ ne représente plus ici l'âge de décès biologique au
+sens strict, mais un paramètre de calibration lié à la fenêtre des données.
+
+
 ##### L'aléatoire dans le modèle IMAP
+
+Comme pour le modèle de Moore, le problème des optima locaux est géré par
+une procédure de départs multiples aléatoires. Les points de départ des
+quatre paramètres libres sont générés aléatoirement à chaque itération,
+selon une logique proportionnelle à $t_d$ inspirée des travaux de Berthelot
+et al. (2019) :
+
+\begin{itemize}
+  \item $A$ est tiré négativement dans l'intervalle
+        $[-0{,}003 \cdot t_d \;;\; -0{,}002 \cdot t_d]$,
+        reflétant le fait que le terme de déclin impose $A < 0$ pour que
+        la courbe reste positive sur la fenêtre d'observation ;
+  \item $\alpha_0$ est tiré dans
+        $[0{,}00075 \cdot t_d \;;\; 0{,}00325 \cdot t_d]$ ;
+  \item $\alpha_r$ est tiré dans
+        $[0{,}00225 \cdot t_d \;;\; 0{,}00325 \cdot t_d]$ ;
+  \item $\beta_r$ est tiré négativement dans
+        $[-0{,}0015 \cdot t_d \;;\; -0{,}0005 \cdot t_d]$.
+\end{itemize}
+
+Pour chaque valeur de $t_d$ testée, 500 modèles sont estimés et le meilleur
+--- au sens du RMSE --- est retenu. Au total, 4 000 estimations sont donc
+réalisées par couple (sexe $\times$ discipline).
+
 
 #### Choix du modèle le plus performant : Critère d'optimisation {.unnumbered}
 
@@ -466,6 +504,94 @@ Pour chacun de ces critères, le modèle retenu est celui présentant la valeur 
 
 
 ## Résultats
+### Résultats du modèle IMAP {.unnumbered}
+
+Le modèle IMAP a convergé pour l'ensemble des 42 couples
+(sexe $\times$ discipline). Le Tableau 4 présente les âges au pic estimés
+par groupe de disciplines.
+
+| Groupe | Sexe | $t_{\text{pic}}$ moyen | Min | Max |
+|---|---|---|---|---|
+| Sprint | Hommes | 27,1 | 25,3 | 29,2 |
+| Sprint | Femmes | 27,3 | 26,8 | 28,2 |
+| Haies | Hommes | 27,0 | 26,9 | 27,0 |
+| Haies | Femmes | 27,2 | 26,4 | 28,0 |
+| Demi-fond | Hommes | 26,6 | 25,2 | 27,7 |
+| Demi-fond | Femmes | 26,1 | 24,9 | 27,1 |
+| Fond | Hommes | 25,2 | 24,9 | 25,4 |
+| Fond | Femmes | 27,0 | 25,8 | 28,3 |
+| Marathon | Hommes | 29,5 | 29,5 | 29,5 |
+| Marathon | Femmes | 29,8 | 29,8 | 29,8 |
+| Marche | Hommes | 28,2 | 28,2 | 28,2 |
+| Marche | Femmes | 27,3 | 27,3 | 27,3 |
+| Lancers | Hommes | 28,6 | 26,8 | 30,0 |
+| Lancers | Femmes | 27,6 | 27,2 | 28,3 |
+| Sauts | Hommes | 27,2 | 26,3 | 28,4 |
+| Sauts | Femmes | 27,9 | 27,0 | 28,7 |
+| Combinées | Hommes | 26,6 | 26,6 | 26,6 |
+| Combinées | Femmes | 25,3 | 25,3 | 25,3 |
+
+: Âge au pic estimé par le modèle IMAP selon le groupe de disciplines
+et le sexe {#tbl-imap-groupes}
+
+Plusieurs tendances se dégagent. Premièrement, le modèle IMAP identifie
+des âges au pic se situant entre 25 et 30 ans pour la majorité des estimations. 
+
+#### 
+Le marathon constitue l'exception la plus nette, avec un
+pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes ---
+valeurs cohérentes avec la littérature sur l'endurance longue, qui
+souligne le rôle de l'expérience et de la maturité physiologique dans
+cette discipline.
+
+Les différences entre sexes sont faibles et non
+systématiques : les femmes présentent un pic légèrement plus tardif
+dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais
+légèrement plus précoce dans les épreuves de fond et les épreuves
+combinées. Ces écarts restent dans une marge de 1 à 2 ans, ce qui
+suggère que le sexe n'est pas un facteur déterminant de l'âge au pic
+de performance en athlétisme d'élite. (faire les tests)
+
+Concernant la qualité d'ajustement, le RMSE varie fortement selon la
+nature de la performance mesurée. Les disciplines techniques exprimées
+en mètres (lancers notamment, RMSE moyen de 1,57 m chez les hommes)
+présentent des erreurs absolues plus élevées que les disciplines où
+la performance est exprimée en km/h (marche athlétique, RMSE $<$ 0,01).
+Cette hétérogénéité peut s'expliquer par les différences d'échelle entre les
+variables de performance et ne reflète pas une moindre qualité
+d'ajustement relatif. 
+
+#### exemple du marathon 
+
+La Figure 5 présente les ajustements obtenus pour les marathoniens et
+marathoniennes du Top 39. Chez les hommes, le modèle estime un pic de
+performance à **29,5 ans**, avec un $t_d$ retenu de 65 ans. La courbe
+capture bien la phase de progression rapide entre 18 et 28 ans, le
+plateau autour de 29--31 ans, puis le déclin progressif jusqu'à 40 ans.
+L'ajustement est visuellement satisfaisant, les résidus ne présentant
+pas de structure systématique.
+
+Chez les femmes, le pic estimé est légèrement plus tardif à **29,8 ans**,
+avec un $t_d$ retenu de 85 ans. La dispersion des points est plus
+importante que chez les hommes --- notamment la présence d'une performance
+exceptionnelle à 35 ans (18,49 km/h) qui s'écarte nettement de la
+tendance centrale --- ce qui se traduit par un RMSE légèrement plus élevé
+(0,20 km/h) et des critères AIC et BIC moins favorables. La courbe
+capture néanmoins bien la dynamique générale, avec une phase de croissance
+plus progressive que chez les hommes et un déclin légèrement plus marqué
+après 32 ans.
+
+
+La similitude des âges au pic entre hommes (29,5 ans) et femmes (29,8 ans)
+au marathon est cohérente avec la littérature sur l'endurance longue, qui
+souligne que cette discipline requiert une maturité physiologique et une
+expérience de course accumulée sur plusieurs années, indépendamment du sexe
+\cite{Allen2015}.
+
+
+![Ajustement du modèle IMAP sur le marathon (hommes et femmes).
+Points : meilleure performance annuelle par âge. Ligne rouge : courbe
+ajustée.](annexes/imap_marathon.png){width=90%}
 
 ## Discussion
 
@@ -494,7 +620,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 # Annexes {.unnumbered}
 
-<<<<<<< HEAD
+
 ## Compléments de l'analyse de distribution
 
 Cette section regroupe les graphiques de diagnostic complémentaires permettant de valider les choix statistiques effectués dans le corps du rapport.
@@ -523,5 +649,30 @@ Les graphiques Quantile-Quantile (QQ-plots) permettent de visualiser l'écart en
 =======
 ## Annexe : Modèles de Moore
 
+
 ![Lancers](annexes/ajustement_lancer.png){width=80%}
->>>>>>> 6a468e714207fe49701505da3b2a5dc4d343762a
+
+
+![Sauts](annexes/ajustement_saut.png){width=80%}
+
+
+![Sprint](annexes/ajustement_sprint.png){width=80%}
+
+
+![Haies](annexes/ajustement_haies.png){width=80%}
+
+
+![Demi-fond](annexes/ajustement_demi_fond.png){width=80%}
+
+
+![5000m - 10000m](annexes/ajustement_5000_10000.png){width=80%}
+
+
+![Marathon](annexes/ajustement_marathon.png){width=80%}
+
+
+![Marche](annexes/ajustement_marche.png){width=80%}
+
+
+![Epreuves combinées](annexes/ajustement_epreuves_combinees.png){width=80%}
+
