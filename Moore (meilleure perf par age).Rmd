@@ -2519,20 +2519,105 @@ lines(`df_women_10,000_Metres`$Age, predict(best_fit_f_10000), col="red", lwd=2)
 ## Code graphiques propres
 
 ```{r}
-library(ggplot2)
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_1500_Metres$pred   <- predict(best_fit_h_1500)
 
-# Création du graphique
-ggplot(`df_women_10,000_Metres`, aes(x = Age, y = meilleure_perf_km_par_h)) +
-  # Ajout des points (équivalent à pch=16)
-  geom_point(alpha = 0.6) + 
-  # Ajout de la ligne de prédiction (équivalent à lines())
-  geom_line(aes(y = predict(best_fit_f_10000)), color = "red", size = 1) +
-  # Titre et labels
-  labs(title = "Ajustement du modèle",
-       x = "Age",
-       y = "Meilleure performance (km/h)") +
-  # Un thème épuré
-  theme_minimal()
+df_women_1500_Metres$pred  <- predict(best_fit_f_1500)
+
+# On combine tout dans un seul gros dataframe
+df_1500 <- bind_rows(
+  mutate(df_men_1500_Metres, Epreuve = "1500m", Sexe = "Hommes"),
+  mutate(df_women_1500_Metres, Epreuve = "1500m", Sexe = "Femmes")
+)
+
+p_1500 <- ggplot(df_1500, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 1500m",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_1500m.png", plot = p_1500, width = 12, height = 9)
+```
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_200_Metres$pred   <- predict(best_fit_h_200)
+
+df_women_200_Metres$pred  <- predict(best_fit_f_200)
+
+# On combine tout dans un seul gros dataframe
+df_200 <- bind_rows(
+  mutate(df_men_200_Metres, Epreuve = "200m", Sexe = "Hommes"),
+  mutate(df_women_200_Metres, Epreuve = "200m", Sexe = "Femmes")
+)
+
+p_200 <- ggplot(df_200, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 200m",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_200m.png", plot = p_200, width = 12, height = 9)
+```
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_400_Metres_Hurdles$pred   <- predict(best_fit_h_400h)
+
+df_women_400_Metres_Hurdles$pred  <- predict(best_fit_f_400h)
+
+# On combine tout dans un seul gros dataframe
+df_400h <- bind_rows(
+  mutate(df_men_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Hommes"),
+  mutate(df_women_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Femmes")
+)
+
+p_400h <- ggplot(df_400h, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 400m haies",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_400h.png", plot = p_400h, width = 12, height = 9)
 ```
 
 ### Pour mettre en annexes
