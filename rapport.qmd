@@ -108,13 +108,11 @@ Imad {Hamri}\\
 
 # Résumé {.unnumbered}
 
-La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à trois familles de disciplines --- sprint, lancers et endurance. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
+La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à différentes familles de disciplines. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
 
 # Abstract {.unnumbered}
 
-Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model (1975) and the IMAP model (Berthelot et al., 2019), across three discipline families --- sprints, throws, and endurance. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
-
-# Mots-clés {.unnumbered}
+Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model (1975) and the IMAP model (Berthelot et al., 2019), across various discipline families. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
 
 \newpage
 
@@ -140,17 +138,13 @@ Contrairement aux approches basées uniquement sur l'âge moyen des athlètes, q
 
 ## Questions de recherches et trajectoires attendues {.unnumbered}
 
-L'analyse de nos données vise à répondre à plusieurs interrogations fondamentales sur la dynamique de la performance athlétique. La littérature scientifique nous guide dans la formulation de nos attentes quant aux résultats escomptés.
+L'analyse de nos données vise à répondre à plusieurs interrogations fondamentales sur la dynamique de la performance athlétique. La littérature scientifique nous guide dans la formulation de nos attentes quant aux résultats escomptés.\
 
-Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins [@Allen2015] ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond.
+Tout d'abord, nous cherchons à caractériser la variabilité de l'âge au pic de performance selon les disciplines. Les travaux d'Allen et Hopkins [@Allen2015] ont établi une relation claire entre la durée de l'épreuve et l'âge optimal de performance : dans les épreuves de puissance explosive et de sprint, l'âge au pic décroît avec la durée de l'effort, allant d'environ 27 ans pour les lancers à 20 ans pour les sprints courts en natation. À l'inverse, pour les épreuves d'endurance, l'âge au pic augmente avec la durée, s'échelonnant d'environ 20 ans pour les épreuves courtes à près de 39 ans pour l'ultra-endurance cycliste. Cette tendance s'explique par les différences dans les systèmes énergétiques sollicités et le temps nécessaire au développement complet des capacités aérobies. Nous nous attendons donc à observer dans nos données un âge au pic plus précoce pour les épreuves de sprint et de saut, et plus tardif pour les disciplines d'endurance comme le demi-fond et le fond.\
 
-La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins [@Allen2015], rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 [@Infographic2020] révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes.
+La question des différences entre sexes mérite également une attention particulière. Bien que plusieurs études, notamment celle d'Allen et Hopkins [@Allen2015], rapportent peu de différences entre hommes et femmes dans l'âge au pic de performance pour les épreuves explosives et d'endurance, d'autres travaux suggèrent une distinction : l'analyse des Jeux Olympiques 2020 [@Infographic2020] révèle que l'âge moyen des athlètes masculins est d'un an supérieur à celui des femmes. De plus, des études sur le vieillissement athlétique indiquent que le déclin de performance avec l'âge pourrait être plus marqué chez les femmes que chez les hommes dans certaines disciplines, particulièrement en sprint, tandis que cette différence s'atténue dans les épreuves d'endurance longue. Nos analyses chercheront à confirmer ou infirmer ces tendances sur notre échantillon d'athlètes.\
 
-<<<<<<< HEAD
-Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter \cite{Carter2019} décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \
-=======
-Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter [@Carter2019] décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \\
->>>>>>> 3adb33a3ae72b53f08e8aa085488ad26db2c90d0
+Enfin, la dynamique temporelle de la performance nous intéresse particulièrement. La relation âge-performance suit typiquement une forme asymétrique en U inversé : une phase de croissance progressive durant l'enfance et l'adolescence, un plateau lors du pic de performance à l'âge adulte, puis un déclin dont la vitesse s'accélère après 70 ans. Carter [@Carter2019] décrit cette asymétrie comme une caractéristique fondamentale du vieillissement humain. La phase de croissance et la phase de déclin ne sont pas symétriques, et cette asymétrie pourrait varier selon les disciplines. Les épreuves de puissance, qui dépendent fortement des fibres musculaires rapides, connaissent un déclin plus précoce et prononcé que les épreuves d'endurance, où la perte de capacité aérobie est plus progressive. Nous explorerons donc la vitesse de progression en début de carrière et la vitesse de déclin après le pic, en comparant ces dynamiques entre disciplines et entre sexes. \
 
 \newpage
 
@@ -160,7 +154,7 @@ Notre étude s'appuie sur une base de données issue de World Athletics, la féd
 
 Les données comportent plusieurs variables clés : l'identifiant de l'athlète, son âge au moment de la performance, son sexe, sa nationalité, la discipline pratiquée, la performance brute (temps, distance ou hauteur selon la discipline) et le ResultScore. Ce dernier, développé par World Athletics, constitue une métrique normalisée permettant de comparer les performances entre disciplines différentes en s'appuyant sur des paramètres définis par des experts du domaine. \
 
-La base couvre l'ensemble des disciplines olympiques en athlétisme : courses (sprint, demi-fond, fond, haies, relais), sauts (hauteur, longueur, triple saut, perche), lancers (poids, disque, javelot, marteau) et épreuves combinées (décathlon, heptathlon). Cette diversité permet d'analyser finement les spécificités de chaque famille de disciplines. \
+La base couvre l'ensemble des disciplines olympiques en athlétisme : courses (sprint, demi-fond, fond, haies), sauts (hauteur, longueur, triple saut, perche), lancers (poids, disque, javelot, marteau) et épreuves combinées (décathlon, heptathlon). Cette diversité permet d'analyser finement les spécificités de chaque famille de disciplines. \
 
 Il convient toutefois de noter certaines limites structurelles : un déséquilibre dans la répartition des athlètes par âge, avec une sous-représentation des athlètes de plus de 35 ans, ainsi qu'une possible hétérogénéité dans la qualité de l'enregistrement des données selon les périodes et les pays. Ces biais potentiels seront pris en compte dans notre analyse et discutés dans l'interprétation des résultats.
 
@@ -173,7 +167,9 @@ Le passage des données brutes à un échantillon exploitable a nécessité un p
 Une limite méthodologique inhérente à la base de données doit être soulignée : la date exacte de la performance n'étant pas disponible, l'âge au pic a été estimé par la différence entre l'année de la compétition et l'année de naissance de l'athlète.
 
 - **Identification des carrières terminées :** Afin d'éviter le biais de troncature (inclure un athlète n'ayant pas encore atteint son pic), nous avons restreint l'étude aux athlètes retraités. Un seuil de "retraite" a été fixé à l'année 2022 : tout athlète ayant réalisé une performance après cette date a été considéré comme actif et exclu de l'analyse.
-- **Sélection de la meilleure performance annuelle :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en trois familles majeures : **Sprint**, **Lancers** et **Endurance**.
+
+- **Sélection de la meilleure performance annuelle :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en neuf familles majeures :**5000-100000**, **800 - 1500 - Steeple**, **Épreuves combinées**, **Marche**, **Marathon**, **Sauts**, **Haies**, **Sprint** et **Lancers**.
+
 - **Filtrage par expérience et équilibrage (Top 32) :** Pour garantir que l'âge au pic observé soit représentatif d'une trajectoire complète, seuls les athlètes ayant au moins **5 années de performances** enregistrées dans une même discipline ont été retenus. Enfin, pour corriger les disparités d'effectifs entre les sexes, nous avons procédé à un échantillonnage équilibré en sélectionnant le **Top 32** des meilleurs athlètes par discipline et par sexe, seuil défini par l'effectif le plus restreint du jeu de données (heptathlon).
 
 ## Variables d'intérêt
@@ -184,11 +180,13 @@ L'analyse repose sur un ensemble de variables structurées pour répondre à la 
 \vspace{5pt}
 - **Sex :** Pour comparer les performances entre les femmes et les hommes.
 \vspace{5pt}
-- **Famille :** Regroupement des disciplines par filières énergétiques (Sprint, Lancers, Endurance).
+- **Famille :** Regroupement des disciplines par filières énergétiques.
 \vspace{5pt}
 - **Discipline :** Pour observer les ressemblances et différences entre les 24 disciplines en athlétisme.
 \vspace{5pt}
 - **meilleure\_perf\_km\_par\_h :** Conversion de la performance en kilomètre par heure afin d'avoir des valeurs positives à maximiser dans nos modèles.
+\vspace{5pt}
+- **mark_numeric :** Meilleure performance d'un athlète sur une saison au format numérique (seconde ou mètre selon la discipline).
 
 
 \newpage
@@ -204,7 +202,7 @@ La démarche analytique est structurée en trois phases complémentaires. Une **
 
 ## Résultats descriptifs et indicateurs de position 
 
-Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) permet d'observer que la majorité des records personnels sont enregistrés dans une fenêtre comprise entre 22 et 28 ans pour les deux sexes. **On note cependant une répartition distincte selon le genre : les hommes sont davantage représentés entre 21 et 24 ans, tandis que la tendance s'inverse par la suite. À partir de 26 ans, on observe une proportion plus importante de femmes atteignant leur âge au pic.**
+Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) permet d'observer que la majorité des records personnels sont enregistrés dans une fenêtre comprise entre 22 et 28 ans pour les deux sexes. On note cependant une répartition distincte selon le genre : les hommes sont davantage représentés entre 21 et 24 ans, tandis que la tendance s'inverse par la suite. À partir de 26 ans, on observe une proportion plus importante de femmes atteignant leur âge au pic.
 
 ::: {#fig-hist fig-pos='H'}
 \fbox{\includegraphics[width=0.85\textwidth]{outputs/histogramme_global.png}}
@@ -233,7 +231,9 @@ Le groupe **Sprint** se distingue par la maturité la plus précoce, avec des m�
 On observe des structures de distribution spécifiques selon les familles :
 
 - **Proximité entre sexes :** En **Haies**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes.
+\vspace{5pt}
 - **Dispersion :** La famille **Lancers** et le **Marathon** montrent des distributions supérieures très étirées, signalant une plus grande variabilité de l'âge au pic.
+\vspace{5pt}
 - **Valeurs extrêmes :** Les **Lancers** et le **5000 - 10000** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement au épreuves combinées ou aux Haies.
 
 ## Étude de la distribution et vérification de la normalité
@@ -253,9 +253,9 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 L'observation de la @fig-hist-men révèle des profils variés :
 
 - Certaines familles, comme le **Sprint**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif.
-
+\vspace{5pt}
 - D'autres, comme les **Lancers**, présentent une distribution plus étalée, suggérant une plus grande hétérogénéité des âges de performance.
-
+\vspace{5pt}
 - De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est limité avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
 
 *Note : Les histogrammes concernant les athlètes féminines ainsi que l'ensemble des graphiques Quantile-Quantile (QQ-plots) sont consultables en Annexe.*
@@ -281,9 +281,7 @@ Pour confirmer les observations visuelles, un test de **Shapiro-Wilk** a été r
 
 ### Conclusion sur le choix des tests {.unnumbered .unlisted}
 
-L'analyse du tableau @tbl-shapiro montre que l'hypothèse de normalité est rejetée pour la majorité des familles de disciplines. Ce résultat corrobore les observations visuelles : la distribution de l'âge au pic présente majoritairement une asymétrie positive, marquée par un seuil d'accès au haut niveau vers 20 ans et un maintien de la performance qui s'étire pour certains athlètes au-delà de 30 ans.
-
-Bien que la normalité soit statistiquement acceptée pour quelques groupes isolés, une **méthodologie non paramétrique unique** est privilégiée pour l'ensemble de l'étude. Ce choix garantit la cohérence des comparaisons entre toutes les disciplines et assure la robustesse des résultats face aux distributions asymétriques observées.
+L'analyse du tableau @tbl-shapiro montre que l'hypothèse de normalité est rejetée pour la majorité des familles de disciplines. Ce résultat corrobore les observations visuelles : la distribution de l'âge au pic présente majoritairement une asymétrie positive, marquée par un seuil d'accès au haut niveau vers 20 ans et un maintien de la performance qui s'étire pour certains athlètes au-delà de 30 ans. Bien que la normalité soit statistiquement acceptée pour quelques groupes isolés, une **méthodologie non paramétrique unique** est privilégiée pour l'ensemble de l'étude. Ce choix garantit la cohérence des comparaisons entre toutes les disciplines et assure la robustesse des résultats face aux distributions asymétriques observées.\
 
 **Implication méthodologique :** La distribution de l'âge au pic n'étant pas uniformément normale, l'utilisation de la moyenne et de l'écart-type comme seuls indicateurs serait trompeuse. Par conséquent :
 
@@ -297,18 +295,20 @@ Bien que la normalité soit statistiquement acceptée pour quelques groupes isol
 Le raisonnement statistique reposant sur la comparaison des rangs plutôt que des moyennes permet de s'affranchir des contraintes liées aux valeurs extrêmes et à l'asymétrie des données. Pour ce faire, les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
 
 - **Test de Wilcoxon-Mann-Whitney :** Ce test est mobilisé pour comparer l'âge au pic entre les sexes. Il teste si une distribution est statistiquement décalée par rapport à l'autre en se basant sur la somme des rangs.
+\vspace{5pt}
 - **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes (les familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur et évalue si au moins une famille présente une médiane statistiquement différente des autres.
+\vspace{5pt}
 - **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure est utilisée pour identifier quelles familles se distinguent spécifiquement les unes des autres. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
 
 ### Résultats des tests globaux {.unnumbered .unlisted}
 
-**Comparaison par sexe**
+\noindent**Comparaison par sexe**
 
 \vspace{4pt}
 
-Le test de Wilcoxon-Mann-Whitney confirme une différence statistiquement significative entre les deux distributions ($p = 0,0016$). Ce résultat permet de rejeter l'hypothèse d'une égalité des médianes et indique que, dans cet échantillon, l'âge au pic des athlètes féminines (médiane à 26 ans) est légèrement supérieur à celui des athlètes masculins (médiane à 25 ans).
+Le test de Wilcoxon-Mann-Whitney confirme une différence statistiquement significative entre les deux distributions ($p = 0,0016$). Ce résultat permet de rejeter l'hypothèse d'une égalité des médianes et indique que, dans cet échantillon, l'âge au pic des athlètes féminines (médiane à 26 ans) est légèrement supérieur à celui des athlètes masculins (médiane à 25 ans).\
 
-**Comparaison par familles de disciplines**
+\noindent**Comparaison par familles de disciplines**
 
 \vspace{4pt}
 
@@ -336,13 +336,13 @@ Sur l'ensemble des épreuves significatives, une tendance se dégage : le pic de
 
 ## Discussion
 
-Les tests statistiques effectués suggèrent que l'âge au pic de performance pourrait être influencé par une interaction complexe entre le sexe et la nature de l'effort physique. 
+Les analyses statistiques réalisées suggèrent que l’âge au pic de performance pourrait résulter d'une interaction entre le sexe et la nature des filières énergétiques sollicitées.\
 
-L'écart significatif identifié dans les disciplines d'endurance (10 000m, Marathon) permet de supposer que les carrières féminines dans ces spécialités pourraient suivre une trajectoire de maturité plus lente ou plus durable. Il est possible que des facteurs liés à la gestion des carrières ou à des capacités d'adaptation aérobie prolongées chez les femmes expliquent ce décalage d'un à quatre ans.
+Dans les disciplines d’endurance pure (10 000 m, marathon), un écart significatif est identifié, ce qui permet de supposer que les trajectoires de carrière féminines pourraient être caractérisées par une maturité plus tardive ou une longévité accrue dans l'élite. Il est possible que des facteurs liés à la gestion des carrières ou à des capacités d'adaptation aérobie prolongées chez les femmes expliquent ce décalage d'un à quatre ans, comme cela a pu être évoqué dans certains travaux sur le métabolisme lipidique [Source].\
 
-Cependant, l'absence de lien significatif dans les épreuves de sprint court (100m, 200m) ou de sauts suggère que pour les disciplines dépendant prioritairement de la puissance explosive, les contraintes biologiques pourraient imposer un cadre temporel plus rigide, identique pour les deux sexes.
+À l'inverse, l'absence de différence significative observée dans les épreuves de sprint court ou de sauts laisse supposer que pour les disciplines dépendant prioritairement de la puissance explosive, des contraintes biologiques pourraient imposer un cadre temporel plus rigide et similaire pour les deux sexes.\
 
-Ces résultats doivent être interprétés avec prudence. Bien que les tests montrent des liens statistiques solides, ces derniers ne permettent pas d'affirmer une causalité biologique directe. Il est envisageable que des facteurs environnementaux ou l'organisation des circuits de compétition mondiaux participent à ces différences observées. Ces constats justifient toutefois l'intérêt d'une modélisation séparée par famille dans la suite de cette étude.
+Ces interprétations doivent toutefois être considérées avec prudence. Bien que des liens statistiques soient mis en évidence, une causalité biologique directe ne peut être affirmée sur la base de ces seules données. Il est envisageable que des facteurs environnementaux, tels que la structure des circuits professionnels ou des contextes socio-économiques, participent aux disparités constatées [Source]. Ces observations, limitées à l'échantillon étudié, justifient néanmoins l'intérêt d'une modélisation distincte par famille de disciplines pour la suite des travaux.
 
 
 
@@ -370,7 +370,7 @@ Dans son modèle, Dan H. Moore explique la relation entre l'âge et la performan
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-L'équation \eqref{eq:moore} est un modèle à double exponentielle, constitué de deux composantes :\
+L'équation [(@eq-moore)] est un modèle à double exponentielle, constitué de deux composantes :\
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
@@ -540,11 +540,11 @@ Afin de comparer les différents modèles de régression linéaire considérés 
 
 ##### AIC : Akaike Information Criterion
 
-L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne le nombre d'observations, p le nombre de variables explicatives retenues dans le modèle, et SCR la somme des carrés des résidus. Cette formule, valable sous hypothèse de normalité des erreurs, quantifie l'erreur de prévision via la divergence de Kullback-Leibler.
+L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne le nombre d'observations, p le nombre de variables explicatives retenues dans le modèle, et SCR la somme des carrés des résidus. Cette formule, valable sous hypothèse de normalité des erreurs, quantifie l'erreur de prévision.
 
 ##### BIC : Bayesian Information Criterion
 
-Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $$\ln (n)$$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents. 
+Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents. 
 
 Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.
 
