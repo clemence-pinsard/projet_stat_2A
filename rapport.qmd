@@ -360,7 +360,7 @@ Ces interprétations doivent toutefois être considérées avec prudence. Bien q
 
 # Etude 2 : Modèles
 
-## Méthodologie
+## Modèles
 
 De nombreux modèles ont déjà été élaborés afin de modéliser la relation entre l'âge et la performance en athlétisme. Nous allons nous concentrer sur le modèle de Moore (1975) ainsi que sur le modèle IMAP (2019). Ces deux modèles sont des modèles incluant une partie qui va croitre avec l'âge jusqu'à atteindre un pic ainsi qu'une seconde partie de décroissance.
 
@@ -401,26 +401,27 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
 
 
-### Méthode générale
+## Méthode générale
 
-#### Précautions pour gérer le déséquilibre des âges {.unnumbered}
+### Précautions pour gérer le déséquilibre des âges 
 
 On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. 
 
-![Top 32](donnees_reelles_top32/brut_10_000_Metres_men.png){width=80%}
+![Top 32](donnees_reelles_top32/brut_1500_Metres_men.png){width=80%}
 
 Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
 
-![Meilleure par age](donnees_reelles_meilleure_par_age/brut_10_000_Metres_men.png){width=80%}
+![Meilleure par age](donnees_reelles_meilleure_par_age/brut_1500_Metres_men.png){width=80%}
 
 
-#### Descente de gradients {.unnumbered}
+### Descente de gradients 
 
-##### Pourquoi cette méthode ?
+#### Pourquoi cette méthode ? {.unnumbered}
+
 
 La méthode de la descente de gradient est nécessaire car dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
 
-##### Fonctionnement
+#### Fonctionnement {.unnumbered}
 
 La descente de gradient est un algorithme d'optimisation itératif du premier ordre. Son objectif est de déterminer le jeu de paramètres $\theta={\theta_1, ...,\theta_n}$ qui minimise une fonction de coût (ou fonction de perte), notée $J(\theta)$. Dans ce cadre, nous utilisons l'Erreur Quadratique Moyenne (MSE), qui mesure l'écart entre les prédictions du modèle et les observations réelles.
 Le gradient, noté $\nabla J(\theta)$, est le vecteur regroupant les dérivées partielles de la fonction de coût par rapport à chaque paramètre : $$\nabla J(\theta) = \begin{pmatrix} \frac{\partial J}{\partial \theta_1} \\ \vdots \\ \frac{\partial J}{\partial \theta_n} \end{pmatrix}$$
@@ -432,30 +433,29 @@ Dans cette formule, $\eta$ représente le taux d'apprentissage (learning rate). 
 L'opération est répétée jusqu'à la convergence, c'est-à-dire lorsque le gradient devient proche de zéro (indiquant que nous avons atteint un minimum) ou lorsque le nombre maximal d'itérations est atteint.
 
 
-##### Optimum local
+#### Optimum local {.unnumbered}
 
 La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
 ![Optimum local et descente de graident ](methodo/descente_gradient.png){width=80%}
 
-#### Introduction de l'aléatoire {.unnumbered}
+### Introduction de l'aléatoire pour initialiser les paramètres
 
-Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés 1 000 modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
+Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés plusieurs modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
 
-##### L'aléatoire dans le modèle de Moore
 
-###### Initialisation des paramètres du modèle
+#### L'aléatoire dans le modèle de Moore {.unnumbered}
 
 Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
 
 * **$a$** est tiré uniformément entre 0,9 et 1,2 fois la valeur de performance maximale observée, reflétant le fait que le plateau asymptotique du terme montant est légèrement supérieur au pic ;
 * **$b$** est tiré uniformément autour du rapport $\frac{\text{pente initiale}}{a}$, conformément à l'approximation $f'(0) \approx ab$ valable lorsque $c \ll a$ ;
 * **$c$** est tiré uniformément dans un voisinage étroit de $a/100$, traduisant l'hypothèse que le terme descendant est une petite perturbation devant le terme montant ;
-* **$d$** est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points situés dans la phase descendante de la courbe.
+* **$d$** est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points t_3 et t_4 situés dans la phase descendante de la courbe.
 
 Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
-##### Adaptation du modèle IMAP à nos données {.unnumbered}
+#### Adaptation du modèle IMAP à nos données {.unnumbered}
 
 Le modèle IMAP tel que proposé par Berthelot et al. (2019) a été conçu pour
 des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ.
@@ -477,8 +477,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 \cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
 
 
-
-##### Choix du paramètre $t_d$ {.unnumbered}
+#### Choix du paramètre $t_d$ {.unnumbered}
 
 Le paramètre $t_d$, qui représente dans le modèle original l'espérance de
 vie de l'athlète, ne peut pas être estimé de façon fiable sur des données
@@ -502,7 +501,7 @@ de noter que $t_d$ ne représente plus ici l'âge de décès biologique au
 sens strict, mais un paramètre de calibration lié à la fenêtre des données.
 
 
-##### L'aléatoire dans le modèle IMAP
+#### L'aléatoire dans le modèle IMAP
 
 Comme pour le modèle de Moore, le problème des optima locaux est géré par
 une procédure de départs multiples aléatoires. Les points de départ des
@@ -528,21 +527,23 @@ Pour chaque valeur de $t_d$ testée, 500 modèles sont estimés et le meilleur
 réalisées par couple (sexe $\times$ discipline).
 
 
-#### Choix du modèle le plus performant : Critère d'optimisation {.unnumbered}
+### Choix du modèle le plus performant : Critère d'optimisation 
 
 Une fois les modèles estimés, il va nous falloir déterminer les paramètres optimaux pour chaque modèle afin de résumer au mieux les données et obtenir une courbe la plus représentative possible. Il nous faut donc un critère d'optimisation. Le critère d'optimisation que nous allons utiliser est assez classique : il s'agit de l'erreur quadratique (ou méthode des moindres carrés). Ce critère consiste à minimiser la somme des erreurs quadratiques, notée : $$S(\theta) = \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$ On cherche donc : $$\arg\min_{\theta} \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$.
 
+Où f_i est la performance observée à l'âge i (age_i), \hat{f}(age_i, \theta) est la performance estimée par notre modèle à l'âge i avec l'ensemble de paramètres \theta.
+
 Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
 
-#### Comparaison des modèles : AIC et BIC {.unnumbered}
+### Comparaison des modèles : AIC et BIC {.unnumbered}
 
 Afin de comparer les différents modèles de régression linéaire considérés dans cette étude, les critères d'information AIC (Akaike Information Criterion) et BIC (Bayesian Information Criterion) sont utilisés. Ces deux critères reposent sur une logique commune : pénaliser la complexité du modèle afin d'éviter le surapprentissage, tout en cherchant à minimiser l'erreur de prévision sur de nouvelles observations.
 
-##### AIC : Akaike Information Criterion
+#### AIC : Akaike Information Criterion
 
 L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne le nombre d'observations, p le nombre de variables explicatives retenues dans le modèle, et SCR la somme des carrés des résidus. Cette formule, valable sous hypothèse de normalité des erreurs, quantifie l'erreur de prévision.
 
-##### BIC : Bayesian Information Criterion
+#### BIC : Bayesian Information Criterion
 
 Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents. 
 
