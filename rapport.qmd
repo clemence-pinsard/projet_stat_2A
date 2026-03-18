@@ -205,7 +205,7 @@ Dans l’optique de mieux comprendre la structure de l'échantillon d'élite et 
 
 La démarche analytique est structurée en trois phases complémentaires. Une **analyse descriptive** globale est d'abord menée pour identifier les indicateurs de position (médiane, quartiles) selon le sexe et la discipline. Ensuite, la distribution des données est soumise à un **test de normalité** (Shapiro-Wilk) afin de valider le cadre statistique. Enfin, une **analyse inférentielle** est déployée pour tester statistiquement l'influence du sexe et de la spécialité athlétique sur l'âge de performance.
 
-## Résultats descriptifs et indicateurs de position 
+## Analyse descriptive de l'âge au pic : Indicateurs de position et variabilité inter-disciplines
 
 Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) permet d'observer que la majorité des records personnels sont enregistrés dans une fenêtre comprise entre 22 et 28 ans pour les deux sexes. On note cependant une répartition distincte selon le genre : les hommes sont davantage représentés entre 21 et 24 ans, tandis que la tendance s'inverse par la suite. À partir de 26 ans, on observe une proportion plus importante de femmes atteignant leur âge au pic.
 
@@ -245,11 +245,11 @@ Le groupe **Sprint** se distingue par la maturité la plus précoce, avec des m�
 
 \vspace{4pt}
 
-\noindent Cette première approche par grandes familles met en évidence des tendances structurelles liées à la nature de l'effort. Toutefois, la variabilité observée (notamment les nombreux points extrêmes) suggère que l'analyse par famille peut masquer des disparités internes. Pour affiner cette compréhension, une analyse désagrégée à l'échelle de chaque discipline est nécessaire afin d'identifier les spécialités qui s'écartent des moyennes de leur propre groupe.
+\noindent Cette première approche par grandes familles met en évidence des tendances liées à la nature de l'effort. Toutefois, la variabilité observée (notamment les nombreux points extrêmes) suggère que l'analyse par famille peut masquer des disparités internes. Pour affiner cette compréhension, une analyse à l'échelle de chaque discipline est nécessaire afin d'identifier les spécialités qui s'écartent des moyennes de leur propre groupe.
 
 ### Analyse descriptive par discipline {.unnumbered .unlisted}
 
-Le tableau ci-dessous présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue  permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
+Le tableau ci-dessous présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
 
 | Discipline | Hommes <br> (Moy ± SD) | Hommes <br> Med [Min-Max] | Femmes <br> (Moy ± SD) | Femmes <br> Med [Min-Max] |
 |:-----------|:-------------------:|:-----------------:|:-------------------:|:-----------------:|
@@ -281,7 +281,7 @@ Le tableau ci-dessous présente une synthèse détaillée de l'âge au pic obser
 
 \noindent L'observation de ce tableau permet de noter que, pour la majorité des disciplines, la **moyenne est supérieure à la médiane**. Ce constat est un indicateur mathématique d'une distribution étirée vers les âges élevés (asymétrie positive).
 
-### Étude de la distribution et vérification de la normalité {.unnumbered .unlisted}
+## Diagnostic de distribution et test de normalité
 
 Avant de procéder aux tests d'inférence, il est indispensable d'étudier la forme de la distribution de notre variable d'intérêt : l'âge au pic observé. Cette étape permet de vérifier si les données suivent une loi normale, condition *sine qua non* pour l'utilisation de tests paramétriques classiques.
 
@@ -304,9 +304,9 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \noindent L'observation de la @fig-hist-men révèle des profils variés :
 
-- Certaines familles, comme le **Sprint**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif.
+- Certaines familles, comme le **800 - 1500 - Steeple**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif.
 \vspace{5pt}
-- D'autres, comme les **Lancers**, présentent une distribution plus étalée, suggérant une plus grande hétérogénéité des âges de performance.
+- D'autres, comme les **Lancers** et le **Marathon**, présentent une distribution décalée vers la droite et plus étalée, suggérant une plus grande hétérogénéité des âges de performance.
 \vspace{5pt}
 - De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est limité avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
 
@@ -314,7 +314,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
 
-### Test statistique de normalité (Shapiro-Wilk) {.unnumbered .unlisted}
+### Test statistique de normalité {.unnumbered .unlisted}
 
 \noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle ($H_0$ : normalité) selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
@@ -337,10 +337,6 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 2. À l'échelle des **disciplines** (*n* = 32), niveau considéré comme le "juste milieu" statistique (suffisant pour la puissance mais évitant la sur-sensibilité), le taux de rejet tombe à 23,8 %.
 
-\vspace{4pt}
-
-\noindent Toutefois, le fait qu'un quart des disciplines rejette toujours la normalité malgré un effectif réduit ($n=32$) confirme que l'asymétrie observée sur les graphiques n'est pas un artefact lié au volume de données, mais une caractéristique biologique réelle de l'âge au pic de performance. Cette distribution se caractérise par un seuil d'accès au haut niveau et un maintien de la performance qui s'étire pour certains athlètes, créant une "queue" de distribution vers les âges avancés.
-
 ### Conclusion sur le choix des tests {.unnumbered .unlisted}
 
 L'analyse combinée des taux de rejet et des diagnostics graphiques (QQ-plots en annexe) confirme que l'âge au pic ne suit pas une loi normale de manière universelle. Bien que la normalité soit statistiquement acceptée pour certaines disciplines lorsque l'effectif est strictement contrôlé à $n=32$, une **méthodologie non paramétrique unique** est privilégiée pour l'ensemble de l'étude. Ce choix garantit la cohérence des comparaisons entre tous les groupes et assure la robustesse des résultats face aux distributions asymétriques observées.\
@@ -353,7 +349,7 @@ L'analyse combinée des taux de rejet et des diagnostics graphiques (QQ-plots en
 
 2.  Des **tests non paramétriques** (Wilcoxon-Mann-Whitney et Kruskal-Wallis), fondés sur les rangs, sont exclusivement utilisés pour les comparaisons statistiques dans la suite de l'analyse.
 
-## Analyse inférentielle : Influence du sexe et de la spécialité
+## Analyse inférentielle : Effets du sexe et de la spécialité sur l’âge au pic
 
 ### Méthodologie {.unnumbered .unlisted}
 
@@ -406,7 +402,7 @@ Le raisonnement statistique reposant sur la comparaison des rangs plutôt que de
 
 Les résultats indiquent un écart significatif pour seulement 4 des 21 disciplines. Dans les épreuves du 800 m, du 10 000 m et du Marathon, la médiane féminine est supérieure à la médiane masculine. Le Lancer du Disque présente le schéma inverse (médiane masculine supérieure). Pour les 17 autres épreuves, l'hypothèse nulle d'égalité des médianes entre les sexes ne peut être rejetée.
 
-### Discussion {.unnumbered .unlisted}
+## Discussion 
 
 Les analyses statistiques réalisées suggèrent que l’âge au pic de performance pourrait résulter d’une interaction entre le sexe et la nature des filières énergétiques sollicitées.\
 
@@ -449,15 +445,26 @@ Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) corresp
 En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre.
 Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Sous l'hypothèse c << a, a est le paramètre dominant : il fixe à lui seul l'ordre de grandeur du pic, et c n'en est qu'une correction.
 
-![Effet de a et c](methodo/a_et_c.png){width=80%}
+::: {#fig-params-ac fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
+
+Effet des paramètres $a$ et $c$ sur la modélisation
+:::
 
 Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et tardif. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
 
-![Effet de b et d](methodo/b_et_d.png){width=80%}
+::: {#fig-params-bd fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{methodo/b_et_d.png}}
 
+Effet des paramètres $b$ et $d$ sur la modélisation
+:::
 La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. Sous l'hypothèse c << a, on a cd << ab, donc R >> 1, ln(R) > 0 et t* est bien positif — le pic existe. Plus c est faible devant a, plus R est grand et plus le pic est tardif : la descente, peu vigoureuse, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab > cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
 
-![Effet des paramètres sur t\_pic](methodo/effets_params_t_pic.png){width=80%}
+::: {#fig-effets-tpic fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{methodo/effets_params_t_pic.png}}
+
+Effet des paramètres sur l'âge au pic théorique ($t_{pic}$)
+:::
 
 ### Modèle IMAP (2019)
 
@@ -477,12 +484,19 @@ où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0
 
 On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle. 
 
-![Top 32](donnees_reelles_top32/brut_1500_Metres_men.png){width=80%}
+::: {#fig-brut-1500m-men fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_top32/brut_1500_Metres_men.png}}
+
+Top 32 
+:::
 
 Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
 
-![Meilleure par age](donnees_reelles_meilleure_par_age/brut_1500_Metres_men.png){width=80%}
+::: {#fig-best-age-1500m-men fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_meilleure_par_age/brut_1500_Metres_men.png}}
 
+Meilleures performances par âge (1500 m - Hommes)
+:::
 
 ### Descente de gradients 
 
@@ -509,7 +523,11 @@ Dans cette étude, l'optimisation est réalisée via l'algorithme de Levenberg-M
 
 La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
-![Optimum local et descente de graident ](methodo/descente_gradient.png){width=80%}
+::: {#fig-descente-gradient fig-pos='H'}
+\fbox{\includegraphics[width=0.80\textwidth]{methodo/descente_gradient.png}}
+
+Optimum local et descente de graident 
+:::
 
 ### Introduction de l'aléatoire pour initialiser les paramètres
 
