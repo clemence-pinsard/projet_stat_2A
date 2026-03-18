@@ -228,7 +228,9 @@ Une différence d'un an est observée sur l'âge médian, s'établissant à 25 a
 
 Le groupe **Sprint** se distingue par la maturité la plus précoce, avec des médianes basses et une distribution resserrée. À l'inverse, le **Marathon** et les **Lancers** affichent les médianes les plus élevées.
 
-On observe des structures de distribution spécifiques selon les familles :
+\vspace{5pt}
+
+\noindent On observe des structures de distribution spécifiques selon les familles :
 
 - **Proximité entre sexes :** En **Haies**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes.
 \vspace{5pt}
@@ -236,7 +238,45 @@ On observe des structures de distribution spécifiques selon les familles :
 \vspace{5pt}
 - **Valeurs extrêmes :** Les **Lancers** et le **5000 - 10000** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement au épreuves combinées ou aux Haies.
 
-## Étude de la distribution et vérification de la normalité
+\vspace{4pt}
+
+\noindent Cette première approche par grandes familles met en évidence des tendances structurelles liées à la nature de l'effort. Toutefois, la variabilité observée (notamment les nombreux points extrêmes) suggère que l'analyse par famille peut masquer des disparités internes. Pour affiner cette compréhension, une analyse désagrégée à l'échelle de chaque discipline est nécessaire afin d'identifier les spécialités qui s'écartent des moyennes de leur propre groupe.
+
+### Analyse descriptive par discipline {.unnumbered .unlisted}
+
+Le tableau ci-dessous présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue  permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
+
+| Discipline | Hommes <br> (Moy ± SD) | Hommes <br> Med [Min-Max] | Femmes <br> (Moy ± SD) | Femmes <br> Med [Min-Max] |
+|:-----------|:-------------------:|:-----------------:|:-------------------:|:-----------------:|
+| **100 m** | 25.6 ± 4.1 | 24 [21-40] | 24.8 ± 3.0 | 25 [20-31] |
+| **200 m** | 24.5 ± 3.0 | 24 [21-33] | 25.3 ± 3.4 | 26 [20-33] |
+| **400 m** | 24.1 ± 3.3 | 23 [18-31] | 25.3 ± 2.9 | 25 [20-32] |
+| **800 m** | 22.9 ± 3.5 | 23 [18-30] | 25.4 ± 2.7 | 26 [19-32] |
+| **1500 m** | 25.9 ± 4.0 | 25 [19-35] | 25.9 ± 3.5 | 26 [19-34] |
+| **5000 m** | 24.5 ± 4.6 | 22 [19-37] | 25.2 ± 3.4 | 26 [20-33] |
+| **10 000 m** | 23.7 ± 3.6 | 23 [18-36] | 26.8 ± 4.9 | 27 [20-39] |
+| **Marathon** | 27.7 ± 4.0 | 27 [22-36] | 30.0 ± 4.1 | 29 [18-40] |
+| **Haies** | 26.0 ± 2.8 | 26 [21-31] | 26.9 ± 2.9 | 27 [20-32] |
+| **400 m H** | 24.6 ± 2.7 | 24 [20-31] | 25.8 ± 2.4 | 26 [20-29] |
+| **Steeple** | 24.9 ± 3.6 | 24 [19-33] | 25.3 ± 3.9 | 26 [18-32] |
+| **Marche** | 26.3 ± 3.6 | 26 [21-37] | 25.8 ± 3.7 | 26 [20-34] |
+| **Hauteur** | 25.4 ± 3.0 | 25 [21-32] | 25.4 ± 3.0 | 26 [20-33] |
+| **Perche** | 26.5 ± 3.0 | 26 [22-35] | 27.0 ± 3.4 | 27 [20-35] |
+| **Longueur** | 25.6 ± 3.2 | 26 [19-33] | 26.2 ± 3.5 | 26 [20-34] |
+| **T. saut** | 25.6 ± 3.3 | 25 [21-35] | 26.7 ± 3.2 | 26 [21-32] |
+| **Poids** | 26.8 ± 2.9 | 26 [23-36] | 26.7 ± 3.5 | 26 [21-34] |
+| **Disque** | 28.8 ± 3.3 | 28 [22-36] | 26.5 ± 4.6 | 26 [18-37] |
+| **Marteau** | 28.0 ± 5.0 | 26 [22-46] | 27.3 ± 2.9 | 28 [23-35] |
+| **Javelot** | 26.8 ± 3.3 | 27 [21-34] | 26.4 ± 4.0 | 26 [17-37] |
+| **Combinées** | 26.2 ± 3.1 | 26 [21-33] | 26.8 ± 3.0 | 27 [20-33] |
+
+: Synthèse descriptive de l'âge au pic par discipline et sexe {#tbl-desc-complet}
+
+\vspace{4pt}
+
+\noindent L'observation de ce tableau permet de noter que, pour la majorité des disciplines, la **moyenne est supérieure à la médiane**. Ce constat est un indicateur mathématique d'une distribution étirée vers les âges élevés (asymétrie positive).
+
+### Étude de la distribution et vérification de la normalité {.unnumbered .unlisted}
 
 Avant de procéder aux tests d'inférence, il est indispensable d'étudier la forme de la distribution de notre variable d'intérêt : l'âge au pic observé. Cette étape permet de vérifier si les données suivent une loi normale, condition *sine qua non* pour l'utilisation de tests paramétriques classiques.
 
@@ -250,7 +290,14 @@ L'examen des histogrammes permet d'observer la répartition réelle des athlète
 Distributions de l'âge au pic de performance (Athlètes masculins)
 :::
 
-L'observation de la @fig-hist-men révèle des profils variés :
+\setlength{\parindent}{0pt}
+*Note : Les histogrammes concernant les athlètes féminines, les planches détaillées par discipline ainsi que l'ensemble des graphiques Quantile-Quantile (QQ-plots) sont consultables en Annexe.*
+
+\setlength{\parindent}{15pt}
+
+\vspace{5pt}
+
+\noindent L'observation de la @fig-hist-men révèle des profils variés :
 
 - Certaines familles, comme le **Sprint**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif.
 \vspace{5pt}
@@ -258,95 +305,113 @@ L'observation de la @fig-hist-men révèle des profils variés :
 \vspace{5pt}
 - De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est limité avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
 
-*Note : Les histogrammes concernant les athlètes féminines ainsi que l'ensemble des graphiques Quantile-Quantile (QQ-plots) sont consultables en Annexe.*
+\vspace{5pt}
+
+\noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
 
 ### Test statistique de normalité (Shapiro-Wilk) {.unnumbered .unlisted}
 
-Pour confirmer les observations visuelles, un test de **Shapiro-Wilk** a été réalisé sur chaque groupe (combinaison sexe/famille). Ce test évalue l'hypothèse nulle ($H_0$) de normalité des données. Si la $p$-value est inférieure au seuil de $5\%$, l'hypothèse de normalité est rejetée. Le tableau ci-dessous présente une sélection représentative des résultats obtenus.
+\noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle ($H_0$ : normalité) selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
-| Famille | Sexe | Statistique W | $p$-value | Normalité |
-|:---|:---:|:---:|:---:|:---:|
-| **Sprint** | Hommes | 0.892 | < 0.001 | **NON** |
-| **Lancers** | Hommes | 0.914 | < 0.001 | **NON** |
-| **5000 - 10000** | Hommes | 0.883 | < 0.001 | **NON** |
-| **Sauts** | Hommes | 0.965 | 0.002 | **NON** |
-| **Marathon** | Femmes | 0.927 | 0.033 | **NON** |
-| **800 - 1500 - steeple**| Hommes | 0.969 | 0.023 | **NON** |
-| **Épreuves combinées** | Hommes | 0.963 | 0.335 | **OUI** |
-| **Marche** | Femmes | 0.942 | 0.083 | **OUI** |
-| **Haies** | Femmes | 0.975 | 0.230 | **OUI** |
-: Sélection de résultats du test de normalité de Shapiro-Wilk par groupe {#tbl-shapiro}
+| Niveau d'analyse | Effectif moyen ($n$) | Nb total de tests | Tests rejetant $H_0$ ($p < 0,05$) | % de Rejet |
+|:-----------------|:-------------------:|:-----------------:|:--------------------------------:|:----------:|
+| **Famille** |**75**        | 18                | 11                               | **61,1 %** |
+| **Discipline**| **32** | 42                | 10                               | **23,8 %** |
 
-*Note : L'intégralité des 18 tests (couvrant toutes les familles pour chaque sexe) est consultable en annexe. La majorité des groupes non mentionnés ici rejettent également l'hypothèse de normalité.*
+: Synthèse des tests de normalité selon l'échelle d'analyse {#tbl-shapiro-synthese}
+
+\setlength{\parindent}{0pt}
+*Note : L'intégralité des résultats des tests de Shapiro-Wilk (18 familles et 42 disciplines) est consultable en Annexe.*
+\setlength{\parindent}{15pt}
+
+\vspace{5pt}
+
+\noindent L'analyse de la @tbl-shapiro-synthese révèle que :
+
+1. À l'échelle des **familles** ($n \approx 75$), le test est extrêmement sensible et rejette la normalité dans la majorité des cas (61,1 %).
+
+2. À l'échelle des **disciplines** (*n* = 32), niveau considéré comme le "juste milieu" statistique (suffisant pour la puissance mais évitant la sur-sensibilité), le taux de rejet tombe à 23,8 %.
+
+\vspace{4pt}
+
+\noindent Toutefois, le fait qu'un quart des disciplines rejette toujours la normalité malgré un effectif réduit ($n=32$) confirme que l'asymétrie observée sur les graphiques n'est pas un artefact lié au volume de données, mais une caractéristique biologique réelle de l'âge au pic de performance. Cette distribution se caractérise par un seuil d'accès au haut niveau et un maintien de la performance qui s'étire pour certains athlètes, créant une "queue" de distribution vers les âges avancés.
 
 ### Conclusion sur le choix des tests {.unnumbered .unlisted}
 
-L'analyse du tableau @tbl-shapiro montre que l'hypothèse de normalité est rejetée pour la majorité des familles de disciplines. Ce résultat corrobore les observations visuelles : la distribution de l'âge au pic présente majoritairement une asymétrie positive, marquée par un seuil d'accès au haut niveau vers 20 ans et un maintien de la performance qui s'étire pour certains athlètes au-delà de 30 ans. Bien que la normalité soit statistiquement acceptée pour quelques groupes isolés, une **méthodologie non paramétrique unique** est privilégiée pour l'ensemble de l'étude. Ce choix garantit la cohérence des comparaisons entre toutes les disciplines et assure la robustesse des résultats face aux distributions asymétriques observées.\
+L'analyse combinée des taux de rejet et des diagnostics graphiques (QQ-plots en annexe) confirme que l'âge au pic ne suit pas une loi normale de manière universelle. Bien que la normalité soit statistiquement acceptée pour certaines disciplines lorsque l'effectif est strictement contrôlé à $n=32$, une **méthodologie non paramétrique unique** est privilégiée pour l'ensemble de l'étude. Ce choix garantit la cohérence des comparaisons entre tous les groupes et assure la robustesse des résultats face aux distributions asymétriques observées.\
 
-**Implication méthodologique :** La distribution de l'âge au pic n'étant pas uniformément normale, l'utilisation de la moyenne et de l'écart-type comme seuls indicateurs serait trompeuse. Par conséquent :
+\setlength{\parindent}{0pt}
+**Implication méthodologique :**
+\setlength{\parindent}{15pt}
 
-1. La **médiane** et les **quartiles** sont privilégiés pour décrire les positions.
-2. Des **tests non paramétriques**, fondés sur les rangs, sont exclusivement utilisés pour comparer les groupes dans la suite de l'analyse.
+1.  La **médiane** et les **quartiles** sont les indicateurs de référence pour décrire les positions (plus robustes que la moyenne face aux valeurs extrêmes).
 
-## Analyse inférentielle : Influence du sexe et de la discipline 
+2.  Des **tests non paramétriques** (Wilcoxon-Mann-Whitney et Kruskal-Wallis), fondés sur les rangs, sont exclusivement utilisés pour les comparaisons statistiques dans la suite de l'analyse.
 
-### Méthodologie et raisonnement statistique {.unnumbered .unlisted}
+## Analyse inférentielle : Influence du sexe et de la spécialité
 
-Le raisonnement statistique reposant sur la comparaison des rangs plutôt que des moyennes permet de s'affranchir des contraintes liées aux valeurs extrêmes et à l'asymétrie des données. Pour ce faire, les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
+### Méthodologie {.unnumbered .unlisted}
 
-- **Test de Wilcoxon-Mann-Whitney :** Ce test est mobilisé pour comparer l'âge au pic entre les sexes. Il teste si une distribution est statistiquement décalée par rapport à l'autre en se basant sur la somme des rangs.
+Le raisonnement statistique reposant sur la comparaison des rangs plutôt que des moyennes permet de s'affranchir des contraintes liées aux valeurs extrêmes et à l'asymétrie des distributions. Les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
+
+- **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe).
 \vspace{5pt}
-- **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes (les familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur et évalue si au moins une famille présente une médiane statistiquement différente des autres.
+- **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants (comparaison par familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
 \vspace{5pt}
-- **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure est utilisée pour identifier quelles familles se distinguent spécifiquement les unes des autres. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
+- **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
 
-### Résultats des tests globaux {.unnumbered .unlisted}
+### Résultats {.unnumbered .unlisted}
 
-\noindent**Comparaison par sexe**
+**Effet global du sexe** 
 
-\vspace{4pt}
+\noindent Le test de Wilcoxon-Mann-Whitney appliqué à l'ensemble de l'échantillon révèle une différence statistiquement significative entre les sexes ($p = 0,0016$). La médiane globale de l'âge au pic s'établit à 26 ans pour les athlètes féminines contre 25 ans pour les athlètes masculins.\
 
-Le test de Wilcoxon-Mann-Whitney confirme une différence statistiquement significative entre les deux distributions ($p = 0,0016$). Ce résultat permet de rejeter l'hypothèse d'une égalité des médianes et indique que, dans cet échantillon, l'âge au pic des athlètes féminines (médiane à 26 ans) est légèrement supérieur à celui des athlètes masculins (médiane à 25 ans).\
+\setlength{\parindent}{0pt}
+**Effet global de la famille de disciplines**
+\setlength{\parindent}{15pt}
 
-\noindent**Comparaison par familles de disciplines**
+\noindent Le test de Kruskal-Wallis indique un effet principal significatif de la discipline sur l'âge au pic ($\chi^2 = 98,22$, $p < 0,001$). Les comparaisons post-hoc de Dunn permettent d'isoler les contrastes suivants :
 
-\vspace{4pt}
+- **L'exception du Marathon :** Cette épreuve se distingue significativement de la quasi-totalité des épreuves de course (du 100 m au 5000 m, $p_{adj} < 0,01$) et des sauts (Hauteur, Longueur).
+\vspace{5pt}
+- **Le contraste Lancers vs Vitesse/Demi-fond :** Le Lancer du Disque et le Lancer du Marteau présentent des distributions significativement décalées par rapport aux épreuves de vitesse (100 m, 200 m, 400 m) et au 800 m ($p_{adj} < 0,05$).
+\vspace{5pt}
+- **L'homogénéité du bloc explosif :** L'absence de différence statistiquement significative entre les familles des **Sauts**, des **Haies** et du **Sprint court** ($p_{adj} = 1,00$), indiquant une uniformité des âges au pic pour ces épreuves.
 
-Le test de Kruskal-Wallis met en évidence une forte hétérogénéité entre les spécialités athlétiques ($\chi^2 = 98,22, p < 0,001$). Les tests de comparaison par paires (Dunn) indiquent les tendances suivantes :
+\setlength{\parindent}{0pt}
+**Interaction Sexe et Famille**
+\setlength{\parindent}{15pt}
 
-- Un contraste marqué est observé entre le **Marathon** et les épreuves de **Sprint** ($p_{adj} < 0,001$). Les résultats montrent un lien entre l'allongement de la distance de course et l'élévation de l'âge au pic.
+\noindent L'analyse croisée indique que l'écart global de maturité observé entre les sexes n'est pas distribué de manière homogène entre les familles. L'écart des médianes (faveur des femmes) est présent dans la famille de l'**Endurance**. À l'inverse, au sein des familles du **Sprint** et des **Sauts**, l'écart des médianes entre hommes et femmes se réduit jusqu'à devenir statistiquement non significatif au seuil $\alpha = 0,05$.\
 
-- Les familles des **Lancers** et du **Sprint** présentent également des distributions significativement décalées ($p_{adj} < 0,001$), suggérant des dynamiques de maturité distinctes entre la puissance explosive courte et la force technique.
+\setlength{\parindent}{0pt}
+**Analyse détaillée par Sexe et Discipline**
+\setlength{\parindent}{15pt}
 
-- À l'inverse, aucun lien statistique clair n'est mis en évidence entre les **Sauts** et les **Haies**, laissant supposer des contraintes physiologiques comparables.
-
-### Analyse détaillée par discipline {.unnumbered .unlisted}
-
-L'examen par épreuve individuelle permet d'identifier les disciplines où le lien entre sexe et maturité est le plus manifeste (@tbl-wilcox-disc).
+\noindent L'examen désagrégé par épreuve individuelle (Sexe $\times$ Discipline) permet de tester l'effet du sexe sur 21 spécialités mixtes (@tbl-wilcox-disc). 
 
 | Discipline | Médiane Hommes | Médiane Femmes | $p$-value | Conclusion |
-|:---|:---:|:---:|:---:|:---:|
-| 800 Mètres | 23.0 | 25.5 | 0.002 | Significatif |
-| 10 000 Mètres | 23.0 | 27.0 | 0.007 | Significatif |
-| Marathon | 27.0 | 29.0 | 0.009 | Significatif |
-| Disque | 28.0 | 25.5 | 0.012 | Significatif |
+|:-----------|:--------------:|:--------------:|:---------:|:-----------|
+| 800 Mètres | 23.0 | 25.5 | 0.002 | **Significatif** |
+| 10 000 Mètres | 23.0 | 27.0 | 0.007 | **Significatif** |
+| Marathon | 27.0 | 29.0 | 0.009 | **Significatif** |
+| Lancer du Disque| 28.0 | 25.5 | 0.012 | **Significatif** |
+
 : Principaux résultats du test de Wilcoxon par discipline {#tbl-wilcox-disc}
 
-Sur l'ensemble des épreuves significatives, une tendance se dégage : le pic de performance féminin semble plus tardif, à l'exception du lancer du disque où le schéma inverse est observé.
+Les résultats indiquent un écart significatif pour seulement 4 des 21 disciplines. Dans les épreuves du 800 m, du 10 000 m et du Marathon, la médiane féminine est supérieure à la médiane masculine. Le Lancer du Disque présente le schéma inverse (médiane masculine supérieure). Pour les 17 autres épreuves, l'hypothèse nulle d'égalité des médianes entre les sexes ne peut être rejetée.
 
-## Discussion
+### Discussion {.unnumbered .unlisted}
 
-Les analyses statistiques réalisées suggèrent que l’âge au pic de performance pourrait résulter d'une interaction entre le sexe et la nature des filières énergétiques sollicitées.\
+Les analyses statistiques réalisées suggèrent que l’âge au pic de performance pourrait résulter d’une interaction entre le sexe et la nature des filières énergétiques sollicitées.\
 
-Dans les disciplines d’endurance pure (10 000 m, marathon), un écart significatif est identifié, ce qui permet de supposer que les trajectoires de carrière féminines pourraient être caractérisées par une maturité plus tardive ou une longévité accrue dans l'élite. Il est possible que des facteurs liés à la gestion des carrières ou à des capacités d'adaptation aérobie prolongées chez les femmes expliquent ce décalage d'un à quatre ans, comme cela a pu être évoqué dans certains travaux sur le métabolisme lipidique [Source].\
+Dans les disciplines d’endurance pure (10 000 m, marathon), un écart significatif est identifié, ce qui permet de supposer que les trajectoires de carrière féminines pourraient être caractérisées par une maturité plus tardive ou une longévité accrue dans l’élite. Il est possible que des facteurs liés à la gestion des carrières ou à des capacités d’adaptation aérobie prolongées chez les femmes expliquent ce décalage d’un à quatre ans, comme cela a pu être évoqué dans certains travaux sur le métabolisme lipidique [Source].\
 
-À l'inverse, l'absence de différence significative observée dans les épreuves de sprint court ou de sauts laisse supposer que pour les disciplines dépendant prioritairement de la puissance explosive, des contraintes biologiques pourraient imposer un cadre temporel plus rigide et similaire pour les deux sexes.\
+À l’inverse, l’absence de différence significative observée dans les épreuves de sprint court ou de sauts laisse supposer que pour les disciplines dépendant prioritairement de la puissance explosive, des contraintes biologiques pourraient imposer un cadre temporel plus rigide et similaire pour les deux sexes.\
 
-Ces interprétations doivent toutefois être considérées avec prudence. Bien que des liens statistiques soient mis en évidence, une causalité biologique directe ne peut être affirmée sur la base de ces seules données. Il est envisageable que des facteurs environnementaux, tels que la structure des circuits professionnels ou des contextes socio-économiques, participent aux disparités constatées [Source]. Ces observations, limitées à l'échantillon étudié, justifient néanmoins l'intérêt d'une modélisation distincte par famille de disciplines pour la suite des travaux.
+Ces interprétations doivent toutefois être considérées avec prudence. Bien que des liens statistiques soient mis en évidence, une causalité biologique directe ne peut être affirmée sur la base de ces seules données. Il est envisageable que des facteurs environnementaux, tels que la structure des circuits professionnels ou des contextes socio-économiques, participent aux disparités constatées [Source]. L'exception du lancer du disque (où les hommes sont plus âgés au pic) rappelle d'ailleurs la multifactorialité de la performance.\
 
-
-
-
+Ces observations, limitées à l’échantillon étudié, justifient néanmoins l’intérêt d’une modélisation distincte par famille de disciplines pour la suite des travaux. L'âge au pic n'étant qu'une composante ponctuelle, il est désormais nécessaire de modéliser la durée de maintien au plus haut niveau (analyse de survie), en conservant impérativement cette segmentation.
 
 
 
@@ -800,31 +865,146 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 # Annexes {.unnumbered}
 
+## Distributions détaillées par discipline {.unnumbered .unlisted}
 
-## Compléments de l'analyse de distribution
+::: {layout-ncol=1}
+![Distributions de l'âge au pic par discipline (Hommes)](outputs/hist_discipline_hommes.png){#fig-hist-disc-men width=100%}
 
-Cette section regroupe les graphiques de diagnostic complémentaires permettant de valider les choix statistiques effectués dans le corps du rapport.
-
-### Distributions des athlètes féminines
-
-La figure ci-dessous complète l'analyse descriptive en présentant les histogrammes de l'âge au pic pour les femmes.
-
-![Distributions de l'âge au pic de performance (Athlètes féminines)](outputs/hist_age_femmes.png){#fig-hist-women width=100%}
+![Distributions de l'âge au pic par discipline (Femmes)](outputs/hist_discipline_femmes.png){#fig-hist-disc-women width=100%}
+:::
 
 ---
 
-### Analyse de la normalité (QQ-Plots)
-
-Les graphiques Quantile-Quantile (QQ-plots) permettent de visualiser l'écart entre nos données observées et une distribution normale théorique (représentée par la ligne droite). Un écart des points par rapport à cette ligne confirme la non-normalité.
+## Distributions par familles de disciplines {.unnumbered .unlisted}
 
 ::: {layout-ncol=1}
-![QQ-plot de l'âge au pic (Hommes)](outputs/qqplot_age_hommes.png){#fig-qq-men width=100%}
+![Distributions de l'âge au pic par famille (Hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men width=100%}
 
-![QQ-plot de l'âge au pic (Femmes)](outputs/qqplot_age_femmes.png){#fig-qq-women width=100%}
+![Distributions de l'âge au pic par famille (Femmes)](outputs/hist_famille_femmes.png){#fig-hist-fam-women width=100%}
 :::
 
+---
 
+## Diagnostics de normalité (QQ-Plots) par discipline {.unnumbered .unlisted}
 
+::: {layout-ncol=1}
+![QQ-plots par discipline (Hommes)](outputs/qq_discipline_hommes.png){#fig-qq-disc-men width=100%}
+
+![QQ-plots par discipline (Femmes)](outputs/qq_discipline_femmes.png){#fig-qq-disc-women width=100%}
+:::
+
+---
+
+## Diagnostics de normalité (QQ-Plots) par famille {.unnumbered .unlisted}
+
+::: {layout-ncol=1}
+![QQ-plots par famille (Hommes)](outputs/qq_famille_hommes.png){#fig-qq-fam-men width=100%}
+
+![QQ-plots par famille (Femmes)](outputs/qq_famille_femmes.png){#fig-qq-fam-women width=100%}
+:::
+
+## Détail des tests de normalité de Shapiro-Wilk {.unnumbered .unlisted}
+
+### Analyse par familles de disciplines {.unnumbered .unlisted}
+
+| Famille | Sexe | Statistique W | $p$-value | Effectif ($n$) | Normalité |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| **5000 - 10000** | Hommes | 0.883 | < 0.001 | 64 | **NON** |
+| **5000 - 10000** | Femmes | 0.943 | 0.005 | 64 | **NON** |
+| **800 - 1500 - steeple** | Hommes | 0.969 | 0.023 | 96 | **NON** |
+| **800 - 1500 - steeple** | Femmes | 0.985 | 0.329 | 96 | **OUI** |
+| **Épreuves combinées** | Hommes | 0.963 | 0.335 | 32 | **OUI** |
+| **Épreuves combinées** | Femmes | 0.983 | 0.885 | 32 | **OUI** |
+| **Haies** | Hommes | 0.956 | 0.022 | 64 | **NON** |
+| **Haies** | Femmes | 0.975 | 0.230 | 64 | **OUI** |
+| **Lancers** | Hommes | 0.915 | < 0.001 | 128 | **NON** |
+| **Lancers** | Femmes | 0.975 | 0.019 | 128 | **NON** |
+| **Marathon** | Hommes | 0.944 | 0.096 | 32 | **OUI** |
+| **Marathon** | Femmes | 0.927 | 0.033 | 32 | **NON** |
+| **Marche** | Hommes | 0.937 | 0.062 | 32 | **OUI** |
+| **Marche** | Femmes | 0.942 | 0.083 | 32 | **OUI** |
+| **Sauts** | Hommes | 0.965 | 0.002 | 128 | **NON** |
+| **Sauts** | Femmes | 0.979 | 0.047 | 128 | **NON** |
+| **Sprint** | Hommes | 0.892 | < 0.001 | 96 | **NON** |
+| **Sprint** | Femmes | 0.971 | 0.032 | 96 | **NON** |
+
+: Résultats des tests de Shapiro-Wilk par famille {#tbl-shapiro-famille}
+
+\vspace{10pt}
+
+### Analyse détaillée par discipline {.unnumbered .unlisted}
+
+| Discipline | Sexe | Statistique W | $p$-value | Effectif ($n$) | Normalité |
+|:---|:---:|:---:|:---:|:---:|:---:|
+| 10 000 m | Hommes | 0.896 | 0.005 | 32 | **NON** |
+| 10 000 m | Femmes | 0.944 | 0.097 | 32 | **OUI** |
+| 100 m | Hommes | 0.823 | < 0.001 | 32 | **NON** |
+| 100 m | Femmes | 0.962 | 0.313 | 32 | **OUI** |
+| 100 m Haies | Femmes | 0.974 | 0.612 | 32 | **OUI** |
+| 110 m Haies | Hommes | 0.957 | 0.222 | 32 | **OUI** |
+| 1500 m | Hommes | 0.961 | 0.293 | 32 | **OUI** |
+| 1500 m | Femmes | 0.976 | 0.692 | 32 | **OUI** |
+| 20 km Marche | Hommes | 0.937 | 0.062 | 32 | **OUI** |
+| 20 km Marche | Femmes | 0.942 | 0.083 | 32 | **OUI** |
+| 200 m | Hommes | 0.881 | 0.002 | 32 | **NON** |
+| 200 m | Femmes | 0.965 | 0.374 | 32 | **OUI** |
+| 3000 m Steeple | Hommes | 0.965 | 0.373 | 32 | **OUI** |
+| 3000 m Steeple | Femmes | 0.962 | 0.319 | 32 | **OUI** |
+| 400 m | Hommes | 0.941 | 0.078 | 32 | **OUI** |
+| 400 m | Femmes | 0.941 | 0.078 | 32 | **OUI** |
+
+*Note : Les résultats pour les disciplines restantes suivent la même méthodologie (n=32).*
+
+: Résultats des tests de Shapiro-Wilk par discipline (Extrait) {#tbl-shapiro-discipline}
+
+## Comparaisons des sexes par discipline (Wilcoxon) {.unnumbered .unlisted}
+
+Ce tableau présente les tests de comparaison de médianes entre les hommes et les femmes pour chaque discipline. Les disciplines non-mixtes (Décathlon, Heptathlon, Haies spécifiques) ne sont pas testées.
+
+| Discipline | Médiane Hommes | Médiane Femmes | Différence (H-F) | $p$-value | Significatif |
+|:-----------|:--------------:|:--------------:|:----------------:|:---------:|:------------:|
+| **800 Metres** | 23.0 | 25.5 | -2.5 | 0.002 | **OUI** |
+| **10,000 Metres** | 23.0 | 27.0 | -4.0 | 0.007 | **OUI** |
+| **Marathon** | 27.0 | 29.0 | -2.0 | 0.010 | **OUI** |
+| **Discus Throw** | 28.0 | 25.5 | +2.5 | 0.012 | **OUI** |
+| **400 Metres Hurdles** | 24.5 | 26.0 | -1.5 | 0.050 | NON |
+| **400 Metres** | 23.0 | 25.0 | -2.0 | 0.081 | NON |
+| **Triple Jump** | 25.0 | 26.5 | -1.5 | 0.126 | NON |
+| **5000 Metres** | 22.0 | 25.5 | -3.5 | 0.175 | NON |
+| **200 Metres** | 24.0 | 26.0 | -2.0 | 0.286 | NON |
+| **20 km Race Walk** | 26.0 | 26.0 | 0.0 | 0.418 | NON |
+| **Pole Vault** | 26.0 | 27.0 | -1.0 | 0.521 | NON |
+| **Long Jump** | 25.5 | 26.0 | -0.5 | 0.539 | NON |
+| **3000 m Steeple** | 24.0 | 25.5 | -1.5 | 0.627 | NON |
+| **100 Metres** | 24.0 | 25.0 | -1.0 | 0.661 | NON |
+| **Shot Put** | 26.5 | 26.0 | +0.5 | 0.700 | NON |
+| **Javelin Throw** | 27.0 | 26.0 | +1.0 | 0.803 | NON |
+| **1500 Metres** | 25.0 | 26.0 | -1.0 | 0.856 | NON |
+| **High Jump** | 25.0 | 26.0 | -1.0 | 0.957 | NON |
+| **Hammer Throw** | 26.5 | 27.5 | -1.0 | 0.962 | NON |
+
+: Tests de Wilcoxon-Mann-Whitney par discipline {#tbl-wilcox-annexe}
+
+\vspace{20pt}
+
+## Comparaisons inter-disciplines (Extrait du Test de Dunn) {.unnumbered .unlisted}
+
+Le test de Kruskal-Wallis ayant révélé une différence globale significative entre les disciplines ($p < 0,001$), le test de Dunn permet d'identifier les paires d'épreuves dont les âges au pic diffèrent.
+
+| Comparaison (Paire de disciplines) | Statistique Z | $p$-value (brute) | $p$-value (Bonferroni) |
+|:-----------------------------------|:-------------:|:-----------------:|:----------------------:|
+| 10,000 Metres - 100 Metres | 0.018 | 0.985 | 1.000 |
+| 10,000 Metres - 100 m Hurdles | -2.757 | 0.006 | 1.000 |
+| 100 Metres - 100 m Hurdles | -2.772 | 0.006 | 1.000 |
+| 10,000 Metres - 110 m Hurdles | -1.364 | 0.172 | 1.000 |
+| 100 Metres - 110 m Hurdles | -1.379 | 0.168 | 1.000 |
+| 10,000 Metres - 1500 Metres | -1.420 | 0.155 | 1.000 |
+| 100 Metres - 1500 Metres | -1.439 | 0.150 | 1.000 |
+| 100 m Hurdles - 1500 Metres | 1.597 | 0.110 | 1.000 |
+
+*Note : Les $p$-values ajustées par la méthode de Bonferroni sont conservatrices pour éviter les faux positifs liés aux comparaisons multiples (24 disciplines).*
+
+: Test post-hoc de Dunn sur les disciplines (Extrait) {#tbl-dunn-annexe}
 
 =======
 ## Annexe : Modèles de Moore

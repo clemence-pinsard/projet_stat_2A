@@ -192,6 +192,35 @@ stats_pic_equilibre <- stats_pic_discipline %>%
 table(stats_pic_equilibre$discipline, stats_pic_equilibre$Sex)
 ```
 
+```{r}
+library(dplyr)
+library(tidyr)
+library(knitr)
+
+tab_discipline_complet <- stats_pic_equilibre %>%
+  group_by(discipline, Sex) %>%
+  summarise(
+    # format : Moyenne ± SD | Médiane [Min - Max]
+    Stat = sprintf("%.1f ± %.1f | %.0f [%.0f - %.0f]", 
+                   mean(Age_Pic_Obs, na.rm = TRUE),
+                   sd(Age_Pic_Obs, na.rm = TRUE),
+                   median(Age_Pic_Obs, na.rm = TRUE), 
+                   min(Age_Pic_Obs, na.rm = TRUE), 
+                   max(Age_Pic_Obs, na.rm = TRUE)),
+    .groups = "drop"
+  ) %>%
+  pivot_wider(names_from = Sex, values_from = Stat) %>%
+  rename(
+    `Discipline` = discipline,
+    `Hommes (Moyenne ± SD | Médiane [Min-Max])` = men,
+    `Femmes (Moyenne ± SD | Médiane [Min-Max])` = women
+  )
+
+# Affichage du tableau
+kable(tab_discipline_complet, 
+      booktabs = TRUE, 
+      caption = "Analyse descriptive de l'âge au pic par discipline et sexe")
+```
 
 
 # GRAPHIQUE RAPPORT
@@ -268,85 +297,191 @@ print(top_longevite)
 
 ## Planche normalité
 ```{r}
-# --- PLANCHE HISTOGRAMME : HOMMES (Bleu + Cadre) ---
-p_hist_age_hommes <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(x = Age_Pic_Obs)) +
-  geom_histogram(aes(y = after_stat(density)), binwidth = 1, 
-                 fill = "#2E86C1", color = "white", alpha = 0.8) +
-  geom_density(color = "#1B4F72", size = 0.8) +
-  facet_wrap(~ Famille, scales = "free_y", ncol = 3) +
-  labs(title = "Distribution de l'âge au pic des athlètes masculins",
-       x = "Âge au pic (années)", y = "Densité") +
-  theme_minimal() +
+# ==============================================================================
+# GÉNÉRATION DES PLANCHES HISTOGRAMMES (FAMILLES ET DISCIPLINES)
+# ==============================================================================
+
+library(ggplot2)
+
+# --- FONCTION REUTILISABLE POUR ÉVITER LES DOUBLONS ---
+creer_planche_hist <- theme_minimal() + 
   theme(
-    strip.text = element_text(face = "bold"),
+    strip.text = element_text(face = "bold", size = 9),
     plot.title = element_text(face = "bold", size = 14),
-    # Ajout du cadre autour de chaque facette
-    panel.border = element_rect(colour = "black", fill = NA, size = 0.7),
-    panel.spacing = unit(1, "lines")
+    panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+    panel.spacing = unit(0.5, "lines")
   )
 
-ggsave("outputs/hist_age_hommes.png", p_hist_age_hommes, width = 12, height = 8)
+# ------------------------------------------------------------------------------
+# 1. PAR FAMILLE (Déjà existant)
+# ------------------------------------------------------------------------------
 
-# --- PLANCHE HISTOGRAMME : FEMMES (Vert + Cadre) ---
-p_hist_age_femmes <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(x = Age_Pic_Obs)) +
-  geom_histogram(aes(y = after_stat(density)), binwidth = 1, 
-                 fill = "#28B463", color = "white", alpha = 0.8) +
-  geom_density(color = "#186A3B", size = 0.8) +
+# Hommes - Familles
+p_fam_h <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(x = Age_Pic_Obs)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "#2E86C1", color = "white") +
+  geom_density(color = "#1B4F72", size = 0.7) +
   facet_wrap(~ Famille, scales = "free_y", ncol = 3) +
-  labs(title = "Distribution de l'âge au pic des athlètes féminines",
-       x = "Âge au pic (années)", y = "Densité") +
-  theme_minimal() +
-  theme(
-    strip.text = element_text(face = "bold"),
-    plot.title = element_text(face = "bold", size = 14),
-    # Ajout du cadre autour de chaque facette
-    panel.border = element_rect(colour = "black", fill = NA, size = 0.7),
-    panel.spacing = unit(1, "lines")
-  )
+  labs(title = "Distribution par Familles : Hommes", x = "Âge", y = "Densité") +
+  creer_planche_hist
 
-ggsave("outputs/hist_age_femmes.png", p_hist_age_femmes, width = 12, height = 8)
+# Femmes - Familles
+p_fam_f <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(x = Age_Pic_Obs)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "#28B463", color = "white") +
+  geom_density(color = "#186A3B", size = 0.7) +
+  facet_wrap(~ Famille, scales = "free_y", ncol = 3) +
+  labs(title = "Distribution par Familles : Femmes", x = "Âge", y = "Densité") +
+  creer_planche_hist
+
+ggsave("outputs/hist_famille_hommes.png", p_fam_h, width = 12, height = 8)
+ggsave("outputs/hist_famille_femmes.png", p_fam_f, width = 12, height = 8)
+
+# ------------------------------------------------------------------------------
+# 2. PAR DISCIPLINE (Nouveau - Format Large)
+# ------------------------------------------------------------------------------
+
+# Hommes - Disciplines (on passe à 4 colonnes pour 24 épreuves)
+p_disc_h <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(x = Age_Pic_Obs)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "#2E86C1", color = "white") +
+  geom_density(color = "#1B4F72", size = 0.6) +
+  facet_wrap(~ discipline, scales = "free_y", ncol = 4) +
+  labs(title = "Distribution détaillée par Discipline : Hommes", x = "Âge", y = "Densité") +
+  creer_planche_hist
+
+# Femmes - Disciplines
+p_disc_f <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(x = Age_Pic_Obs)) +
+  geom_histogram(aes(y = after_stat(density)), binwidth = 1, fill = "#28B463", color = "white") +
+  geom_density(color = "#186A3B", size = 0.6) +
+  facet_wrap(~ discipline, scales = "free_y", ncol = 4) +
+  labs(title = "Distribution détaillée par Discipline : Femmes", x = "Âge", y = "Densité") +
+  creer_planche_hist
+
+# Sauvegarde en plus grand format (14x14) pour que les 24 facettes soient lisibles
+ggsave("outputs/hist_discipline_hommes.png", p_disc_h, width = 14, height = 14)
+ggsave("outputs/hist_discipline_femmes.png", p_disc_f, width = 14, height = 14)
 ```
 
 ## Quantile - quantile
 ```{r}
-# --- PLANCHE QQ-PLOT : HOMMES (Bleu + Cadre) ---
-p_qq_age_hommes <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(sample = Age_Pic_Obs)) +
-  stat_qq(color = "#2E86C1", size = 1.2) +
+# ==============================================================================
+# GÉNÉRATION DES PLANCHES QQ-PLOTS (FAMILLES ET DISCIPLINES)
+# ==============================================================================
+
+library(ggplot2)
+
+# --- THÈME COMMUN ---
+theme_qq <- theme_minimal() + 
+  theme(
+    strip.text = element_text(face = "bold", size = 9),
+    plot.title = element_text(face = "bold", size = 14),
+    panel.border = element_rect(colour = "black", fill = NA, size = 0.5),
+    panel.spacing = unit(0.5, "lines")
+  )
+
+# ------------------------------------------------------------------------------
+# 1. PAR FAMILLE
+# ------------------------------------------------------------------------------
+
+# Hommes - Familles
+p_qq_fam_h <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(sample = Age_Pic_Obs)) +
+  stat_qq(color = "#2E86C1", size = 1) +
   stat_qq_line(color = "#1B4F72") +
   facet_wrap(~ Famille, scales = "free", ncol = 3) +
-  labs(title = "Quantile-quantile de l'âge au pic des athlètes masculins",
-       x = "Quantiles théoriques", y = "Quantiles observés") +
-  theme_minimal() +
-  theme(
-    strip.text = element_text(face = "bold"),
-    plot.title = element_text(face = "bold", size = 14),
-    # Ajout du cadre autour de chaque facette
-    panel.border = element_rect(colour = "black", fill = NA, size = 0.7),
-    panel.spacing = unit(1, "lines")
-  )
+  labs(title = "QQ-Plot par Familles : Hommes", x = "Quantiles théoriques", y = "Quantiles observés") +
+  theme_qq
 
-ggsave("outputs/qqplot_age_hommes.png", p_qq_age_hommes, width = 12, height = 8)
-
-# --- PLANCHE QQ-PLOT : FEMMES (Vert + Cadre) ---
-p_qq_age_femmes <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(sample = Age_Pic_Obs)) +
-  stat_qq(color = "#28B463", size = 1.2) +
+# Femmes - Familles
+p_qq_fam_f <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(sample = Age_Pic_Obs)) +
+  stat_qq(color = "#28B463", size = 1) +
   stat_qq_line(color = "#186A3B") +
   facet_wrap(~ Famille, scales = "free", ncol = 3) +
-  labs(title = "Quantile-quantile de l'âge au pic des athlètes féminines",
-       x = "Quantiles théoriques", y = "Quantiles observés") +
-  theme_minimal() +
-  theme(
-    strip.text = element_text(face = "bold"),
-    plot.title = element_text(face = "bold", size = 14),
-    # Ajout du cadre autour de chaque facette
-    panel.border = element_rect(colour = "black", fill = NA, size = 0.7),
-    panel.spacing = unit(1, "lines")
-  )
+  labs(title = "QQ-Plot par Familles : Femmes", x = "Quantiles théoriques", y = "Quantiles observés") +
+  theme_qq
 
-ggsave("outputs/qqplot_age_femmes.png", p_qq_age_femmes, width = 12, height = 8)
+ggsave("outputs/qq_famille_hommes.png", p_qq_fam_h, width = 12, height = 8)
+ggsave("outputs/qq_famille_femmes.png", p_qq_fam_f, width = 12, height = 8)
+
+# ------------------------------------------------------------------------------
+# 2. PAR DISCIPLINE (Format Large)
+# ------------------------------------------------------------------------------
+
+# Hommes - Disciplines (4 colonnes)
+p_qq_disc_h <- ggplot(subset(stats_pic_equilibre, Sex == "men"), aes(sample = Age_Pic_Obs)) +
+  stat_qq(color = "#2E86C1", size = 0.8) +
+  stat_qq_line(color = "#1B4F72") +
+  facet_wrap(~ discipline, scales = "free", ncol = 4) +
+  labs(title = "QQ-Plot détaillé par Discipline : Hommes", x = "Quantiles théoriques", y = "Quantiles observés") +
+  theme_qq
+
+# Femmes - Disciplines
+p_qq_disc_f <- ggplot(subset(stats_pic_equilibre, Sex == "women"), aes(sample = Age_Pic_Obs)) +
+  stat_qq(color = "#28B463", size = 0.8) +
+  stat_qq_line(color = "#186A3B") +
+  facet_wrap(~ discipline, scales = "free", ncol = 4) +
+  labs(title = "QQ-Plot détaillé par Discipline : Femmes", x = "Quantiles théoriques", y = "Quantiles observés") +
+  theme_qq
+
+# Sauvegarde format 14x14 pour la clarté
+ggsave("outputs/qq_discipline_hommes.png", p_qq_disc_h, width = 14, height = 14)
+ggsave("outputs/qq_discipline_femmes.png", p_qq_disc_f, width = 14, height = 14)
 ```
 
 ## Tests de normalité
+```{r}
+# ==============================================================================
+# TESTS DE NORMALITÉ (SHAPIRO-WILK) - ANALYSE MULTI-NIVEAUX
+# ==============================================================================
+
+library(dplyr)
+
+# --- 1. TEST PAR FAMILLE (NIVEAU MACRO) ---
+shapiro_familles <- stats_pic_equilibre %>%
+  group_by(Famille, Sex) %>%
+  summarise(
+    W = shapiro.test(Age_Pic_Obs)$statistic,
+    p_value = shapiro.test(Age_Pic_Obs)$p.value,
+    n = n(),
+    .groups = 'drop'
+  ) %>%
+  mutate(
+    Normalite = ifelse(p_value < 0.05, "NON", "OUI"),
+    Niveau = "Famille"
+  )
+
+# --- 2. TEST PAR DISCIPLINE (NIVEAU MICRO) ---
+# C'est ici qu'on répond à la demande du prof sur l'impact de 'n'
+shapiro_disciplines <- stats_pic_equilibre %>%
+  group_by(discipline, Sex) %>%
+  summarise(
+    W = shapiro.test(Age_Pic_Obs)$statistic,
+    p_value = shapiro.test(Age_Pic_Obs)$p.value,
+    n = n(),
+    .groups = 'drop'
+  ) %>%
+  mutate(
+    Normalite = ifelse(p_value < 0.05, "NON", "OUI"),
+    Niveau = "Discipline"
+  )
+
+# --- 3. AFFICHAGE DES RÉSULTATS ---
+
+cat("\n--- RÉSUMÉ DES TESTS PAR FAMILLE ---\n")
+print(as.data.frame(shapiro_familles))
+
+cat("\n--- RÉSUMÉ DES TESTS PAR DISCIPLINE (PREMIÈRES LIGNES) ---\n")
+print(head(as.data.frame(shapiro_disciplines), 15))
+
+# --- 4. ANALYSE DE L'IMPACT DU 'N' POUR LA DISCUSSION ---
+cat("\n--- BILAN DE LA NORMALITÉ SELON L'ÉCHELLE ---\n")
+cat("Taux de rejet de la normalité (Familles) : ", 
+    mean(shapiro_familles$Normalite == "NON") * 100, "%\n")
+cat("Taux de rejet de la normalité (Disciplines) : ", 
+    mean(shapiro_disciplines$Normalite == "NON") * 100, "%\n")
+
+# Moyenne des effectifs par niveau
+cat("Taille moyenne des échantillons (n) par famille : ", mean(shapiro_familles$n), "\n")
+cat("Taille moyenne des échantillons (n) par discipline : ", mean(shapiro_disciplines$n), "\n")
+```
+
 
 
 ```{r}
@@ -355,15 +490,12 @@ ggsave("outputs/qqplot_age_femmes.png", p_qq_age_femmes, width = 12, height = 8)
 # ==============================================================================
 
 # 1. Test de Wilcoxon-Mann-Whitney (Comparaison Hommes vs Femmes Globale)
-# On teste si la distribution de l'âge au pic diffère entre les sexes
 wilcox_global <- wilcox.test(Age_Pic_Obs ~ Sex, data = stats_pic_equilibre)
 
 # 2. Test de Kruskal-Wallis (Comparaison entre Familles)
-# On teste si l'appartenance à une famille influence l'âge au pic
 kruskal_famille <- kruskal.test(Age_Pic_Obs ~ Famille, data = stats_pic_equilibre)
 
-# 3. Test Post-hoc de Dunn (Comparaisons par paires de Familles)
-# Nécessaire uniquement si Kruskal-Wallis est significatif
+# 3. Test Post-hoc de Dunn pour les Familles
 library(FSA)
 dunn_familles <- dunnTest(Age_Pic_Obs ~ Famille, 
                           data = stats_pic_equilibre, 
@@ -373,38 +505,52 @@ dunn_familles <- dunnTest(Age_Pic_Obs ~ Famille,
 # PARTIE 2 : ANALYSE DÉTAILLÉE PAR DISCIPLINE
 # ==============================================================================
 
-# Calcul des p-values de Wilcoxon pour chaque discipline individuellement
-test_par_discipline <- stats_pic_equilibre %>%
+# 1. Comparaison Hommes vs Femmes au sein de chaque discipline
+test_sexe_par_discipline <- stats_pic_equilibre %>%
   group_by(discipline) %>%
   summarise(
-    # On vérifie si on a bien les deux sexes dans la discipline
     P_Value = if(n_distinct(Sex) == 2) {
       wilcox.test(Age_Pic_Obs ~ Sex)$p.value
     } else {
       NA_real_
     },
-    Mediane_Hommes = median(Age_Pic_Obs[Sex == "men"], na.rm = TRUE),
-    Mediane_Femmes = median(Age_Pic_Obs[Sex == "women"], na.rm = TRUE),
-    Difference_Mediane = Mediane_Hommes - Mediane_Femmes
+    Mediane_H = median(Age_Pic_Obs[Sex == "men"], na.rm = TRUE),
+    Mediane_F = median(Age_Pic_Obs[Sex == "women"], na.rm = TRUE),
+    Diff = Mediane_H - Mediane_F,
+    .groups = 'drop'
   ) %>%
   mutate(Significatif = ifelse(!is.na(P_Value) & P_Value < 0.05, "OUI", "NON")) %>%
   arrange(P_Value)
+
+# 2. Test de Kruskal-Wallis (Comparaison entre toutes les Disciplines)
+# Pour savoir si l'âge au pic varie selon la discipline précise
+kruskal_discipline <- kruskal.test(Age_Pic_Obs ~ discipline, data = stats_pic_equilibre)
+
+# 3. Test Post-hoc de Dunn pour les Disciplines
+# Attention : avec 24 disciplines, ce tableau sera très long (comparaisons par paires)
+dunn_disciplines <- dunnTest(Age_Pic_Obs ~ discipline, 
+                             data = stats_pic_equilibre, 
+                             method = "bonferroni")
 
 # ==============================================================================
 # PARTIE 3 : AFFICHAGE DES RÉSULTATS
 # ==============================================================================
 
-cat("\n--- RÉSULTAT TEST WILCOXON GLOBAL (SEXE) ---\n")
+cat("\n--- 1. ANALYSE GLOBALE : SEXE ---\n")
 print(wilcox_global)
 
-cat("\n--- RÉSULTAT KRUSKAL-WALLIS (FAMILLES) ---\n")
+cat("\n--- 2. ANALYSE GLOBALE : FAMILLES ---\n")
 print(kruskal_famille)
 
-cat("\n--- RÉSULTAT TEST DE DUNN (DIFFÉRENCES ENTRE FAMILLES) ---\n")
-print(dunn_familles)
+cat("\n--- 3. COMPARISON HOMMES/FEMMES PAR DISCIPLINE ---\n")
+print(as.data.frame(test_sexe_par_discipline))
 
-cat("\n--- ANALYSE PAR DISCIPLINE (TOP 39 EQUILIBRÉ) ---\n")
-print(test_par_discipline)
+cat("\n--- 4. ANALYSE GLOBALE : DISCIPLINES (KW) ---\n")
+print(kruskal_discipline)
+
+# On n'affiche que le début du Dunn disciplines car il est massif
+cat("\n--- 5. TEST DE DUNN DISCIPLINES (EXTRAIT) ---\n")
+print(dunn_disciplines$res)
 ```
 
 
