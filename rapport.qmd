@@ -71,7 +71,7 @@ nocite: "@*" » est utile pour faire une liste bibliographique, pour plus d’ex
 
 \rule{\textwidth}{0.5mm}\\
 \vspace{0.8cm}
-{\huge\bfseries Trajectoires de performance en athlétisme d'élite : modélisation de la relation âge-performance et identification de l'âge au pic}\\
+{\huge\bfseries Modélisation de la relation âge-performance et identification de l'âge au pic en athlétisme de haut niveau}\\
 \vspace{0.8cm}
 \rule{\textwidth}{0.5mm}\\
 
@@ -707,11 +707,7 @@ proche : 27,7 ans chez les hommes et 27,1 ans chez les femmes, soit un écart de
 d'années. Le RMSE est plus faible chez les hommes (0,238 km/h contre 0,346 km/h),
 reflet d'une dispersion plus grande des points féminins autour de la tendance centrale,
 notamment le point isolé à 40 ans (environ 20,7 km/h) qui s'écarte nettement de la
-courbe. Cette hétérogénéité se traduit par des critères AIC et BIC sensiblement moins
-favorables chez les femmes (AIC : 23,45 contre 4,83 ; BIC : 29,55 contre 10,72),
-confirmant que le modèle capture moins fidèlement la trajectoire féminine sur cette
-discipline, sans pour autant remettre en cause la convergence des deux estimations
-de $t_{\text{pic}}$.
+courbe. 
 
 #### Modèle de Moore {.unnumbered}
 
@@ -957,7 +953,18 @@ argument en sa faveur indépendamment des seuls critères statistiques,
 notamment pour des usages prospectifs ou comparatifs entre populations.
 \newpage
 
-# Discussion générale
+# Comparaison avec la réalité 
+
+### Méthode 
+
+Afin d'évaluer la cohérence des résultats obtenus par les deux modèles, nous proposons une comparaison directe des âges au pic estimés par chaque modèles avec l'âge empirique estimé. En effet, l'étude 1 fournit une estimation empirique de l'âge au pic, défini comme la moyenne d'âge des athlètes à leur meilleure performance enregistrée, pour chaque couple (sexe × discipline).
+
+La comparaison entre les trois estimations (étude 1, Moore, IMAP) est réalisée discipline par discipline et séparément pour les hommes et les femmes. L'écart entre l'estimation empirique de l'étude 1 et les estimations modélisées de l'étude 2 constitue un indicateur de cohérence entre les deux approches.
+
+### Résultats 
+
+### Discussion 
+
 
 \newpage
 
