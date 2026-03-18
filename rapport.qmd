@@ -461,7 +461,8 @@ L'équation [(@eq-moore)] est un modèle à double exponentielle, constitué de 
 Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme un temps de course (en secondes), une distance (en mètres) ou une hauteur (en mètres).
 
 En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre.
-Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Sous l'hypothèse c << a, a est le paramètre dominant : il fixe à lui seul l'ordre de grandeur du pic, et c n'en est qu'une correction.
+Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Le rapport $\frac a c$ conditionne la forme du pic : si c≪a, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic; si au contraire c≫ac, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab>cd.
+
 
 ::: {#fig-params-ac fig-pos='H'}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
@@ -476,7 +477,7 @@ Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la cou
 
 Effet des paramètres $b$ et $d$ sur la modélisation
 :::
-La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. Sous l'hypothèse c << a, on a cd << ab, donc R >> 1, ln(R) > 0 et t* est bien positif — le pic existe. Plus c est faible devant a, plus R est grand et plus le pic est tardif : la descente, peu vigoureuse, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab > cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
+La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. La condition d'existence du pic est ab>cd, soit R>1, ce qui assure $\ln(R) > 0$ et donc $t_{pic}>0.  Cette condition peut être satisfaite même lorsque c>a,  à condition que d soit suffisamment petit devant b. Plus R est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab > cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
 
 ::: {#fig-effets-tpic fig-pos='H'}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/effets_params_t_pic.png}}
@@ -557,8 +558,8 @@ Le point de départ choisi jouant un rôle essentiel dans la détermination des 
 Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
 
 * **$a$** est tiré uniformément entre 0,9 et 1,2 fois la valeur de performance maximale observée, reflétant le fait que le plateau asymptotique du terme montant est légèrement supérieur au pic ;
-* **$b$** est tiré uniformément autour du rapport $\frac{\text{pente initiale}}{a}$, conformément à l'approximation $f'(0) \approx ab$ valable lorsque $c \ll a$ ;
-* **$c$** est tiré uniformément dans un voisinage étroit de $a/100$, traduisant l'hypothèse que le terme descendant est une petite perturbation devant le terme montant ;
+* **$b$** est tiré uniformément autour du rapport $\frac{\text{pente initiale}}{a}$, conformément à l'approximation $P′(0)\approx ab$, valable en début de courbe lorsque le terme montant domine localement;
+* **$c$** est tiré uniformément dans un voisinage étroit de $\frac a {100}$, par choix conservateur afin de démarrer dans une région où la condition ab>cd est nécessairement vérifiée et où le pic existe, sans que cette valeur initiale contraigne la solution finale estimée par l'algorithme;
 * **$d$** est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points t_3 et t_4 situés dans la phase descendante de la courbe.
 
 Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
@@ -646,15 +647,15 @@ Où f_i est la performance observée à l'âge i (age_i), $\hat{f}(age_i, \theta
 
 Pour chaque couple (sexe, discipline), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
 
-## Comparaison des modèles : AIC et BIC {.unnumbered}
+### Comparaison des modèles : AIC et BIC
 
 Afin de comparer les différents modèles de régression linéaire considérés dans cette étude, les critères d'information AIC (Akaike Information Criterion) et BIC (Bayesian Information Criterion) sont utilisés. Ces deux critères reposent sur une logique commune : pénaliser la complexité du modèle afin d'éviter le surapprentissage, tout en cherchant à minimiser l'erreur de prévision sur de nouvelles observations.
 
-#### AIC : Akaike Information Criterion
+#### AIC : Akaike Information Criterion {.unnumbered}
 
 L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne le nombre d'observations, p le nombre de variables explicatives retenues dans le modèle, et SCR la somme des carrés des résidus. Cette formule, valable sous hypothèse de normalité des erreurs, quantifie l'erreur de prévision.
 
-#### BIC : Bayesian Information Criterion
+#### BIC : Bayesian Information Criterion {.unnumbered}
 
 Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents. 
 
@@ -742,6 +743,42 @@ Les estimations se situent entre 25 et 30 ans pour la majorité des groupes. Le 
 
 ### Exemple du 1500m {.unnumbered}
 
+#### Modèle de Moore {.unnumbered}
+
+L'exemple du 1500m permet de détailler l'ajustement du modèle de Moore à nos données (@fig-moore-1500). Le tableau @tbl-moore-1500m présente les paramètres estimés par le modèle de Moore pour le 1500 m, ainsi que les indicateurs de qualité d'ajustement.
+
+| | Hommes | Femmes |
+|---|:---:|:---:|
+| a | $30{,}89$ | $29{,}215$ |
+| b | $0{,}126$ | $0{,}11279$ |
+| c | $141{,}92$ | $11{,}915$ |
+| d | $0{,}001$ | $0{,}001$ |
+| $t_{\text{pic}}$ | $26$ ans | $25{,}6$ ans |
+| RMSE | $0{,}39$ km/h | $0{,}529$ km/h |
+| AIC | $-5{,}11$ | $19{,}48$ |
+| BIC | $0{,}77$ | $25{,}58$ |
+
+: Paramètres estimés et critères d'ajustement du modèle de Moore — 1500m {#tbl-moore-1500m}
+
+::: {#fig-moore-1500 fig-pos='H'}
+\fbox{\includegraphics[width=0.90\textwidth]{annexes/moore_1500m.png}}
+
+Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annuelle
+par âge (km/h). Ligne rouge : courbe ajustée.
+:::
+
+**Interprétation des paramètres.** Chez les deux sexes, le paramètre b, qui gouverne la vitesse de montée des performances ($b = 0{,}126$ chez les hommes, $b = 0{,}113$ chez les femmes), est nettement supérieur au paramètre d de déclin ($d = 0{,}001$ dans les deux cas), avec un rapport $\frac b d$ d'environ 126. Cet écart de deux ordres de grandeur traduit une montée en performance rapide lors des premières décennies de vie, suivie d'une dégradation extrêmement progressive avec l'avancée en âge. La pente initiale théorique $P'(0) \approx ab$ vaut ainsi $3{,}89$ km/h par année chez les hommes et $3{,}30$ km/h par année chez les femmes, confirmant un développement athlétique similairement soutenu dans les deux groupes.
+
+Le paramètre a, qui fixe l'amplitude de la composante ascendante, est légèrement supérieur chez les hommes ($a = 30{,}89$ km/h) par rapport aux femmes ($a = 29{,}22$ km/h), ce qui est cohérent avec les différences physiologiques connues en endurance. En revanche, le paramètre c, qui gouverne l'amplitude du terme de déclin, présente un contraste saisissant entre les sexes : $c = 141{,}92$ chez les hommes contre $c = 11{,}92$ chez les femmes, soit un rapport de l'ordre de 12. Bien que d soit identique ($0{,}001$), cette différence implique que le produit $c \cdot d$, qui représente la « force » de la composante déclinante, est environ 12 fois plus élevé chez les hommes ($cd \approx 0{,}142$) que chez les femmes ($cd \approx 0{,}012$). Autrement dit, à taux de déclin égal, l'amplitude de la chute de performance à long terme est structurellement plus importante chez les hommes sur cette distance.
+
+Notons toutefois que la condition d'existence du pic (ab > cd) est bien vérifiée dans les deux cas : $ab \approx 3{,}89 \gg cd \approx 0{,}142$ chez les hommes, et $ab \approx 3{,}29 \gg cd \approx 0{,}012$ chez les femmes, avec des rapports $R= \frac {ab} {cd}$ respectifs de $27{,}4$ et $276{,}5$.
+
+
+**Âge au pic et qualité d'ajustement.** L'âge au pic estimé est très similaire entre sexes : 26,0 ans chez les hommes et 25,6 ans chez les femmes. 
+L'ajustement est meilleur pour les hommes que pour les femmes, comme en témoigne un RMSE plus faible (0,39 vs 0,53 km/h). Les critères AIC et BIC, non comparables entre sexes car issus de jeux de données distincts, sont utilisés ici pour la comparaison entre modèles au sein de chaque groupe.
+
+
+
 #### Modèle IMAP {.unnumbered}
 
 Le 1500m offre une illustration détaillée de l'ajustement du modèle IMAP sur une
@@ -809,96 +846,6 @@ d'années. Le RMSE est plus faible chez les hommes (0,238 km/h contre 0,346 km/h
 reflet d'une dispersion plus grande des points féminins autour de la tendance centrale,
 notamment le point isolé à 40 ans (environ 20,7 km/h) qui s'écarte nettement de la
 courbe. 
-
-#### Modèle de Moore {.unnumbered}
-
-L'exemple du 1500m permet de détailler l'ajustement du modèle de Moore à nos données (@fig-moore-1500). Le tableau @tbl-moore-1500m présente les paramètres estimés par le modèle de Moore pour le 1500 m, ainsi que les indicateurs de qualité d'ajustement.
-
-| | Hommes | Femmes |
-|---|:---:|:---:|
-| a | $30{,}89$ | $29{,}215$ |
-| b | $0{,}126$ | $0{,}11279$ |
-| c | $141{,}92$ | $11{,}915$ |
-| d | $0{,}001$ | $0{,}001$ |
-| $t_{\text{pic}}$ | $26$ ans | $25{,}6$ ans |
-| RMSE | $0{,}39$ km/h | $0{,}529$ km/h |
-| AIC | $-5{,}11$ | $19{,}48$ |
-| BIC | $0{,}77$ | $25{,}58$ |
-
-: Paramètres estimés et critères d'ajustement du modèle de Moore — 1500m {#tbl-moore-1500m}
-
-::: {#fig-moore-1500 fig-pos='H'}
-\fbox{\includegraphics[width=0.90\textwidth]{annexes/moore_1500m.png}}
-
-Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annuelle
-par âge (km/h). Ligne rouge : courbe ajustée.
-:::
-
-**Interprétation des paramètres.** Les paramètres a et b, associés à la première composante de croissance, sont proches entre les deux sexes (a : 30,89 vs 29,22 ; b : 0,126 vs 0,113). En revanche, le paramètre c, qui gouverne l'amplitude de la seconde composante, diffère très nettement : 141,92 chez les hommes contre 11,92 chez les femmes, ce qui traduit une dynamique de progression tardive de bien plus grande ampleur dans le modèle masculin. Le paramètre d est identique pour les deux sexes (0,001), indiquant une vitesse de développement de cette seconde composante équivalente.
-
-**Âge au pic et qualité d'ajustement.** L'âge au pic estimé est très similaire entre sexes : 26,0 ans chez les hommes et 25,6 ans chez les femmes. 
-L'ajustement est meilleur pour les hommes que pour les femmes, comme en témoigne un RMSE plus faible (0,39 vs 0,53 km/h). Les critères AIC et BIC, non comparables entre sexes car issus de jeux de données distincts, sont utilisés ici pour la comparaison entre modèles au sein de chaque groupe.
-
-
-#### Exemple du 200m {.unnumbered}
-
-L'exemple du 200m permet de détailler l'ajustement du modèle de Moore à nos données (@fig-moore-200). Le tableau @tbl-moore-200m présente les paramètres estimés par le modèle de Moore pour le 200 m, ainsi que les indicateurs de qualité d'ajustement.
-
-| | Hommes | Femmes |
-|---|:---:|:---:|
-| a | $42{,}61$ | $33{,}403$ |
-| b | $0{,}125$ | $0{,}181$ |
-| c | $1{,}64$ | $0{,}00027$ |
-| d | $0{,}0466$ | $0{,}236$ |
-| $t_{\text{pic}}$ | $24{,}7$ ans | $27{,}4$ ans |
-| RMSE | $0{,}535$ km/h | $0{,}404$ km/h |
-| AIC | $55{,}46$ | $17{,}73$ |
-| BIC | $61{,}35$ | $23{,}62$ |
-
-: Paramètres estimés et critères d'ajustement du modèle de Moore — 200m {#tbl-moore-200m}
-
-::: {#fig-moore-200 fig-pos='H'}
-\fbox{\includegraphics[width=0.90\textwidth]{annexes/moore_200m.png}}
-
-Ajustement du modèle de Moore sur le 200m. Points : meilleure performance annuelle
-par âge (km/h). Ligne rouge : courbe ajustée.
-:::
-
-**Interprétation des paramètres.** Les paramètres a et b diffèrent modérément entre sexes (a : 42,61 vs 33,40 ; b : 0,125 vs 0,181), indiquant une première composante de croissance d'amplitude plus élevée mais plus lente chez les hommes. Le paramètre c diverge très nettement : 1,64 chez les hommes contre 0,00027 chez les femmes, ce qui traduit une seconde composante de progression quasi absente dans le modèle féminin. Corollairement, le paramètre d est sans effet pratique pour les femmes malgré une valeur plus élevée (0,236 vs 0,047).
-
-**Âge au pic et qualité d'ajustement.** L'âge au pic estimé présente un écart intersexe notable : 24,7 ans chez les hommes contre 27,4 ans chez les femmes, soit 2,7 ans d'écart, ce qui constitue l'un des écarts les plus marqués observés toutes disciplines confondues. Ce résultat est à mettre en regard de la quasi-absence de la seconde composante dans le modèle féminin, qui confère à la courbe des femmes une forme différente de celle des hommes.
-Concernant la qualité d'ajustement, le RMSE est plus faible pour les femmes (0,404 km/h) que pour les hommes (0,535 km/h), suggérant un ajustement légèrement meilleur du modèle aux données féminines pour cette discipline.
-
-
-#### Exemple du 400m haies {.unnumbered}
-
-L'exemple du 400m haies permet de détailler l'ajustement du modèle de Moore à nos données (@fig-moore-400h). Le tableau @tbl-moore-400h présente les paramètres estimés par le modèle de Moore pour le 400m haies, ainsi que les indicateurs de qualité d'ajustement.
-
-| | Hommes | Femmes |
-|---|:---:|:---:|
-| a | $9{,}935$ | $7{,}129$ |
-| b | $0{,}124$ | $0{,}135$ |
-| c | $3{,}029$ | $0{,}000078$ |
-| d | $0{,}0123$ | $0{,}264$ |
-| $t_{\text{pic}}$ | $25{,}7$ ans | $26{,}9$ ans |
-| RMSE | $0{,}47$ km/h | $0{,}203$ km/h |
-| AIC | $-43$ | $-58{,}44$ |
-| BIC | $-37{,}32$ | $-53{,}22$ |
-
-: Paramètres estimés et critères d'ajustement du modèle de Moore — 400m haies {#tbl-moore-400h}
-
-::: {#fig-moore-400h fig-pos='H'}
-\fbox{\includegraphics[width=0.90\textwidth]{annexes/moore_400h.png}}
-
-Ajustement du modèle de Moore sur le 400m haies. Points : meilleure performance annuelle
-par âge (km/h). Ligne rouge : courbe ajustée.
-:::
-
-**Interprétation des paramètres.** Les paramètres a et b sont proches entre sexes (a : 9,935 vs 7,129 ; b : 0,124 vs 0,135), indiquant une première composante de croissance d'amplitude légèrement plus élevée mais de vitesse comparable entre hommes et femmes. Le paramètre c diverge très nettement : 3,029 chez les hommes contre 0,000078 chez les femmes, ce qui traduit, comme observé pour le 200 m, une seconde composante de progression quasi absente dans le modèle féminin. En conséquence, le paramètre d, bien que plus élevé chez les femmes (0,264 vs 0,012), n'a pas d'effet pratique sur la courbe féminine.
-
-**Âge au pic et qualité d'ajustement.** L'âge au pic estimé est de 25,7 ans chez les hommes et 26,9 ans chez les femmes, soit un écart de 1,2 an, plus modéré que celui observé pour le 200 m. Ces valeurs sont cohérentes avec celles rapportées dans le tableau @tbl-moore-groupes pour le groupe haies.
-Concernant la qualité d'ajustement, le RMSE est nettement plus faible pour les femmes (0,203 km/h) que pour les hommes (0,470 km/h), indiquant un meilleur ajustement du modèle aux données féminines pour cette discipline. Cette différence est notable et constitue l'un des écarts de RMSE les plus marqués entre sexes parmi les disciplines étudiées.
-
 
 
 ### Comparaison des modèles Moore et IMAP {.unnumbered}
@@ -972,11 +919,12 @@ hommes ; $25,6$ contre $29,5$ chez les femmes). Moore offre donc un meilleur com
 ajustement-parcimonie sur cette discipline, résultat cohérent avec la tendance générale
 observée sur l'ensemble du demi-fond (tableau complet en annexe, @tbl-rmse-cr).
 
-| Discipline | AIC Moore H | AIC IMAP H | AIC Moore F | AIC IMAP F |
-|---|:---:|:---:|:---:|:---:|
-| 1500m | - 5,1 | 4,8 | 19,5 | 23,5 |
-| Discipline | BIC Moore H | BIC IMAP H | BIC Moore F | BIC IMAP F |
-| 1500m | 0,8 | 10,7 | 25,6 | 29,5 |
+| Discipline | Modèle | AIC | BIC |
+|---|---|:---:|:---:|
+| 1500m H | Moore | -5,1 | 0,8 |
+| 1500m H | IMAP | 4,8 | 10,7 |
+| 1500m F | Moore | 19,5 | 25,6 |
+| 1500m F | IMAP | 23,5 | 29,5 |
 : Critères AIC et BIC par modèle, discipline et sexe {#tbl-comparatif-aic-bic-1500m}
 
 
