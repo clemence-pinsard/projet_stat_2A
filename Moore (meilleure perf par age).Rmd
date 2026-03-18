@@ -76,6 +76,15 @@ generate_starts_km_par_h <- function(df) {
 lower_bounds <- c(a = 0.05, b = 0.001, c = -100, d = 0.001)
 
 n_iterations <- 1000
+
+
+rmse_cr <- function(fit, y_obs) {
+  res  <- residuals(fit)
+  rmse <- sqrt(mean(res^2))
+  rmse_cr <- rmse / mean(y_obs)
+  return(rmse_cr)
+}
+
 ```
 
 
@@ -127,6 +136,7 @@ summary(best_fit)
 
 AIC(best_fit)
 BIC(best_fit)
+rmse_cr(best_fit, df_men_Discus_Throw$meilleure_perf)
 
 t_pic <- log(params["a"]*params["b"]/(params["c"]*params["d"]))/(params["b"]+params["d"])
 print(t_pic)
@@ -183,6 +193,7 @@ summary(best_fit_f_d)
 
 AIC(best_fit_f_d)
 BIC(best_fit_f_d)
+rmse_cr(best_fit_f_d, df_women_Discus_Throw$meilleure_perf)
 
 t_pic_f_d <- log(params_f_d["a"]*params_f_d["b"]/(params_f_d["c"]*params_f_d["d"]))/(params_f_d["b"]+params_f_d["d"])
 print(t_pic_f_d)
@@ -239,6 +250,7 @@ summary(best_fit_h_m)
 
 AIC(best_fit_h_m)
 BIC(best_fit_h_m)
+rmse_cr(best_fit_h_m, df_men_Hammer_Throw$meilleure_perf)
 
 t_pic_h_m <- log(params_h_m["a"]*params_h_m["b"]/(params_h_m["c"]*params_h_m["d"]))/(params_h_m["b"]+params_h_m["d"])
 print(t_pic_h_m)
@@ -295,6 +307,7 @@ summary(best_fit_f_m)
 
 AIC(best_fit_f_m)
 BIC(best_fit_f_m)
+rmse_cr(best_fit_f_m, df_women_Hammer_Throw$meilleure_perf)
 
 t_pic_f_m <- log(params_f_m["a"]*params_f_m["b"]/(params_f_m["c"]*params_f_m["d"]))/(params_f_m["b"]+params_f_m["d"])
 print(t_pic_f_m)
@@ -351,6 +364,7 @@ summary(best_fit_h_j)
 
 AIC(best_fit_h_j)
 BIC(best_fit_h_j)
+rmse_cr(best_fit_h_j, df_men_Javelin_Throw$meilleure_perf)
 
 t_pic_h_j <- log(params_h_j["a"]*params_h_j["b"]/(params_h_j["c"]*params_h_j["d"]))/(params_h_j["b"]+params_h_j["d"])
 print(t_pic_h_j)
@@ -407,6 +421,7 @@ summary(best_fit_f_j)
 
 AIC(best_fit_f_j)
 BIC(best_fit_f_j)
+rmse_cr(best_fit_f_j, df_women_Javelin_Throw$meilleure_perf)
 
 t_pic_f_j <- log(params_f_j["a"]*params_f_j["b"]/(params_f_j["c"]*params_f_j["d"]))/(params_f_j["b"]+params_f_j["d"])
 print(t_pic_f_j)
@@ -463,6 +478,7 @@ summary(best_fit_h_p)
 
 AIC(best_fit_h_p)
 BIC(best_fit_h_p)
+rmse_cr(best_fit_h_p, df_men_Shot_Put$meilleure_perf)
 
 t_pic_h_p <- log(params_h_p["a"]*params_h_p["b"]/(params_h_p["c"]*params_h_p["d"]))/(params_h_p["b"]+params_h_p["d"])
 print(t_pic_h_p)
@@ -519,6 +535,7 @@ summary(best_fit_f_p)
 
 AIC(best_fit_f_p)
 BIC(best_fit_f_p)
+rmse_cr(best_fit_f_p, df_women_Shot_Put$meilleure_perf)
 
 t_pic_f_p <- log(params_f_p["a"]*params_f_p["b"]/(params_f_p["c"]*params_f_p["d"]))/(params_f_p["b"]+params_f_p["d"])
 print(t_pic_f_p)
@@ -577,6 +594,7 @@ summary(best_fit_h_100)
 
 AIC(best_fit_h_100)
 BIC(best_fit_h_100)
+rmse_cr(best_fit_h_100, df_men_100_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_100 <- log(params_h_100["a"]*params_h_100["b"]/(params_h_100["c"]*params_h_100["d"]))/(params_h_100["b"]+params_h_100["d"])
 print(t_pic_h_100)
@@ -637,6 +655,7 @@ summary(best_fit_f_100)
 
 AIC(best_fit_f_100)
 BIC(best_fit_f_100)
+rmse_cr(best_fit_f_100, df_women_100_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_100 <- log(params_f_100["a"]*params_f_100["b"]/(params_f_100["c"]*params_f_100["d"]))/(params_f_100["b"]+params_f_100["d"])
 print(t_pic_f_100)
@@ -693,6 +712,7 @@ summary(best_fit_h_200)
 
 AIC(best_fit_h_200)
 BIC(best_fit_h_200)
+rmse_cr(best_fit_h_200, df_men_200_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_200 <- log(params_h_200["a"]*params_h_200["b"]/(params_h_200["c"]*params_h_200["d"]))/(params_h_200["b"]+params_h_200["d"])
 print(t_pic_h_200)
@@ -752,6 +772,7 @@ summary(best_fit_f_200)
 
 AIC(best_fit_f_200)
 BIC(best_fit_f_200)
+rmse_cr(best_fit_f_200, df_women_200_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_200 <- log(params_f_200["a"]*params_f_200["b"]/(params_f_200["c"]*params_f_200["d"]))/(params_f_200["b"]+params_f_200["d"])
 print(t_pic_f_200)
@@ -809,6 +830,7 @@ summary(best_fit_h_400)
 
 AIC(best_fit_h_400)
 BIC(best_fit_h_400)
+rmse_cr(best_fit_h_400, df_men_400_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_400 <- log(params_h_400["a"]*params_h_400["b"]/(params_h_400["c"]*params_h_400["d"]))/(params_h_400["b"]+params_h_400["d"])
 print(t_pic_h_400)
@@ -865,6 +887,7 @@ summary(best_fit_f_400)
 
 AIC(best_fit_f_400)
 BIC(best_fit_f_400)
+rmse_cr(best_fit_f_400, df_women_400_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_400 <- log(params_f_400["a"]*params_f_400["b"]/(params_f_400["c"]*params_f_400["d"]))/(params_f_400["b"]+params_f_400["d"])
 print(t_pic_f_400)
@@ -922,6 +945,7 @@ summary(best_fit_h_800)
 
 AIC(best_fit_h_800)
 BIC(best_fit_h_800)
+rmse_cr(best_fit_h_800, df_men_800_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_800 <- log(params_h_800["a"]*params_h_800["b"]/(params_h_800["c"]*params_h_800["d"]))/(params_h_800["b"]+params_h_800["d"])
 print(t_pic_h_800)
@@ -980,6 +1004,7 @@ summary(best_fit_f_800)
 
 AIC(best_fit_f_800)
 BIC(best_fit_f_800)
+rmse_cr(best_fit_f_800, df_women_800_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_800 <- log(params_f_800["a"]*params_f_800["b"]/(params_f_800["c"]*params_f_800["d"]))/(params_f_800["b"]+params_f_800["d"])
 print(t_pic_f_800)
@@ -1037,6 +1062,7 @@ summary(best_fit_h_1500)
 
 AIC(best_fit_h_1500)
 BIC(best_fit_h_1500)
+rmse_cr(best_fit_h_1500, df_men_1500_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_1500 <- log(params_h_1500["a"]*params_h_1500["b"]/(params_h_1500["c"]*params_h_1500["d"]))/(params_h_1500["b"]+params_h_1500["d"])
 print(t_pic_h_1500)
@@ -1093,6 +1119,7 @@ summary(best_fit_f_1500)
 
 AIC(best_fit_f_1500)
 BIC(best_fit_f_1500)
+rmse_cr(best_fit_f_1500, df_women_1500_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_1500 <- log(params_f_1500["a"]*params_f_1500["b"]/(params_f_1500["c"]*params_f_1500["d"]))/(params_f_1500["b"]+params_f_1500["d"])
 print(t_pic_f_1500)
@@ -1149,6 +1176,7 @@ summary(best_fit_h_5000)
 
 AIC(best_fit_h_5000)
 BIC(best_fit_h_5000)
+rmse_cr(best_fit_h_5000, df_men_5000_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_5000 <- log(params_h_5000["a"]*params_h_5000["b"]/(params_h_5000["c"]*params_h_5000["d"]))/(params_h_5000["b"]+params_h_5000["d"])
 print(t_pic_h_5000)
@@ -1206,6 +1234,7 @@ summary(best_fit_f_5000)
 
 AIC(best_fit_f_5000)
 BIC(best_fit_f_5000)
+rmse_cr(best_fit_f_5000, df_women_5000_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_5000 <- log(params_f_5000["a"]*params_f_5000["b"]/(params_f_5000["c"]*params_f_5000["d"]))/(params_f_5000["b"]+params_f_5000["d"])
 print(t_pic_f_5000)
@@ -1262,6 +1291,7 @@ summary(best_fit_h_3000s)
 
 AIC(best_fit_h_3000s)
 BIC(best_fit_h_3000s)
+rmse_cr(best_fit_h_3000s, df_men_3000_Metres_Steeplechase$meilleure_perf_km_par_h)
 
 t_pic_h_3000s <- log(params_h_3000s["a"]*params_h_3000s["b"]/(params_h_3000s["c"]*params_h_3000s["d"]))/(params_h_3000s["b"]+params_h_3000s["d"])
 print(t_pic_h_3000s)
@@ -1320,6 +1350,7 @@ summary(best_fit_f_3000s)
 
 AIC(best_fit_f_3000s)
 BIC(best_fit_f_3000s)
+rmse_cr(best_fit_f_3000s, df_women_3000_Metres_Steeplechase$meilleure_perf_km_par_h)
 
 t_pic_f_3000s <- log(params_f_3000s["a"]*params_f_3000s["b"]/(params_f_3000s["c"]*params_f_3000s["d"]))/(params_f_3000s["b"]+params_f_3000s["d"])
 print(t_pic_f_3000s)
@@ -1377,6 +1408,7 @@ summary(best_fit_h_110h)
 
 AIC(best_fit_h_110h)
 BIC(best_fit_h_110h)
+rmse_cr(best_fit_h_110h, df_men_110_Metres_Hurdles$meilleure_perf_km_par_h)
 
 t_pic_h_110h <- log(params_h_110h["a"]*params_h_110h["b"]/(params_h_110h["c"]*params_h_110h["d"]))/(params_h_110h["b"]+params_h_110h["d"])
 print(t_pic_h_110h)
@@ -1435,6 +1467,7 @@ summary(best_fit_f_100h)
 
 AIC(best_fit_f_100h)
 BIC(best_fit_f_100h)
+rmse_cr(best_fit_f_100h, df_women_100_Metres_Hurdles$meilleure_perf_km_par_h)
 
 t_pic_f_100h <- log(params_f_100h["a"]*params_f_100h["b"]/(params_f_100h["c"]*params_f_100h["d"]))/(params_f_100h["b"]+params_f_100h["d"])
 print(t_pic_f_100h)
@@ -1492,6 +1525,7 @@ summary(best_fit_h_400h)
 
 AIC(best_fit_h_400h)
 BIC(best_fit_h_400h)
+rmse_cr(best_fit_h_400h, df_men_400_Metres_Hurdles$meilleure_perf_km_par_h)
 
 t_pic_h_400h <- log(params_h_400h["a"]*params_h_400h["b"]/(params_h_400h["c"]*params_h_400h["d"]))/(params_h_400h["b"]+params_h_400h["d"])
 print(t_pic_h_400h)
@@ -1548,6 +1582,7 @@ summary(best_fit_f_400h)
 
 AIC(best_fit_f_400h)
 BIC(best_fit_f_400h)
+rmse_cr(best_fit_f_400h, df_women_400_Metres_Hurdles$meilleure_perf_km_par_h)
 
 t_pic_f_400h <- log(params_f_400h["a"]*params_f_400h["b"]/(params_f_400h["c"]*params_f_400h["d"]))/(params_f_400h["b"]+params_f_400h["d"])
 print(t_pic_f_400h)
@@ -1604,6 +1639,7 @@ summary(best_fit_h_long)
 
 AIC(best_fit_h_long)
 BIC(best_fit_h_long)
+rmse_cr(best_fit_h_long, df_men_Long_Jump$meilleure_perf)
 
 t_pic_h_long <- log(params_h_long["a"]*params_h_long["b"]/(params_h_long["c"]*params_h_long["d"]))/(params_h_long["b"]+params_h_long["d"])
 print(t_pic_h_long)
@@ -1660,6 +1696,7 @@ summary(best_fit_f_long)
 
 AIC(best_fit_f_long)
 BIC(best_fit_f_long)
+rmse_cr(best_fit_f_long, df_women_Long_Jump$meilleure_perf)
 
 t_pic_f_long <- log(params_f_long["a"]*params_f_long["b"]/(params_f_long["c"]*params_f_long["d"]))/(params_f_long["b"]+params_f_long["d"])
 print(t_pic_f_long)
@@ -1716,6 +1753,7 @@ summary(best_fit_h_triple)
 
 AIC(best_fit_h_triple)
 BIC(best_fit_h_triple)
+rmse_cr(best_fit_h_triple, df_men_Triple_Jump$meilleure_perf)
 
 t_pic_h_triple <- log(params_h_triple["a"]*params_h_triple["b"]/(params_h_triple["c"]*params_h_triple["d"]))/(params_h_triple["b"]+params_h_triple["d"])
 print(t_pic_h_triple)
@@ -1773,6 +1811,7 @@ summary(best_fit_f_triple)
 
 AIC(best_fit_f_triple)
 BIC(best_fit_f_triple)
+rmse_cr(best_fit_f_triple, df_women_Triple_Jump$meilleure_perf)
 
 t_pic_f_triple <- log(params_f_triple["a"]*params_f_triple["b"]/(params_f_triple["c"]*params_f_triple["d"]))/(params_f_triple["b"]+params_f_triple["d"])
 print(t_pic_f_triple)
@@ -1829,6 +1868,7 @@ summary(best_fit_h_haut)
 
 AIC(best_fit_h_haut)
 BIC(best_fit_h_haut)
+rmse_cr(best_fit_h_haut, df_men_High_Jump$meilleure_perf)
 
 t_pic_h_haut <- log(params_h_haut["a"]*params_h_haut["b"]/(params_h_haut["c"]*params_h_haut["d"]))/(params_h_haut["b"]+params_h_haut["d"])
 print(t_pic_h_haut)
@@ -1886,6 +1926,7 @@ summary(best_fit_f_haut)
 
 AIC(best_fit_f_haut)
 BIC(best_fit_f_haut)
+rmse_cr(best_fit_f_haut, df_women_High_Jump$meilleure_perf)
 
 t_pic_f_haut <- log(params_f_haut["a"]*params_f_haut["b"]/(params_f_haut["c"]*params_f_haut["d"]))/(params_f_haut["b"]+params_f_haut["d"])
 print(t_pic_f_haut)
@@ -1943,6 +1984,7 @@ summary(best_fit_h_per)
 
 AIC(best_fit_h_per)
 BIC(best_fit_h_per)
+rmse_cr(best_fit_h_per, df_men_Pole_Vault$meilleure_perf)
 
 t_pic_h_per <- log(params_h_per["a"]*params_h_per["b"]/(params_h_per["c"]*params_h_per["d"]))/(params_h_per["b"]+params_h_per["d"])
 print(t_pic_h_per)
@@ -1999,6 +2041,7 @@ summary(best_fit_f_per)
 
 AIC(best_fit_f_per)
 BIC(best_fit_f_per)
+rmse_cr(best_fit_f_per, df_women_Pole_Vault$meilleure_perf)
 
 t_pic_f_per <- log(params_f_per["a"]*params_f_per["b"]/(params_f_per["c"]*params_f_per["d"]))/(params_f_per["b"]+params_f_per["d"])
 print(t_pic_f_per)
@@ -2056,6 +2099,7 @@ summary(best_fit_h_deca)
 
 AIC(best_fit_h_deca)
 BIC(best_fit_h_deca)
+rmse_cr(best_fit_h_deca, df_men_Decathlon$meilleure_perf)
 
 t_pic_h_deca <- log(params_h_deca["a"]*params_h_deca["b"]/(params_h_deca["c"]*params_h_deca["d"]))/(params_h_deca["b"]+params_h_deca["d"])
 print(t_pic_h_deca)
@@ -2112,6 +2156,7 @@ summary(best_fit_f_hep)
 
 AIC(best_fit_f_hep)
 BIC(best_fit_f_hep)
+rmse_cr(best_fit_f_hep, df_women_Heptathlon$meilleure_perf)
 
 t_pic_f_hep <- log(params_f_hep["a"]*params_f_hep["b"]/(params_f_hep["c"]*params_f_hep["d"]))/(params_f_hep["b"]+params_f_hep["d"])
 print(t_pic_f_hep)
@@ -2169,6 +2214,7 @@ summary(best_fit_h_marc)
 
 AIC(best_fit_h_marc)
 BIC(best_fit_h_marc)
+rmse_cr(best_fit_h_marc, df_men_20_Kilometres_Race_Walk$meilleure_perf_km_par_h)
 
 
 t_pic_h_marc <- log(params_h_marc["a"]*params_h_marc["b"]/(params_h_marc["c"]*params_h_marc["d"]))/(params_h_marc["b"]+params_h_marc["d"])
@@ -2227,6 +2273,7 @@ summary(best_fit_f_marc)
 
 AIC(best_fit_f_marc)
 BIC(best_fit_f_marc)
+rmse_cr(best_fit_f_marc, df_women_20_Kilometres_Race_Walk$meilleure_perf_km_par_h)
 
 t_pic_f_marc <- log(params_f_marc["a"]*params_f_marc["b"]/(params_f_marc["c"]*params_f_marc["d"]))/(params_f_marc["b"]+params_f_marc["d"])
 print(t_pic_f_marc)
@@ -2284,6 +2331,7 @@ summary(best_fit_h_mara)
 
 AIC(best_fit_h_mara)
 BIC(best_fit_h_mara)
+rmse_cr(best_fit_h_mara, df_men_Marathon$meilleure_perf_km_par_h)
 
 t_pic_h_mara <- log(params_h_mara["a"]*params_h_mara["b"]/(params_h_mara["c"]*params_h_mara["d"]))/(params_h_mara["b"]+params_h_mara["d"])
 print(t_pic_h_mara)
@@ -2341,6 +2389,7 @@ summary(best_fit_f_mara)
 
 AIC(best_fit_f_mara)
 BIC(best_fit_f_mara)
+rmse_cr(best_fit_f_mara, df_women_Marathon$meilleure_perf_km_par_h)
 
 t_pic_f_mara <- log(params_f_mara["a"]*params_f_mara["b"]/(params_f_mara["c"]*params_f_mara["d"]))/(params_f_mara["b"]+params_f_mara["d"])
 print(t_pic_f_mara)
@@ -2399,6 +2448,7 @@ summary(best_fit_h_10000)
 
 AIC(best_fit_h_10000)
 BIC(best_fit_h_10000)
+rmse_cr(best_fit_h_10000, `df_men_10,000_Metres`$meilleure_perf_km_par_h)
 
 t_pic_h_10000 <- log(params_h_10000["a"]*params_h_10000["b"]/(params_h_10000["c"]*params_h_10000["d"]))/(params_h_10000["b"]+params_h_10000["d"])
 print(t_pic_h_10000)
@@ -2456,6 +2506,7 @@ summary(best_fit_f_10000)
 
 AIC(best_fit_f_10000)
 BIC(best_fit_f_10000)
+rmse_cr(best_fit_f_10000, `df_women_10,000_Metres`$meilleure_perf_km_par_h)
 
 t_pic_f_10000 <- log(params_f_10000["a"]*params_f_10000["b"]/(params_f_10000["c"]*params_f_10000["d"]))/(params_f_10000["b"]+params_f_10000["d"])
 print(t_pic_f_10000)
@@ -2468,20 +2519,105 @@ lines(`df_women_10,000_Metres`$Age, predict(best_fit_f_10000), col="red", lwd=2)
 ## Code graphiques propres
 
 ```{r}
-library(ggplot2)
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_1500_Metres$pred   <- predict(best_fit_h_1500)
 
-# Création du graphique
-ggplot(`df_women_10,000_Metres`, aes(x = Age, y = meilleure_perf_km_par_h)) +
-  # Ajout des points (équivalent à pch=16)
-  geom_point(alpha = 0.6) + 
-  # Ajout de la ligne de prédiction (équivalent à lines())
-  geom_line(aes(y = predict(best_fit_f_10000)), color = "red", size = 1) +
-  # Titre et labels
-  labs(title = "Ajustement du modèle",
-       x = "Age",
-       y = "Meilleure performance (km/h)") +
-  # Un thème épuré
-  theme_minimal()
+df_women_1500_Metres$pred  <- predict(best_fit_f_1500)
+
+# On combine tout dans un seul gros dataframe
+df_1500 <- bind_rows(
+  mutate(df_men_1500_Metres, Epreuve = "1500m", Sexe = "Hommes"),
+  mutate(df_women_1500_Metres, Epreuve = "1500m", Sexe = "Femmes")
+)
+
+p_1500 <- ggplot(df_1500, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 1500m",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_1500m.png", plot = p_1500, width = 12, height = 9)
+```
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_200_Metres$pred   <- predict(best_fit_h_200)
+
+df_women_200_Metres$pred  <- predict(best_fit_f_200)
+
+# On combine tout dans un seul gros dataframe
+df_200 <- bind_rows(
+  mutate(df_men_200_Metres, Epreuve = "200m", Sexe = "Hommes"),
+  mutate(df_women_200_Metres, Epreuve = "200m", Sexe = "Femmes")
+)
+
+p_200 <- ggplot(df_200, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 200m",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_200m.png", plot = p_200, width = 12, height = 9)
+```
+
+```{r}
+# On ajoute les prédictions directement dans chaque dataframe
+df_men_400_Metres_Hurdles$pred   <- predict(best_fit_h_400h)
+
+df_women_400_Metres_Hurdles$pred  <- predict(best_fit_f_400h)
+
+# On combine tout dans un seul gros dataframe
+df_400h <- bind_rows(
+  mutate(df_men_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Hommes"),
+  mutate(df_women_400_Metres_Hurdles, Epreuve = "400m haies", Sexe = "Femmes")
+)
+
+p_400h <- ggplot(df_400h, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
+  geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # L'astuce est ici : scales = "free_y"
+  # On utilise facet_wrap pour une grille 4x2 ou facet_grid
+  facet_wrap(~ Sexe + Epreuve, ncol = 2, scales = "free_y") +
+  
+  theme_bw() + # Un thème un peu plus structuré pour des échelles variées
+  labs(
+    title = "Ajustement du modèle de Moore pour le 400m haies",
+    x = "Âge",
+    y = "Performance (kilomètres par heure)"
+  ) +
+  theme(
+    strip.background = element_rect(fill = "gray90"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggsave("annexes/moore_400h.png", plot = p_400h, width = 12, height = 9)
 ```
 
 ### Pour mettre en annexes
