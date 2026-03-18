@@ -124,7 +124,7 @@ Early talent detection and understanding the career trajectories of elite athlet
 
 ## Contexte et enjeux {.unnumbered}
 
-La détection précoce des talents sportifs constitue un enjeu majeur pour les fédérations internationales d'athlétisme. Si la question de l'identification des jeunes athlètes prometteurs semble intuitive, elle se révèle en réalité bien plus complexe : les performances exceptionnelles observées à l'adolescence ne garantissent pas nécessairement la réussite au plus haut niveau à l'âge adulte. Ce constat soulève une problématique centrale : comment identifier, parmi les jeunes athlètes performants, ceux qui parviendront à maintenir, voire améliorer leur niveau dans les années suivantes ?
+La détection précoce des talents sportifs constitue un enjeu majeur pour les fédérations internationales d'athlétisme. Si la question de l'identification des jeunes athlètes prometteurs semble intuitive, elle se révèle en réalité bien plus complexe : les performances exceptionnelles observées à l'adolescence ne garantissent pas nécessairement la réussite au plus haut niveau à l'âge adulte. Ce constat soulève une problématique centrale : comment identifier, parmi les jeunes athlètes performants, ceux qui parviendront à maintenir, voire améliorer leur niveau dans les années suivantes ?\
 
 Cette question s'inscrit dans un contexte scientifique où la relation entre l'âge et la performance sportive a fait l'objet de nombreuses recherches. Depuis les travaux pionniers de Moore en 1975, qui proposa le premier modèle mathématique de cette relation, la communauté scientifique n'a cessé d'approfondir la compréhension de cette dynamique. Plus récemment, Berthelot et ses collaborateurs ont développé en 2019 le modèle IMAP (Integrative Model of Age-Performance), fondé sur des mécanismes biologiques cellulaires, offrant ainsi une nouvelle perspective pour modéliser l'évolution des capacités physiques tout au long de la vie.\
 
@@ -168,7 +168,7 @@ Une limite méthodologique inhérente à la base de données doit être soulign�
 
 - **Identification des carrières terminées :** Afin d'éviter le biais de troncature (inclure un athlète n'ayant pas encore atteint son pic), nous avons restreint l'étude aux athlètes retraités. Un seuil de "retraite" a été fixé à l'année 2022 : tout athlète ayant réalisé une performance après cette date a été considéré comme actif et exclu de l'analyse.
 
-- **Sélection de la meilleure performance annuelle :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en neuf familles majeures :**5000-100000**, **800 - 1500 - Steeple**, **Épreuves combinées**, **Marche**, **Marathon**, **Sauts**, **Haies**, **Sprint** et **Lancers**.
+- **Sélection de la meilleure performance annuelle :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en neuf familles majeures : **5000-100000**, **800 - 1500 - Steeple**, **Épreuves combinées**, **Marche**, **Marathon**, **Sauts**, **Haies**, **Sprint** et **Lancers**.
 
 - **Filtrage par expérience et équilibrage (Top 32) :** Pour garantir que l'âge au pic observé soit représentatif d'une trajectoire complète, seuls les athlètes ayant au moins **5 années de performances** enregistrées dans une même discipline ont été retenus. Enfin, pour corriger les disparités d'effectifs entre les sexes, nous avons procédé à un échantillonnage équilibré en sélectionnant le **Top 32** des meilleurs athlètes par discipline et par sexe, seuil défini par l'effectif le plus restreint du jeu de données (heptathlon).
 
@@ -237,7 +237,7 @@ Le groupe **Sprint** se distingue par la maturité la plus précoce, avec des m�
 
 \noindent On observe des structures de distribution spécifiques selon les familles :
 
-- **Proximité entre sexes :** En **Haies**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes.
+- **Proximité entre sexes :** En **Marche**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes.
 \vspace{5pt}
 - **Dispersion :** La famille **Lancers** et le **Marathon** montrent des distributions supérieures très étirées, signalant une plus grande variabilité de l'âge au pic.
 \vspace{5pt}
@@ -245,7 +245,7 @@ Le groupe **Sprint** se distingue par la maturité la plus précoce, avec des m�
 
 \vspace{4pt}
 
-\noindent Cette première approche par grandes familles met en évidence des tendances liées à la nature de l'effort. Toutefois, la variabilité observée (notamment les nombreux points extrêmes) suggère que l'analyse par famille peut masquer des disparités internes. Pour affiner cette compréhension, une analyse à l'échelle de chaque discipline est nécessaire afin d'identifier les spécialités qui s'écartent des moyennes de leur propre groupe.
+Cette première approche par grandes familles met en évidence des tendances liées à la nature de l'effort. Toutefois, la variabilité observée (notamment les nombreux points extrêmes) suggère que l'analyse par famille peut masquer des disparités internes. Pour affiner cette compréhension, une analyse à l'échelle de chaque discipline est nécessaire afin d'identifier les spécialités qui s'écartent des moyennes de leur propre groupe.
 
 ### Analyse descriptive par discipline {.unnumbered .unlisted}
 
@@ -312,7 +312,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \vspace{5pt}
 
-\noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
+Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
 
 ### Test statistique de normalité {.unnumbered .unlisted}
 
@@ -365,7 +365,7 @@ Le raisonnement statistique reposant sur la comparaison des rangs plutôt que de
 
 **Effet global du sexe** 
 
-\noindent Le test de Wilcoxon-Mann-Whitney appliqué à l'ensemble de l'échantillon révèle une différence statistiquement significative entre les sexes ($p = 0,0016$). La médiane globale de l'âge au pic s'établit à 26 ans pour les athlètes féminines contre 25 ans pour les athlètes masculins.\
+\noindent Le test de Wilcoxon-Mann-Whitney appliqué à l'ensemble de l'échantillon révèle une différence d'âge au pic statistiquement significative entre les sexes ($p = 0,0016$). La médiane globale de l'âge au pic s'établit à 26 ans pour les athlètes féminines contre 25 ans pour les athlètes masculins.\
 
 \setlength{\parindent}{0pt}
 **Effet global de la famille de disciplines**
@@ -380,10 +380,28 @@ Le raisonnement statistique reposant sur la comparaison des rangs plutôt que de
 - **L'homogénéité du bloc explosif :** L'absence de différence statistiquement significative entre les familles des **Sauts**, des **Haies** et du **Sprint court** ($p_{adj} = 1,00$), indiquant une uniformité des âges au pic pour ces épreuves.
 
 \setlength{\parindent}{0pt}
-**Interaction Sexe et Famille**
+**Analyse de l'effet du sexe par familles de disciplines**
 \setlength{\parindent}{15pt}
 
-\noindent L'analyse croisée indique que l'écart global de maturité observé entre les sexes n'est pas distribué de manière homogène entre les familles. L'écart des médianes (faveur des femmes) est présent dans la famille de l'**Endurance**. À l'inverse, au sein des familles du **Sprint** et des **Sauts**, l'écart des médianes entre hommes et femmes se réduit jusqu'à devenir statistiquement non significatif au seuil $\alpha = 0,05$.\
+\noindent Le tableau suivant présente les résultats des tests de comparaison de moyennes de rangs (Wilcoxon-Mann-Whitney) effectués au sein de chaque famille d'épreuves pour évaluer l'effet du sexe sur l'âge au pic observé ($n = 1344$).
+
+| Famille | $n$ | Médiane H | Médiane F | Différence | $p$-value | Significatif |
+|:---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Fond (5000-10000)** | 128 | 23.0 | 26.0 | -3.0 | 0.004 | **OUI** |
+| **Marathon** | 64 | 27.0 | 29.0 | -2.0 | 0.010 | **OUI** |
+| **Haies** | 128 | 25.0 | 26.0 | -1.0 | 0.022 | **OUI** |
+| **Demi-fond (800-1500-Steeple)** | 192 | 24.0 | 26.0 | -2.0 | 0.034 | **OUI** |
+| **Lancers** | 256 | 27.5 | 26.0 | +1.5 | 0.079 | NON |
+| **Sprint** | 192 | 24.0 | 25.0 | -1.0 | 0.166 | NON |
+| **Sauts** | 256 | 25.5 | 26.0 | -0.5 | 0.149 | NON |
+| **Marche** | 64 | 26.0 | 26.0 | 0.0 | 0.418 | NON |
+| **Épreuves combinées** | 64 | 26.5 | 27.0 | -0.5 | 0.474 | NON |
+
+: Résultats des tests de Wilcoxon par familles (Comparaison Hommes/Femmes) {#tbl-wilcox-familles}
+
+\vspace{10pt}
+
+Au seuil de significativité $\alpha = 0,05$, l'hypothèse nulle d'égalité des médianes est rejetée pour quatre familles : le Fond, le Marathon, le Demi-fond et les Haies. Pour les cinq autres familles (Lancers, Sprint, Sauts, Marche et Épreuves combinées), aucune différence statistiquement significative n'est démontrée entre les sexes.\
 
 \setlength{\parindent}{0pt}
 **Analyse détaillée par Sexe et Discipline**
@@ -396,7 +414,7 @@ Le raisonnement statistique reposant sur la comparaison des rangs plutôt que de
 | 800 Mètres | 23.0 | 25.5 | 0.002 | **Significatif** |
 | 10 000 Mètres | 23.0 | 27.0 | 0.007 | **Significatif** |
 | Marathon | 27.0 | 29.0 | 0.009 | **Significatif** |
-| Lancer du Disque| 28.0 | 25.5 | 0.012 | **Significatif** |
+| Disque| 28.0 | 25.5 | 0.012 | **Significatif** |
 
 : Principaux résultats du test de Wilcoxon par discipline {#tbl-wilcox-disc}
 
