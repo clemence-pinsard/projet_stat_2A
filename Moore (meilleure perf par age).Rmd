@@ -2636,6 +2636,16 @@ df_women_Hammer_Throw$pred  <- predict(best_fit_f_m)
 df_women_Javelin_Throw$pred <- predict(best_fit_f_j)
 df_women_Shot_Put$pred      <- predict(best_fit_f_p) # Supposé pour le 8ème graphique
 
+df_men_Discus_Throw$age_pic_estime   <- t_pic
+df_men_Hammer_Throw$age_pic_estime   <- t_pic_h_m
+df_men_Javelin_Throw$age_pic_estime  <- t_pic_h_j
+df_men_Shot_Put$age_pic_estime       <- t_pic_h_p
+
+df_women_Discus_Throw$age_pic_estime   <- t_pic_f_d
+df_women_Hammer_Throw$age_pic_estime   <- t_pic_f_m
+df_women_Javelin_Throw$age_pic_estime  <- t_pic_f_j
+df_women_Shot_Put$age_pic_estime       <- t_pic_f_p
+
 # On combine tout dans un seul gros dataframe
 df_total_lancers <- bind_rows(
   mutate(df_men_Discus_Throw, Epreuve = "Disque", Sexe = "Hommes"),
@@ -2653,6 +2663,13 @@ df_total_lancers <- bind_rows(
 p_lancer <- ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_lancers %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2686,6 +2703,16 @@ df_women_Triple_Jump$pred   <- predict(best_fit_f_triple)
 df_women_High_Jump$pred  <- predict(best_fit_f_haut)
 df_women_Pole_Vault$pred       <- predict(best_fit_f_per)
 
+df_men_Long_Jump$age_pic_estime   <- t_pic_h_long
+df_men_Triple_Jump$age_pic_estime   <- t_pic_h_triple
+df_men_High_Jump$age_pic_estime  <- t_pic_h_haut
+df_men_Pole_Vault$age_pic_estime       <- t_pic_h_per
+
+df_women_Long_Jump$age_pic_estime   <- t_pic_f_long
+df_women_Triple_Jump$age_pic_estime   <- t_pic_f_triple
+df_women_High_Jump$age_pic_estime  <- t_pic_f_haut
+df_women_Pole_Vault$age_pic_estime       <- t_pic_f_per
+
 # On combine tout dans un seul gros dataframe
 df_total_sauts <- bind_rows(
   mutate(df_men_Long_Jump, Epreuve = "Longueur", Sexe = "Hommes"),
@@ -2704,6 +2731,13 @@ df_total_sauts <- bind_rows(
 p_saut <- ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_sauts %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2735,6 +2769,14 @@ df_women_100_Metres$pred   <- predict(best_fit_f_100)
 df_women_200_Metres$pred   <- predict(best_fit_f_200)
 df_women_400_Metres$pred  <- predict(best_fit_f_400)
 
+df_men_100_Metres$age_pic_estime   <- t_pic_h_100
+df_men_200_Metres$age_pic_estime   <- t_pic_h_200
+df_men_400_Metres$age_pic_estime  <- t_pic_h_400
+
+df_women_100_Metres$age_pic_estime   <- t_pic_f_100
+df_women_200_Metres$age_pic_estime   <- t_pic_f_200
+df_women_400_Metres$age_pic_estime  <- t_pic_f_400
+
 # On combine tout dans un seul gros dataframe
 df_total_sprints <- bind_rows(
   mutate(df_men_100_Metres, Epreuve = "100m", Sexe = "Hommes"),
@@ -2751,6 +2793,13 @@ df_total_sprints <- bind_rows(
 p_sprint <- ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_sprints %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2780,6 +2829,12 @@ df_men_400_Metres_Hurdles$pred  <- predict(best_fit_h_400h)
 df_women_100_Metres_Hurdles$pred   <- predict(best_fit_f_100h)
 df_women_400_Metres_Hurdles$pred  <- predict(best_fit_f_400h)
 
+df_men_110_Metres_Hurdles$age_pic_estime   <- t_pic_h_110h
+df_men_400_Metres_Hurdles$age_pic_estime   <- t_pic_h_400h
+
+df_women_100_Metres_Hurdles$age_pic_estime   <- t_pic_f_100h
+df_women_400_Metres_Hurdles$age_pic_estime   <- t_pic_f_400h
+
 # On combine tout dans un seul gros dataframe
 df_total_haies <- bind_rows(
   mutate(df_men_110_Metres_Hurdles, Epreuve = "110m haies", Sexe = "Hommes"),
@@ -2794,6 +2849,13 @@ df_total_haies <- bind_rows(
 p_haies <- ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_haies %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2821,6 +2883,10 @@ df_men_Decathlon$pred   <- predict(best_fit_h_deca)
 
 df_women_Heptathlon$pred   <- predict(best_fit_f_hep)
 
+df_men_Decathlon$age_pic_estime   <- t_pic_h_deca
+
+df_women_Heptathlon$age_pic_estime   <- t_pic_f_hep
+
 # On combine tout dans un seul gros dataframe
 df_total_epreuves_combinees <- bind_rows(
   mutate(df_men_Decathlon, Epreuve = "Décathlon", Sexe = "Hommes"),
@@ -2833,6 +2899,13 @@ df_total_epreuves_combinees <- bind_rows(
 p_epreuves_combinees <- ggplot(df_total_epreuves_combinees, aes(x = Age, y = meilleure_perf)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_epreuves_combinees %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2865,6 +2938,14 @@ df_women_800_Metres$pred <- predict(best_fit_f_800)
 df_women_1500_Metres$pred <- predict(best_fit_f_1500)
 df_women_3000_Metres_Steeplechase$pred  <- predict(best_fit_f_3000s)
 
+df_men_800_Metres$age_pic_estime   <- t_pic_h_800
+df_men_1500_Metres$age_pic_estime   <- t_pic_h_1500
+df_men_3000_Metres_Steeplechase$age_pic_estime   <- t_pic_h_3000s
+
+df_women_800_Metres$age_pic_estime   <- t_pic_f_800
+df_women_1500_Metres$age_pic_estime   <- t_pic_f_1500
+df_women_3000_Metres_Steeplechase$age_pic_estime   <- t_pic_f_3000s
+
 # On combine tout dans un seul gros dataframe
 df_total_demi_fond <- bind_rows(
   mutate(df_men_800_Metres, Epreuve = "800m", Sexe = "Hommes"),
@@ -2881,6 +2962,13 @@ df_total_demi_fond <- bind_rows(
 p_demi_fond <- ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_demi_fond %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2910,6 +2998,12 @@ df_men_5000_Metres$pred <- predict(best_fit_h_5000)
 df_women_5000_Metres$pred <- predict(best_fit_f_5000)
 `df_women_10,000_Metres`$pred <- predict(best_fit_f_10000)
 
+df_men_5000_Metres$age_pic_estime <- t_pic_h_5000
+`df_men_10,000_Metres`$age_pic_estime <- t_pic_h_10000
+
+df_women_5000_Metres$age_pic_estime <- t_pic_f_5000
+`df_women_10,000_Metres`$age_pic_estime <- t_pic_f_10000
+
 # On combine tout dans un seul gros dataframe
 df_total_5000_10000 <- bind_rows(
   mutate(df_men_5000_Metres, Epreuve = "5000m", Sexe = "Hommes"),
@@ -2924,6 +3018,13 @@ df_total_5000_10000 <- bind_rows(
 p_5000_10000 <- ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_5000_10000 %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2951,6 +3052,10 @@ df_men_Marathon$pred <- predict(best_fit_h_mara)
 
 df_women_Marathon$pred <- predict(best_fit_f_mara)
 
+df_men_Marathon$age_pic_estime <- t_pic_h_mara
+
+df_women_Marathon$age_pic_estime <- t_pic_f_mara
+
 # On combine tout dans un seul gros dataframe
 df_total_marathon <- bind_rows(
   mutate(df_men_Marathon, Epreuve = "Marathon", Sexe = "Hommes"),
@@ -2963,6 +3068,13 @@ df_total_marathon <- bind_rows(
 p_marathon <- ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_marathon %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
@@ -2990,6 +3102,10 @@ df_men_20_Kilometres_Race_Walk$pred <- predict(best_fit_h_marc)
 
 df_women_20_Kilometres_Race_Walk$pred <- predict(best_fit_f_marc)
 
+df_men_20_Kilometres_Race_Walk$age_pic_estime <- t_pic_h_marc
+
+df_women_20_Kilometres_Race_Walk$age_pic_estime <- t_pic_f_marc
+
 # On combine tout dans un seul gros dataframe
 df_total_marche <- bind_rows(
   mutate(df_men_20_Kilometres_Race_Walk, Epreuve = "Marche", Sexe = "Hommes"),
@@ -3002,6 +3118,13 @@ df_total_marche <- bind_rows(
 p_marche <- ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
   geom_point(alpha = 0.5, color = "darkblue", size = 1.2) +
   geom_line(aes(y = pred), color = "red", size = 1) +
+  
+  # AJOUT ICI :
+  # On crée un petit subset "à la volée" pour n'avoir qu'une ligne par épreuve/sexe
+  geom_vline(data = df_total_marche %>% 
+               distinct(Sexe, Epreuve, age_pic_estime), 
+             aes(xintercept = age_pic_estime), 
+             color = "black", linetype = "dashed", size = 0.8) +
   
   # L'astuce est ici : scales = "free_y"
   # On utilise facet_wrap pour une grille 4x2 ou facet_grid
