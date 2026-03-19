@@ -492,7 +492,24 @@ cat("Taille moyenne des échantillons (n) par discipline : ", mean(shapiro_disci
 # 1. Test de Wilcoxon-Mann-Whitney (Comparaison Hommes vs Femmes Globale)
 wilcox_global <- wilcox.test(Age_Pic_Obs ~ Sex, data = stats_pic_equilibre)
 
-# 2. Test de Kruskal-Wallis (Comparaison entre Familles)
+# 1.bis Comparaison Hommes vs Femmes au sein de chaque FAMILLE (Le niveau intermédiaire)
+test_sexe_par_famille <- stats_pic_equilibre %>%
+  group_by(Famille) %>%
+  summarise(
+    n_total = n(),
+    P_Value = if(n_distinct(Sex) == 2) {
+      wilcox.test(Age_Pic_Obs ~ Sex)$p.value
+    } else {
+      NA_real_
+    },
+    Mediane_H = median(Age_Pic_Obs[Sex == "men"], na.rm = TRUE),
+    Mediane_F = median(Age_Pic_Obs[Sex == "women"], na.rm = TRUE),
+    Diff = Mediane_H - Mediane_F,
+    .groups = 'drop'
+  ) %>%
+  mutate(Significatif = ifelse(!is.na(P_Value) & P_Value < 0.05, "OUI", "NON"))
+
+# 2. Test de Kruskal-Wallis (Comparaison entre Familles - effet discipline large)
 kruskal_famille <- kruskal.test(Age_Pic_Obs ~ Famille, data = stats_pic_equilibre)
 
 # 3. Test Post-hoc de Dunn pour les Familles
@@ -523,11 +540,9 @@ test_sexe_par_discipline <- stats_pic_equilibre %>%
   arrange(P_Value)
 
 # 2. Test de Kruskal-Wallis (Comparaison entre toutes les Disciplines)
-# Pour savoir si l'âge au pic varie selon la discipline précise
 kruskal_discipline <- kruskal.test(Age_Pic_Obs ~ discipline, data = stats_pic_equilibre)
 
 # 3. Test Post-hoc de Dunn pour les Disciplines
-# Attention : avec 24 disciplines, ce tableau sera très long (comparaisons par paires)
 dunn_disciplines <- dunnTest(Age_Pic_Obs ~ discipline, 
                              data = stats_pic_equilibre, 
                              method = "bonferroni")
@@ -539,7 +554,10 @@ dunn_disciplines <- dunnTest(Age_Pic_Obs ~ discipline,
 cat("\n--- 1. ANALYSE GLOBALE : SEXE ---\n")
 print(wilcox_global)
 
-cat("\n--- 2. ANALYSE GLOBALE : FAMILLES ---\n")
+cat("\n--- 1.bis COMPARISON HOMMES/FEMMES PAR FAMILLE ---\n")
+print(as.data.frame(test_sexe_par_famille))
+
+cat("\n--- 2. ANALYSE GLOBALE : FAMILLES (KW) ---\n")
 print(kruskal_famille)
 
 cat("\n--- 3. COMPARISON HOMMES/FEMMES PAR DISCIPLINE ---\n")
@@ -548,9 +566,8 @@ print(as.data.frame(test_sexe_par_discipline))
 cat("\n--- 4. ANALYSE GLOBALE : DISCIPLINES (KW) ---\n")
 print(kruskal_discipline)
 
-# On n'affiche que le début du Dunn disciplines car il est massif
 cat("\n--- 5. TEST DE DUNN DISCIPLINES (EXTRAIT) ---\n")
-print(dunn_disciplines$res)
+print(head(dunn_disciplines$res, 15))
 ```
 
 
