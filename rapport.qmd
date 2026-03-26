@@ -133,7 +133,7 @@ La détection précoce des talents sportifs constitue un enjeu majeur pour les f
 
 Cette question s'inscrit dans un contexte scientifique où la relation entre l'âge et la performance sportive a fait l'objet de nombreuses recherches. Depuis les travaux pionniers de Moore en 1975, qui proposa le premier modèle mathématique de cette relation, la communauté scientifique n'a cessé d'approfondir la compréhension de cette dynamique. Plus récemment, Berthelot et ses collaborateurs ont développé en 2019 le modèle IMAP (Integrative Model of Age-Performance), fondé sur des mécanismes biologiques cellulaires, offrant ainsi une nouvelle perspective pour modéliser l'évolution des capacités physiques tout au long de la vie.\
 
-Notre étude s'appuie sur une base de données internationale fournie par World Athletics, couvrant la période 2000-2024 et recensant les 100 meilleures performances annuelles, pour chaque sexe, dans chaque discipline athlétique. Ce corpus, portant sur plusieurs dizaines de milliers de performances au plus haut niveau mondial, permet d'analyser finement la trajectoire des athlètes d'élite à travers différentes disciplines.
+Notre étude s'appuie sur une base de données internationale fournie par World Athletics, couvrant la période 1985-2025 et quelques unes des meilleures performances annuelles, pour chaque sexe, dans chaque discipline athlétique. Ce corpus, portant sur plusieurs dizaines de milliers de performances au plus haut niveau mondial, permet d'analyser finement la trajectoire des athlètes d'élite à travers différentes disciplines.
 
 ## Objectif de l'étude {.unnumbered}
 
@@ -155,7 +155,7 @@ Enfin, la dynamique temporelle de la performance nous intéresse particulièreme
 
 # Présentation des données
 
-Notre étude s'appuie sur une base de données issue de World Athletics, la fédération sportive internationale chargée de régir les fédérations nationales d'athlétisme et d'organiser les compétitions internationales mondiales \footnote{\url{https://fr.wikipedia.org/wiki/World_Athletics}}. Cette base recense, pour chaque discipline et chaque année entre 1985 et 2024, les 100 meilleures performances mondiales réalisées lors de compétitions officielles.\
+Notre étude s'appuie sur une base de données issue de World Athletics, la fédération sportive internationale chargée de régir les fédérations nationales d'athlétisme et d'organiser les compétitions internationales mondiales \footnote{\url{https://fr.wikipedia.org/wiki/World_Athletics}}. Cette base recense, pour chaque discipline et chaque année entre 1985 et 2025, quelques unes des meilleures performances mondiales réalisées lors de compétitions officielles. Notre étude se limitera aux performances réalisées dans des disciplines présentes dans les grands championnats (championnat du monde, d'Europe).\
 
 Les données comportent plusieurs variables clés : l'identifiant de l'athlète, son âge au moment de la performance, son sexe, sa nationalité, la discipline pratiquée, la performance brute (temps, distance ou hauteur selon la discipline) et le ResultScore. Ce dernier, développé par World Athletics, constitue une métrique normalisée permettant de comparer les performances entre disciplines différentes en s'appuyant sur des paramètres définis par des experts du domaine.\
 
@@ -167,27 +167,27 @@ Il convient toutefois de noter certaines limites structurelles : un déséquilib
 
 Le passage des données brutes à un échantillon exploitable a nécessité un protocole de nettoyage, articulé autour de quatre étapes clés :
 
--   **Calcul de l'âge et nettoyage initial :** Les entrées ne disposant pas de performance numérique exploitable ou d'une date de naissance valide ont été écartées. L'âge de chaque athlète a été calculé par la différence entre l'année de la performance (*season*) et son année de naissance.
+-   **Nettoyage initial :** Les entrées ne disposant pas de performance numérique exploitable ou d'une date de naissance valide ont été écartées.
 
-Une limite méthodologique inhérente à la base de données doit être soulignée : la date exacte de la performance n'étant pas disponible, l'âge au pic a été estimé par la différence entre l'année de la compétition et l'année de naissance de l'athlète.
+-   **Calcul de l'âge :** Pour chaque performance gardée, l'âge de l'athlète a été calculé comme la différence entre l'année où la performance a été réalisée (*season*) et l'année de naissance de l'athlète. Il est donc important de noter qu'une limite méthodologique inhérente à la base de données apparait alors.
 
 -   **Identification des carrières terminées :** Afin d'éviter le biais de troncature (inclure un athlète n'ayant pas encore atteint son pic), nous avons restreint l'étude aux athlètes retraités. Un seuil de "retraite" a été fixé à l'année 2022 : tout athlète ayant réalisé une performance après cette date a été considéré comme actif et exclu de l'analyse.
 
--   **Sélection de la meilleure performance annuelle :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Cette étape permet d'éliminer les variations de forme intra-saisonnières. Les disciplines ont ensuite été regroupées en neuf familles majeures : **5000-100000**, **800 - 1500 - Steeple**, **Épreuves combinées**, **Marche**, **Marathon**, **Sauts**, **Haies**, **Sprint** et **Lancers**.
+-   **Sélection de la meilleure performance annuelle, filtrage par expérience et équilibrage (Top 32) :** Pour chaque athlète, à chaque âge et dans chaque discipline, nous n'avons conservé que la meilleure performance annuelle. Les disciplines ont ensuite été regroupées en neuf familles majeures : **5000-100000**, **800 - 1500 - Steeple**, **Épreuves combinées**, **Marche**, **Marathon**, **Sauts**, **Haies**, **Sprint** et **Lancers**. Afin de garantir que l'âge au pic observé soit représentatif d'une trajectoire complète, seuls les athlètes ayant au moins **5 années de performances** enregistrées dans une même discipline ont été retenus. Enfin, pour corriger les disparités d'effectifs entre les sexes, nous avons procédé à un échantillonnage équilibré en sélectionnant le **Top 32** des meilleurs athlètes par discipline et par sexe, seuil défini par l'effectif le plus restreint du jeu de données (heptathlon).
 
--   **Filtrage par expérience et équilibrage (Top 32) :** Pour garantir que l'âge au pic observé soit représentatif d'une trajectoire complète, seuls les athlètes ayant au moins **5 années de performances** enregistrées dans une même discipline ont été retenus. Enfin, pour corriger les disparités d'effectifs entre les sexes, nous avons procédé à un échantillonnage équilibré en sélectionnant le **Top 32** des meilleurs athlètes par discipline et par sexe, seuil défini par l'effectif le plus restreint du jeu de données (heptathlon).
+-   **Récupération de toutes les performances des athlètes du TOP 32 dans chaque discipline :** Afin de travailler sur les mêmes athlètes dans les 2 études, nous récupérons ensuite l'intégralité des performances des athlètes du Top 32 de chaque discipline.
 
 ## Variables d'intérêt
 
 L'analyse repose sur un ensemble de variables structurées pour répondre à la problématique de l'évolution de la performance :
 
--   **Sex :** Pour comparer les performances entre les femmes et les hommes. \vspace{5pt}
--   **Famille :** Regroupement des disciplines par famille (sprints, lancers, sauts, haies, marche, épreuves combinées, marathon, demi-fond, 5000-10000) \vspace{5pt}
--   **Discipline :** Pour observer les ressemblances et différences entre les différentes disciplines de l'athlétisme. \vspace{5pt}
--   **Age :** Age de l'athlète lorsqu'il a réalisé la performance correspondante, elle est calculée en faisant la différence entre l'année au cours de laquelle la performance a été réalisée et l'année de naissance de l'athlète (extraite de sa date de naissance). Notre variable Age est donc une approximation de l'âge exact car nous ne connaissons pas la date exacte à laquelle la performance a été réalisée. \vspace{5pt}
--   **Age_Pic_Obs :** L'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale. \vspace{5pt}
--   **mark_numeric :** Meilleure performance d'un athlète sur une saison au format numérique (en seconde ou mètre selon la discipline). \vspace{5pt}
--   **meilleure_perf_km_par_h :** Conversion de la performance en kilomètre par heure pour les disciplines de courses ou marche afin d'avoir des valeurs positives à maximiser dans nos modèles.
+-   **Sex :** Variable qualitative à 2 modalités (men, women) qui va être utile pour comparer les performances entre les femmes et les hommes. \vspace{5pt}
+-   **Famille :** Regroupement des disciplines par famille (sprints, lancers, sauts, haies, marche, épreuves combinées, marathon, 5000-10000 (fond), 800-1500-3000s (demi-fond))) \vspace{5pt}
+-   **Discipline :** Variable qualitative à 23 modalités correspondant aux noms des différentes disciplines de l'athlétisme. Cette variable va être importante pour observer les ressemblances et différences entre les différentes disciplines de l'athlétisme. \vspace{5pt}
+-   **Age :** Variable quantitative que nous avons codé représentant l'âge de l'athlète lorsqu'il a réalisé la performance correspondante, elle est calculée en faisant la différence entre l'année au cours de laquelle la performance a été réalisée et l'année de naissance de l'athlète. \vspace{5pt}
+-   **Age_Pic_Obs :** Variable quantitative qui correspond à l'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de notre variable dépendante centrale, elle a été obtenue comme l'âge auquel la performance maximale a été réalisée par chaque athlète. \vspace{5pt}
+-   **mark_numeric :** Variable quantitative qui correspond à la meilleure performance d'un athlète sur une saison au format numérique (en seconde ou mètre selon la discipline). \vspace{5pt}
+-   **meilleure_perf_km_par_h :** Variable quantitative calculée à partir de **mark_numeric** pour les disciplines où **mark_numeric** correspond à un temps en seconde. Elle permet de convertir de la performance en kilomètre par heure pour les disciplines de courses ou marche afin d'avoir des valeurs positives à maximiser dans nos modèles.
 
 \newpage
 
@@ -209,7 +209,7 @@ Afin de cerner les principales caractéristiques de la population étudiée, une
 Distribution de l'âge au pic
 :::
 
-Les indicateurs de position associés à cette distribution sont détaillés dans le tableau ci-dessous :
+Les indicateurs de position associés à cette distribution sont détaillés dans le tableau ci-dessous (Table @tbl-stats) :
 
 | Sexe   | Eff. | Min | Q1  | Moyenne $\pm$ SD | Médiane | Q3  | Max |
 |:-------|:----:|:---:|:---:|:----------------:|:-------:|:---:|:---:|
@@ -242,7 +242,7 @@ Cette première approche par grandes familles met en évidence des tendances li�
 
 ### Analyse descriptive par discipline {.unnumbered .unlisted}
 
-Le tableau ci-dessous présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
+Le tableau ci-dessous (Tableau @tbl-desc-complet) présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
 
 | Discipline    | Hommes <br> (Moy ± SD) | Hommes <br> Med \[Min-Max\] | Femmes <br> (Moy ± SD) | Femmes <br> Med \[Min-Max\] |
 |:--------------|:-------------:|:-------------:|:-------------:|:-------------:|
@@ -443,7 +443,10 @@ Ces résultats appuient néanmoins l'idée d'une segmentation par famille et par
 
 \newpage
 
-# Etude 2 : Modèles
+# Etude 2 : Modélisation non linéaire de la relation âge-performance en athlétisme de haut niveau : estimation et comparaison des modèles de Moore et IMAP
+
+Les tendances descriptives dégagées dans l'étude précédente ont mis en évidence une variabilité significative de l'âge au pic selon les disciplines et le sexe, tout en soulignant les limites d'une approche fondée sur un indicateur ponctuel. Afin de modéliser la trajectoire complète de la performance — phase de progression, plateau et déclin — deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019). Cette approche permet d'estimer l'âge au pic à partir d'une courbe continue ajustée sur les données individuelles, et d'en comparer les dynamiques entre disciplines et entre sexes.
+
 
 ## Modèles
 
@@ -459,9 +462,13 @@ L'équation [( @eq-moore)] est un modèle à double exponentielle, constitué de
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
-Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme un temps de course (en secondes), une distance (en mètres) ou une hauteur (en mètres).
+\vspace{5pt}
 
-En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. Leur rapport conditionne ainsi directement la valeur maximale atteinte par P(t). Le rapport $\frac a c$ conditionne la forme du pic : si c≪a, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic; si au contraire c≫ac, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
+\noindent Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme un temps de course (en secondes), une distance (en mètres) ou une hauteur (en mètres).
+
+\vspace{5pt}
+
+\noindent En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de la courbe de P(t). Le rapport $\frac a c$ conditionne ainsi directement la valeur maximale atteinte par P(t). Le rapport $\frac a c$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd. 
 
 ::: {#fig-params-ac fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
@@ -469,7 +476,7 @@ En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{�
 Effet des paramètres $a$ et $c$ sur la modélisation
 :::
 
-Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et tardif. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
+Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et  comme l'illustre la figure @fig-params-bd. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
 
 ::: {#fig-params-bd fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/b_et_d.png}}
@@ -478,12 +485,6 @@ Effet des paramètres $b$ et $d$ sur la modélisation
 :::
 
 La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. La condition d'existence du pic est ab\>cd, soit R\>1, ce qui assure $\ln(R) > 0$ et donc $t_{pic}>0$. Cette condition peut être satisfaite même lorsque c\>a, à condition que d soit suffisamment petit devant b. Plus R est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab \> cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
-
-::: {#fig-effets-tpic fig-pos="H"}
-\fbox{\includegraphics[width=0.80\textwidth]{methodo/effets_params_t_pic.png}}
-
-Effet des paramètres sur l'âge au pic théorique ($t_{pic}$)
-:::
 
 ### Modèle IMAP (2019)
 
@@ -501,7 +502,7 @@ où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0
 
 ### Précautions pour gérer le déséquilibre des âges
 
-On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle.
+On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans comme on peut le voir sur la figure @fig-brut-1500m-men. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle.
 
 ::: {#fig-brut-1500m-men fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_top32/brut_1500_Metres_men.png}}
@@ -509,7 +510,7 @@ On note dans nos données un fort déséquilibre dans la distribution des âges 
 Top 32
 :::
 
-Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données.
+Pour cela, nous allons garder pour chaque âge la meilleure performance réalisée et estimer nos modèles à partir de ces données. On obtient alors la distribution représentée sur la figure @fig-best-age-1500m-men.
 
 ::: {#fig-best-age-1500m-men fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_meilleure_par_age/brut_1500_Metres_men.png}}
@@ -519,19 +520,26 @@ Meilleures performances par âge (1500 m - Hommes)
 
 ### Descente de gradients
 
-#### Pourquoi cette méthode ? {.unnumbered}
+#### Pourquoi cette méthode ? 
 
-La méthode de la descente de gradient est nécessaire car dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
+La méthode de la descente de gradient est nécessaire car dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$ pour le modèle IMAP. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
 
-#### Fonctionnement {.unnumbered}
+#### Fonctionnement 
 
-La descente de gradient est un algorithme d'optimisation itératif du premier ordre. Son objectif est de déterminer le jeu de paramètres $\theta={\theta_1, ...,\theta_n}$ qui minimise une fonction de coût (ou fonction de perte), notée $J(\theta)$. Dans ce cadre, nous utilisons l'Erreur Quadratique Moyenne (MSE), qui mesure l'écart entre les prédictions du modèle et les observations réelles. Le gradient, noté $\nabla J(\theta)$, est le vecteur regroupant les dérivées partielles de la fonction de coût par rapport à chaque paramètre : $$\nabla J(\theta) = \begin{pmatrix} \frac{\partial J}{\partial \theta_1} \\ \vdots \\ \frac{\partial J}{\partial \theta_n} \end{pmatrix}$$ Mathématiquement, ce vecteur pointe toujours vers la direction de la plus forte augmentation de la fonction. Par conséquent, pour minimiser l'erreur, l'algorithme doit se déplacer dans la direction opposée au gradient. L'algorithme démarre d'une initialisation arbitraire et met à jour les paramètres de manière itérative selon la règle suivante : $\theta_{next} = \theta_{current} – \eta \cdot \nabla J(\theta)$. Dans cette formule, $\eta$ représente le taux d'apprentissage (learning rate). C'est un hyperparamètre crucial qui détermine la taille du pas effectué à chaque étape : - S'il est trop grand, l'algorithme risque d'osciller et de ne jamais converger. - S'il est trop petit, la progression sera extrêmement lente. L'opération est répétée jusqu'à la convergence. Un modèle est considéré comme ayant convergé lorsque l'une des deux conditions suivantes est remplie : soit la variation absolue de la fonction de coût entre deux itérations consécutives est inférieure à un seuil fixé, soit le nombre maximal d'itérations est atteint. Les modèles ayant atteint ce nombre maximal sans satisfaire le critère de variation sont considérés comme non convergés et sont écartés de la sélection.
+La descente de gradient est un algorithme d'optimisation itératif du premier ordre. Son objectif est de déterminer le jeu de paramètres $\theta={\theta_1, ...,\theta_n}$ qui minimise une fonction de coût (ou fonction de perte), notée $J(\theta)$. Dans ce cadre, nous utilisons l'Erreur Quadratique Moyenne (MSE), qui mesure l'écart entre les prédictions du modèle et les observations réelles. Le gradient, noté $\nabla J(\theta)$, est le vecteur regroupant les dérivées partielles de la fonction de coût par rapport à chaque paramètre : $$\nabla J(\theta) = \begin{pmatrix} \frac{\partial J}{\partial \theta_1} \\ \vdots \\ \frac{\partial J}{\partial \theta_n} \end{pmatrix}$$.
+Mathématiquement, le gradient indique la direction de plus forte augmentation de la fonction ; pour minimiser l’erreur, l’algorithme se déplace donc dans la direction opposée. À partir d’une initialisation arbitraire, les paramètres sont mis à jour itérativement selon : $\theta_{next} = \theta_{current} - \eta \cdot \nabla J(\theta)$, où $\eta$ est le taux d’apprentissage. Ce paramètre contrôle la taille du pas : trop grand, il peut empêcher la convergence ; trop faible, il ralentit fortement l’optimisation.
 
-Dans cette étude, l'optimisation est réalisée via l'algorithme de Levenberg-Marquardt, implémenté en R par la fonction nls.lm du package minpack.lm. Cet algorithme a été retenu car il est spécifiquement conçu pour les problèmes de moindres carrés non linéaires : il combine la robustesse de la descente de gradient (efficace loin de la solution) et la rapidité de la méthode de Gauss-Newton (efficace près de la solution), en ajustant automatiquement un paramètre d'amortissement $\lambda$ à chaque itération. Cette adaptation automatique du pas nous dispense de fixer manuellement un learning rate ($\eta$).Le nombre maximal d'itérations est fixé à 1 000, avec un maximum de 2 000 évaluations de la fonction de coût. La convergence est déclarée lorsque la réduction relative de la somme des carrés des résidus entre deux itérations consécutives est inférieure à $1,5 \cdot e^{-8}$ (valeur par défaut de nls.lm.control).
+\vspace{5pt}
 
-#### Optimum local {.unnumbered}
+\noindent L’algorithme s’arrête lorsqu’un critère de convergence est atteint, c’est-à-dire lorsque la variation de la fonction de coût entre deux itérations devient inférieure à un seuil fixé. Un nombre maximal d’itérations est également imposé : s’il est atteint avant satisfaction du critère de convergence, le modèle est considéré comme non convergé et exclu de la sélection.
 
-La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum. Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
+\vspace{4pt}
+
+\noindent Dans cette étude, l’optimisation est réalisée avec l’algorithme de Levenberg-Marquardt (nls.lm, package minpack.lm), adapté aux moindres carrés non linéaires. Il combine descente de gradient et méthode de Gauss-Newton en ajustant automatiquement un paramètre d’amortissement $\lambda$, ce qui évite de fixer un learning rate ($\eta$). Le nombre maximal d’itérations est fixé à 1 000, avec jusqu’à 2 000 évaluations de la fonction de coût. La convergence est atteinte lorsque la variation relative de la somme des carrés des résidus entre deux itérations devient inférieure à $1{,}5 \cdot 10^{-8}$.
+
+#### Optimum local
+
+La descente de gradient est une méthode permettant d'obtenir un optimum local qu'il faut distinguer de l'optimum global. En effet, l'optimum local dépend du point d'où nous décidons de partir et n'est pas forcément le meilleur optimum (@fig-descente-gradient). Dans cette méthode, le point de départ choisi joue donc un rôle essentiel et a une influence considérable sur les paramètres estimés. Pour contrer ce problème, nous allons estimer plusieurs modèles (1000) pour chaque couple (Sex, discipline) en générant de façon aléatoire les points de départ pour chacune des estimations.
 
 ::: {#fig-descente-gradient fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/descente_gradient.png}}
@@ -543,7 +551,7 @@ Optimum local et descente de graident
 
 Le point de départ choisi jouant un rôle essentiel dans la détermination des paramètres estimés, il est essentiel d'ajouter une part d'aléatoire dans le choix de ces paramètres. Ainsi nous estimerons plusieurs fois chaque modèle avec des points de départ généré aléatoirement à chaque fois. Nous allons ainsi estimés plusieurs modèles pour chaque couple afin de maximiser nos chances d'en avoir qui convergent et pouvoir ensuite choisir le plus performant.
 
-#### L'aléatoire dans le modèle de Moore {.unnumbered}
+#### L'aléatoire dans le modèle de Moore
 
 Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'algorithme de descente de gradient des valeurs initiales pour $a, b, c$ et $d$. Celles-ci sont générées aléatoirement à partir des propriétés observables de la série de données, selon le schéma suivant :
 
@@ -552,13 +560,17 @@ Afin d'estimer les paramètres du modèle de Moore, nous devons fournir à l'alg
 -   $c$ est tiré uniformément dans un voisinage étroit de $\frac a {100}$, par choix conservateur afin de démarrer dans une région où la condition ab\>cd est nécessairement vérifiée et où le pic existe, sans que cette valeur initiale contraigne la solution finale estimée par l'algorithme;
 -   $d$ est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points $t_3$ et $t_4$ situés dans la phase descendante de la courbe.
 
-Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
+\vspace{5pt}
+
+\noindent Par ailleurs, les quatre paramètres étant par définition strictement positifs, des contraintes de positivité sont imposées lors de la génération, sans restriction sur les valeurs maximales.
 
 #### Adaptation du modèle IMAP à nos données {.unnumbered}
 
 Le modèle IMAP tel que proposé par Berthelot a été conçu pour des données couvrant l'ensemble du cycle de vie, de 5 à 75 ans environ. Dans ce cadre, les six paramètres --- $\alpha_0$, $\alpha_r$, $\beta_0$, $N_\infty$, $\beta_r$ et $t_d$ --- sont tous identifiables car la courbe présente à la fois une phase de croissance complète, un pic prononcé et une phase de déclin étendue.
 
-Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte, de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette troncature crée un problème d'**identifiabilité** : les paramètres $\beta_0$ et $N_\infty$ n'apparaissant que sous forme de produit dans la formule, ils ne peuvent pas être estimés séparément. Ils ont donc été fusionnés en un unique paramètre d'amplitude $A = \beta_0 N_\infty$, ramenant le nombre de paramètres libres à quatre : $A$, $\alpha_0$, $\alpha_r$ et $\beta_r$. La formule estimée est ainsi :
+\vspace{5pt}
+
+\noindent Notre jeu de données couvre en revanche une fenêtre beaucoup plus restreinte, de 16 à 40 ans, correspondant aux carrières des athlètes d'élite. Cette troncature crée un problème d'**identifiabilité** : les paramètres $\beta_0$ et $N_\infty$ n'apparaissant que sous forme de produit dans la formule, ils ne peuvent pas être estimés séparément. Ils ont donc été fusionnés en un unique paramètre d'amplitude $A = \beta_0 N_\infty$, ramenant le nombre de paramètres libres à quatre : $A$, $\alpha_0$, $\alpha_r$ et $\beta_r$. La formule estimée est ainsi :
 
 $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 \cdot \left(1 - e^{\beta_r(t - t_d)}\right)$$
@@ -567,9 +579,13 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 Le paramètre $t_d$, qui représente dans le modèle original l'espérance de vie de l'athlète, ne peut pas être estimé de façon fiable sur des données tronquées à 40 ans : la phase de déclin terminal est trop peu visible dans la fenêtre d'observation pour contraindre ce paramètre. Des tests ont confirmé que laisser $t_d$ libre conduit systématiquement à une matrice de gradient singulière et à l'absence de convergence.
 
-Nous avons donc fixé $t_d$ à une valeur supérieure à l'âge maximal observé dans chaque groupe (discipline $\times$ sexe), en testant huit valeurs : $t_d = \max(\text{Age}) + \delta$ avec $\delta \in \{10, 15, 20, 25, 30, 35, 40, 45\}$. Pour chaque valeur de $\delta$, 500 estimations sont lancées avec des points de départ aléatoires, et la valeur retenue est celle qui minimise le RMSE sur l'ensemble des huit valeurs.
+\vspace{5pt}
 
-Cette approche garantit que le terme de déclin est suffisamment visible dans la fenêtre d'observation pour que le gradient soit non singulier, tout en restant cohérente avec l'interprétation de $t_d$ comme horizon temporel au-delà duquel la performance décline rapidement. Il convient de noter que $t_d$ ne représente plus ici l'âge de décès biologique au sens strict, mais un paramètre de calibration lié à la fenêtre des données.
+\noindent Nous avons donc fixé $t_d$ à une valeur supérieure à l'âge maximal observé dans chaque groupe (discipline $\times$ sexe), en testant huit valeurs : $t_d = \max(\text{Age}) + \delta$ avec $\delta \in \{10, 15, 20, 25, 30, 35, 40, 45\}$. Pour chaque valeur de $\delta$, 500 estimations sont lancées avec des points de départ aléatoires, et la valeur retenue est celle qui minimise le RMSE sur l'ensemble des huit valeurs.
+
+\vspace{5pt}
+
+\noindent Cette approche garantit que le terme de déclin est suffisamment visible dans la fenêtre d'observation pour que le gradient soit non singulier, tout en restant cohérente avec l'interprétation de $t_d$ comme horizon temporel au-delà duquel la performance décline rapidement. Il convient de noter que $t_d$ ne représente plus ici l'âge de décès biologique au sens strict, mais un paramètre de calibration lié à la fenêtre des données.
 
 #### L'aléatoire dans le modèle IMAP
 
@@ -591,7 +607,9 @@ Comme pour le modèle de Moore, le problème des optima locaux est géré par un
 ```
 Pour chaque valeur de $t_d$ testée, 500 modèles sont estimés et le meilleur --- au sens du RMSE --- est retenu. Au total, 4 000 estimations sont donc réalisées par couple (sexe $\times$ discipline).
 
-Le nombre d'estimations par valeur de t_d est fixé à 500, contre 1000 pour le modèle de Moore. Ce choix résulte d'un compromis entre coût calculatoire et couverture de l'espace des paramètres : l'IMAP étant estimé pour 8 valeurs de t_d, le nombre total d'estimations par couple (sexe $\times$ discipline) s'élève à 4 000, soit quatre fois plus que pour Moore. ainsi augmenter davantage le nombre de départs par valeur de t_d n'a pas apporté d'amélioration sensible du RMSE lors de nos tests préliminaires.
+\vspace{5pt}
+
+\noindent Le nombre d'estimations par valeur de t_d est fixé à 500, contre 1000 pour le modèle de Moore. Ce choix résulte d'un compromis entre coût calculatoire et couverture de l'espace des paramètres : l'IMAP étant estimé pour 8 valeurs de t_d, le nombre total d'estimations par couple (sexe $\times$ discipline) s'élève à 4 000, soit quatre fois plus que pour Moore. ainsi augmenter davantage le nombre de départs par valeur de t_d n'a pas apporté d'amélioration sensible du RMSE lors de nos tests préliminaires.
 
 ### Choix du modèle le plus performant
 
@@ -599,7 +617,9 @@ Avant de procéder à la sélection par MSE, les modèles non convergés sont é
 
 Où $f_i$ est la performance observée à l'âge i ($age_i$), $\hat{f}(age_i, \theta)$ est la performance estimée par notre modèle à l'âge i avec l'ensemble de paramètres $\theta$.
 
-Pour chaque couple ($sexe \times discipline$), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
+\vspace{5pt}
+
+\noindent Pour chaque couple ($sexe \times discipline$), nous allons choisir parmi les différents modèles estimés (et ayant donc convergés) celui qui minimise MSE. On trouve ainsi les paramètres correspondant au modèle le plus performant.
 
 ### Comparaison des modèles
 
@@ -613,15 +633,21 @@ L'AIC est défini par $$AIC=n \cdot \ln(\frac {SRC} n)+2(p+1)$$ où n désigne l
 
 Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents.
 
-Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.
+\vspace{5pt}
 
-En cas de désaccord entre les deux critères, nous privilégions le BIC. En effet, le BIC pénalise plus fortement la complexité que l'AIC (facteur $\ln(n)$ contre 2), ce qui le rend plus adapté à notre contexte où le nombre d'observations par couple (sexe $\times$ discipline) est limité et où le risque de surapprentissage est plus préoccupant que le risque de sous-ajustement.
+\noindent Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.
 
-Il convient de distinguer deux niveaux de sélection. Le MSE est utilisé en première étape pour sélectionner, parmi les multiples estimations d'un même modèle avec des points de départ différents, celle qui s'ajuste le mieux aux données : c'est un critère de calibration numérique. L'AIC et le BIC interviennent en deuxième étape pour comparer entre eux les deux modèles (Moore et IMAP) une fois leurs paramètres optimaux identifiés : ces critères intègrent une pénalité sur le nombre de paramètres, ce qui permet une comparaison équitable entre le modèle de Moore (4 paramètres) et le modèle IMAP (4 paramètres libres + $t\_d$ fixé).
+\vspace{5pt}
+
+\noindent En cas de désaccord entre les deux critères, nous privilégions le BIC. En effet, le BIC pénalise plus fortement la complexité que l'AIC (facteur $\ln(n)$ contre 2), ce qui le rend plus adapté à notre contexte où le nombre d'observations par couple (sexe $\times$ discipline) est limité et où le risque de surapprentissage est plus préoccupant que le risque de sous-ajustement.
+
+\vspace{5pt}
+
+\noindent Il convient de distinguer deux niveaux de sélection. Le MSE est utilisé en première étape pour sélectionner, parmi les multiples estimations d'un même modèle avec des points de départ différents, celle qui s'ajuste le mieux aux données : c'est un critère de calibration numérique. L'AIC et le BIC interviennent en deuxième étape pour comparer entre eux les deux modèles (Moore et IMAP) une fois leurs paramètres optimaux identifiés : ces critères intègrent une pénalité sur le nombre de paramètres, ce qui permet une comparaison équitable entre le modèle de Moore (4 paramètres) et le modèle IMAP (4 paramètres libres + $t\_d$ fixé).
 
 ## Résultats
 
-### Résultats du modèle de Moore {.unnumbered}
+### Résultats du modèle de Moore 
 
 Pour tous les couples (sexe $\times$ discipline), les modèles de Moore ont convergé. Le tableau @tbl-moore-groupes présente l'âge au pic de performance estimé par le modèle de Moore pour chaque groupe de disciplines et selon le sexe, avec les valeurs minimales et maximales observées au sein de chaque groupe. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-moore-lancers à @fig-moore-combinees).
 
@@ -648,13 +674,17 @@ Pour tous les couples (sexe $\times$ discipline), les modèles de Moore ont conv
 
 : Âge au pic estimé par le modèle de Moore selon le groupe de disciplines et le sexe {#tbl-moore-groupes}
 
-L'âge au pic moyen varie de 23,15 ans (fond, hommes) à 29,8 ans (marathon, femmes). Chez les hommes, les coureurs de fond présentent l'âge au pic le plus bas (23,15 ans), tandis que les athlètes du marathon affichent le plus élevé (29,5 ans). Chez les femmes, l'étendue est similaire, avec les demi-fondistes atteignant leur pic le plus tôt (25,5 ans) et les marathoniennes le plus tard (29,8 ans). Les disciplines de lancers, de marathon et de marche tendent à présenter des âges au pic plus élevés, autour de 27 à 30 ans pour les deux sexes. À l'inverse, le fond et le demi-fond se distinguent par des âges au pic plus précoces, notamment chez les hommes. Les disciplines de sprint, haies, sauts et combinées se situent dans des valeurs intermédiaires, comprises entre 25 et 27 ans environ.
+L'âge au pic moyen varie de 23,15 ans (fond, hommes) à 29,8 ans (marathon, femmes). Chez les hommes, les coureurs de fond présentent l'âge au pic le plus bas (23,15 ans), tandis que les athlètes du marathon affichent le plus élevé (29,5 ans). Chez les femmes, l'étendue est similaire, avec les demi-fondistes atteignant leur pic le plus tôt (25,5 ans) et les marathoniennes le plus tard (29,8 ans). Les disciplines de lancers, de marathon et de marche tendent à présenter des âges au pic plus élevés, autour de 27 à 30 ans pour les deux sexes. À l'inverse, le fond et le demi-fond se distinguent par des âges au pic plus précoces, notamment chez les hommes. Les disciplines de sprint, haies, sauts et épreuves combinées se situent dans des valeurs intermédiaires, comprises entre 25 et 27 ans environ.
 
-Les différences entre sexes restent limitées pour la majorité des groupes, dans une marge inférieure à 1 an. Une exception notable concerne le fond, où les femmes présentent un pic sensiblement plus tardif que les hommes (+3,1 ans), ce qui constitue l'écart intersexe le plus marqué de l'ensemble des groupes. À l'inverse, les femmes de l'épreuve de marche affichent un pic légèrement plus précoce que les hommes (−1,1 an).
+\vspace{5pt}
 
-Concernant la qualité d'ajustement, le RMSE normalisé varie sensiblement selon les disciplines. La majorité des valeurs se situent entre 0,30 et 0,60, indiquant un ajustement modéré du modèle au regard de la variabilité inter-individuelle. Le 10 000 m constitue le cas le plus défavorable, avec une valeur de 0,903 chez les hommes et 0,601 chez les femmes. Le marathon femmes affiche également une valeur élevée (0,708). À l'opposé, les lancers présentent les meilleurs ajustements, avec des valeurs généralement inférieures à 0,45 pour les deux sexes --- le marteau femmes (0,260) et le poids (0,308--0,317) étant parmi les plus faibles de l'ensemble. Les épreuves de haies 400 m femmes se distinguent aussi par un ajustement particulièrement bon (0,203). Les différences entre sexes restent limitées dans la plupart des groupes, à l'exception notable du marathon et du 400 m haies, où des écarts de plus de 0,2 sont observés.
+\noindent Les différences entre sexes restent limitées pour la majorité des groupes, dans une marge inférieure à 1 an. Une exception notable concerne le fond, où les femmes présentent un pic sensiblement plus tardif que les hommes (+3,1 ans), ce qui constitue l'écart intersexe le plus marqué de l'ensemble des groupes. À l'inverse, les femmes de l'épreuve de marche affichent un pic légèrement plus précoce que les hommes (−1,1 an).
 
-### Résultats du modèle IMAP {.unnumbered}
+\vspace{5pt}
+
+\noindent Concernant la qualité d'ajustement, le RMSE normalisé varie sensiblement selon les disciplines (@tbl-rmse-cr). La majorité des valeurs se situent entre 0,30 et 0,60, indiquant un ajustement modéré du modèle au regard de la variabilité inter-individuelle. Le 10 000 m constitue le cas le plus défavorable, avec une valeur de 0,903 chez les hommes et 0,601 chez les femmes. Le marathon femmes affiche également une valeur élevée (0,708). À l'opposé, les lancers présentent les meilleurs ajustements, avec des valeurs généralement inférieures à 0,45 pour les deux sexes --- le marteau femmes (0,260) et le poids (0,308--0,317) étant parmi les plus faibles de l'ensemble. Les épreuves de haies 400 m femmes se distinguent aussi par un ajustement particulièrement bon (0,203). Les différences entre sexes restent limitées dans la plupart des groupes, à l'exception notable du marathon et du 400 m haies, où des écarts de plus de 0,2 sont observés.
+
+### Résultats du modèle IMAP 
 
 Le modèle IMAP a convergé pour l'ensemble des 42 couples (sexe $\times$ discipline). Le Tableau @tbl-imap-groupes présente les âges au pic estimés par groupe de disciplines. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-imap-lancers à @fig-imap-combinees).
 
@@ -683,7 +713,9 @@ Le modèle IMAP a convergé pour l'ensemble des 42 couples (sexe $\times$ discip
 
 Les estimations se situent entre 25 et 30 ans pour la majorité des groupes. Le marathon constitue l'exception la plus nette, avec un pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes. Les différences entre sexes sont faibles : les femmes présentent un pic légèrement plus tardif dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais légèrement plus précoce dans les épreuves de fond et les épreuves combinées, avec des écarts restant dans une marge de 1 à 2 ans.Concernant la qualité d'ajustement, le RMSE varie selon l'unité de mesure de la performance : les disciplines exprimées en mètres (lancers, RMSE moyen de 1,57 m chez les hommes) présentent des erreurs absolues plus élevées que les disciplines exprimées en km/h (marche athlétique, RMSE \< 0,01).
 
-### Exemple du 1500m {.unnumbered}
+### Exemple du 1500m 
+
+Le 1500m va permettre de détailler l'ajusement du modèle de Moore à nos données (@fig-moore-1500). Les paramètres estimés (a, b, c, d et $t_{pic}$) ainsi que les critères d'ajustement pour les deux sexes sont présentés dans le tableau @tbl-moore-1500m.
 
 #### Modèle de Moore
 
@@ -708,9 +740,13 @@ Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annu
 
 **Interprétation des paramètres.** Chez les deux sexes, le paramètre b, qui gouverne la vitesse de montée des performances ($b = 0{,}126$ chez les hommes, $b = 0{,}113$ chez les femmes), est nettement supérieur au paramètre d de déclin ($d = 0{,}001$ dans les deux cas), avec un rapport $\frac b d$ d'environ 126. Cet écart de deux ordres de grandeur traduit une montée en performance rapide lors des premières décennies de vie, suivie d'une dégradation extrêmement progressive avec l'avancée en âge. La pente initiale théorique $P'(0) \approx ab$ vaut ainsi $3{,}89$ km/h par année chez les hommes et $3{,}30$ km/h par année chez les femmes, confirmant un développement athlétique similairement soutenu dans les deux groupes.
 
-Le paramètre a, qui fixe l'amplitude de la composante ascendante, est légèrement supérieur chez les hommes ($a = 30{,}89$ km/h) par rapport aux femmes ($a = 29{,}22$ km/h), ce qui est cohérent avec les différences physiologiques connues en endurance. En revanche, le paramètre c, qui gouverne l'amplitude du terme de déclin, présente un contraste saisissant entre les sexes : $c = 141{,}92$ chez les hommes contre $c = 11{,}92$ chez les femmes, soit un rapport de l'ordre de 12. Bien que d soit identique ($0{,}001$), cette différence implique que le produit $c \cdot d$, qui représente la « force » de la composante déclinante, est environ 12 fois plus élevé chez les hommes ($cd \approx 0{,}142$) que chez les femmes ($cd \approx 0{,}012$). Autrement dit, à taux de déclin égal, l'amplitude de la chute de performance à long terme est structurellement plus importante chez les hommes sur cette distance.
+\vspace{5pt}
 
-Notons toutefois que la condition d'existence du pic (ab \> cd) est bien vérifiée dans les deux cas : $ab \approx 3{,}89 \gg cd \approx 0{,}142$ chez les hommes, et $ab \approx 3{,}29 \gg cd \approx 0{,}012$ chez les femmes, avec des rapports $R= \frac {ab} {cd}$ respectifs de $27{,}4$ et $276{,}5$.
+\noindent Le paramètre a, qui fixe l'amplitude de la composante ascendante, est légèrement supérieur chez les hommes ($a = 30{,}89$ km/h) par rapport aux femmes ($a = 29{,}22$ km/h), ce qui est cohérent avec les différences physiologiques connues en endurance. En revanche, le paramètre c, qui gouverne l'amplitude du terme de déclin, présente un contraste saisissant entre les sexes : $c = 141{,}92$ chez les hommes contre $c = 11{,}92$ chez les femmes, soit un rapport de l'ordre de 12. Bien que d soit identique ($0{,}001$), cette différence implique que le produit $c \cdot d$, qui représente la « force » de la composante déclinante, est environ 12 fois plus élevé chez les hommes ($cd \approx 0{,}142$) que chez les femmes ($cd \approx 0{,}012$). Autrement dit, à taux de déclin égal, l'amplitude de la chute de performance à long terme est structurellement plus importante chez les hommes sur cette distance.
+
+\vspace{5pt}
+
+\noindent Notons toutefois que la condition d'existence du pic (ab \> cd) est bien vérifiée dans les deux cas : $ab \approx 3{,}89 \gg cd \approx 0{,}142$ chez les hommes, et $ab \approx 3{,}29 \gg cd \approx 0{,}012$ chez les femmes, avec des rapports $R= \frac {ab} {cd}$ respectifs de $27{,}4$ et $276{,}5$.
 
 **Âge au pic et qualité d'ajustement.** L'âge au pic estimé est très similaire entre sexes : 26,0 ans chez les hommes et 25,6 ans chez les femmes. L'ajustement est meilleur pour les hommes que pour les femmes, comme en témoigne un RMSE plus faible (0,39 vs 0,53 km/h). Les critères AIC et BIC, non comparables entre sexes car issus de jeux de données distincts, sont utilisés ici pour la comparaison entre modèles au sein de chaque groupe.
 
@@ -740,13 +776,17 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 **Interprétation des paramètres.** Le paramètre $A$, qui gouverne l'amplitude globale de la courbe, présente une valeur très différente entre les deux sexes ($-0{,}00119$ chez les hommes contre $-181{,}61$ chez les femmes), ce qui ne reflète pas une différence de performance mais une compensation par les autres paramètres : $A$ n'agit pas seul, il est modulé par les termes exponentiels, et des valeurs très différentes de $A$ peuvent produire des courbes d'allure similaire dès lors que $\alpha_0$ et $\alpha_r$ s'ajustent en conséquence. C'est précisément la difficulté d'identifiabilité inhérente au modèle IMAP sur des fenêtres d'observation restreintes, évoquée en section méthodologie.
 
-Le paramètre $\alpha_0$ contrôle le taux initial de croissance cellulaire : sa valeur plus élevée chez les hommes ($0{,}137$ contre $0{,}041$) est cohérente avec une phase de progression plus rapide visible sur le graphique entre 16 et 24 ans, où la courbe masculine monte plus abruptement. Le paramètre $\alpha_r$ gouverne la vitesse à laquelle cette croissance sature : sa valeur très faible chez les hommes ($0{,}006$) traduit une saturation lente, c'est-à-dire un plateau étendu autour du pic, bien visible sur le panneau droit de la figure entre 25 et 31 ans. Chez les femmes, $\alpha_r$ plus élevé ($0{,}031$) produit une saturation plus rapide et un pic plus prononcé, cohérent avec la forme plus arquée de la courbe féminine.
+\vspace{5pt}
 
-Le paramètre $\beta_r$ décrit la vitesse du déclin fonctionnel : sa valeur fortement négative chez les hommes ($-0{,}116$) indique un déclin relativement rapide après le pic, tandis que la valeur quasi nulle chez les femmes ($-0{,}001$) suggère un déclin plus graduel sur la fenêtre d'observation. Cette différence se lit directement sur la figure : la courbe masculine descend plus nettement après 30 ans, tandis que la courbe féminine marque un déclin plus progressif jusqu'à 35 ans avant de s'accentuer.
+\noindent Le paramètre $\alpha_0$ contrôle le taux initial de croissance cellulaire : sa valeur plus élevée chez les hommes ($0{,}137$ contre $0{,}041$) est cohérente avec une phase de progression plus rapide visible sur le graphique entre 16 et 24 ans, où la courbe masculine monte plus abruptement. Le paramètre $\alpha_r$ gouverne la vitesse à laquelle cette croissance sature : sa valeur très faible chez les hommes ($0{,}006$) traduit une saturation lente, c'est-à-dire un plateau étendu autour du pic, bien visible sur le panneau droit de la figure entre 25 et 31 ans. Chez les femmes, $\alpha_r$ plus élevé ($0{,}031$) produit une saturation plus rapide et un pic plus prononcé, cohérent avec la forme plus arquée de la courbe féminine.
+
+\vspace{5pt}
+
+\noindent Le paramètre $\beta_r$ décrit la vitesse du déclin fonctionnel : sa valeur fortement négative chez les hommes ($-0{,}116$) indique un déclin relativement rapide après le pic, tandis que la valeur quasi nulle chez les femmes ($-0{,}001$) suggère un déclin plus graduel sur la fenêtre d'observation. Cette différence se lit directement sur la figure : la courbe masculine descend plus nettement après 30 ans, tandis que la courbe féminine marque un déclin plus progressif jusqu'à 35 ans avant de s'accentuer.
 
 **Âge au pic et qualité d'ajustement.** Les deux sexes présentent un pic estimé très proche : 27,7 ans chez les hommes et 27,1 ans chez les femmes, soit un écart de 0,6 an qui reste dans la marge d'incertitude liée au calcul de l'âge par différence d'années. Le RMSE est plus faible chez les hommes (0,238 km/h contre 0,346 km/h), reflet d'une dispersion plus grande des points féminins autour de la tendance centrale, notamment le point isolé à 40 ans (environ 20,7 km/h) qui s'écarte nettement de lacourbe.
 
-### Comparaison des modèles Moore et IMAP {.unnumbered}
+### Comparaison des modèles Moore et IMAP
 
 #### Âges au pic {.unnumbered}
 
@@ -784,7 +824,9 @@ Les deux modèles produisent des estimations globalement cohérentes, avec des �
 
 Afin de comparer les deux modèles sur une base commune indépendante des unités de mesure, le RMSE a été normalisé par l'écart-type des performances observées pour chaque couple (sexe $\times$ discipline), donnant un RMSE centré-réduit (RMSE$_{\text{CR}}$) interprétable comme la part de la variabilité naturelle des performances non expliquée par le modèle. Un RMSE$_{\text{CR}}$ inférieur à 0,5 indique que l'erreur résiduelle est inférieure à la moitié de l'écart-type des observations, ce qui témoigne d'un bon ajustement.
 
-De manière globale, Moore présente un RMSE$_{\text{CR}}$ moyen inférieur à celui d'IMAP, aussi bien chez les hommes (0,461 contre 0,534) que chez les femmes (0,435 contre 0,490), soit un écart de 0,064 point en faveur de Moore toutes disciplines confondues (0,448 contre 0,512). Les femmes affichent des RMSE$_{\text{CR}}$ moyens légèrement inférieurs à ceux des hommes pour les deux modèles, suggérant que les trajectoires féminines sont globalement mieux capturées par les deux formulations sur la fenêtre d'observation considérée.
+\vspace{5pt}
+
+\noindent De manière globale, Moore présente un RMSE$_{\text{CR}}$ moyen inférieur à celui d'IMAP, aussi bien chez les hommes (0,461 contre 0,534) que chez les femmes (0,435 contre 0,490), soit un écart de 0,064 point en faveur de Moore toutes disciplines confondues (0,448 contre 0,512). Les femmes affichent des RMSE$_{\text{CR}}$ moyens légèrement inférieurs à ceux des hommes pour les deux modèles, suggérant que les trajectoires féminines sont globalement mieux capturées par les deux formulations sur la fenêtre d'observation considérée.
 
 | Discipline | Moore H | IMAP H | Moore F | IMAP F |
 |------------|:-------:|:------:|:-------:|:------:|
@@ -804,7 +846,9 @@ Sur le 1500m, Moore présente des critères d'ajustement systématiquement plus 
 
 L'examen du tableau @tbl-rmse-cr (annexe) révèle que Moore présente un RMSE$_{\text{CR}}$ inférieur à celui d'IMAP dans la grande majorité des disciplines, avec un écart moyen de l'ordre de 0,05 à 0,10. Cet avantage est le plus net dans les disciplines de course (sprint, demi-fond, fond), où Moore obtient des erreurs résiduelles inférieures à la moitié de l'écart-type des observations pour plusieurs épreuves (3000m steeple hommes : 0,31 ; disque hommes : 0,32 ; poids hommes : 0,32). IMAP présente en revanche un RMSE$_{\text{CR}}$ légèrement inférieur sur quelques disciplines de terrain : poids hommes (0,291 contre 0,317), marteau hommes (0,347 contre 0,389) et épreuves combinées femmes (0,330 contre 0,377). Dans les deux cas, les RMSE$_{\text{CR}}$ restent inférieurs à 0,9 sur l'ensemble des disciplines, ce qui confirme que les deux modèles capturent une part substantielle de la structure des données. Pour le 1500m spécifiquement, Moore obtient un RMSE$_{\text{CR}}$ de 0,390 chez les hommes et 0,529 chez les femmes, contre 0,526 et 0,625 pour IMAP, illustrant l'avantage relatif de Moore sur cette famille de disciplines.
 
-La comparaison des critères AIC et BIC (@tbl-comparatif-aic et @tbl-comparatif-bic en annexe) confirme l'absence de dominance systématique d'un modèle sur l'autre. Moore obtient des critères inférieurs sur la majorité des disciplines de course courte et de demi-fond (100m, 800m, 1500m, 5000m pour les deux sexes), tandis qu'IMAP s'avère plus parcimonieux sur le marathon hommes (AIC : $-33,0$ contre $-20,8$), le 10 000m hommes (AIC : $11,7$ contre $43,4$) et les épreuves combinées (AIC : $271,1$ contre $275,0$ chez les hommes, $297,9$ contre $308,4$ chez les femmes). Ces résultats suggèrent qu'IMAP offre un meilleur compromis ajustement-parcimonie dans les disciplines d'endurance longue, où la fenêtre d'observation couvre une plus grande partie de la courbe de déclin.
+\vspace{5pt}
+
+\noindent La comparaison des critères AIC et BIC (@tbl-comparatif-aic et @tbl-comparatif-bic en annexe) confirme l'absence de dominance systématique d'un modèle sur l'autre. Moore obtient des critères inférieurs sur la majorité des disciplines de course courte et de demi-fond (100m, 800m, 1500m, 5000m pour les deux sexes), tandis qu'IMAP s'avère plus parcimonieux sur le marathon hommes (AIC : $-33,0$ contre $-20,8$), le 10 000m hommes (AIC : $11,7$ contre $43,4$) et les épreuves combinées (AIC : $271,1$ contre $275,0$ chez les hommes, $297,9$ contre $308,4$ chez les femmes). Ces résultats suggèrent qu'IMAP offre un meilleur compromis ajustement-parcimonie dans les disciplines d'endurance longue, où la fenêtre d'observation couvre une plus grande partie de la courbe de déclin.
 
 ## Discussion
 
@@ -822,13 +866,15 @@ L'absence de dominance systématique d'un modèle sur l'autre suggère que les d
 
 # Comparaison avec la réalité
 
-### Méthode
+## Méthode
 
 Afin d'évaluer la cohérence des résultats obtenus par les deux modèles, nous proposons une comparaison directe des âges au pic estimés par chaque modèles avec l'âge empirique. En effet, l'étude 1 fournit une estimation empirique de l'âge au pic, défini comme la moyenne d'âge des athlètes à leur meilleure performance enregistrée, pour chaque couple (sexe × discipline).
 
-La comparaison entre les trois estimations (étude 1, Moore, IMAP) est réalisée discipline par discipline et séparément pour les hommes et les femmes. L'écart entre l'estimation empirique de l'étude 1 et les estimations modélisées de l'étude 2 constitue un indicateur de cohérence entre les deux approches.
+\vspace{5pt}
 
-### Résultats
+\noindent La comparaison entre les trois estimations (étude 1, Moore, IMAP) est réalisée discipline par discipline et séparément pour les hommes et les femmes. L'écart entre l'estimation empirique de l'étude 1 et les estimations modélisées de l'étude 2 constitue un indicateur de cohérence entre les deux approches.
+
+## Résultats
 
 le tableau ci-dessous présente les âges au pic réel et estimés par le modèle de Moore et le modèle IMAP.
 
@@ -860,23 +906,37 @@ le tableau ci-dessous présente les âges au pic réel et estimés par le modèl
 
 De manière générale, les deux modèles tendent à surestimer l'âge au pic par rapport à la moyenne empirique, avec une surestimation plus marquée pour IMAP que pour Moore.
 
-Les meilleures concordances avec Moore s'observent pour le 1500m hommes (écart de +0,1 an), le saut en longueur hommes (+0,3 an), le 5000m hommes (−0,5 an) et les haies femmes (+0,1 an). Pour IMAP, le javelot hommes (0,0 an), le marathon femmes (−0,2 an) et le marteau femmes (−0,1 an) constituent les cas de meilleure concordance.
+\vspace{5pt}
 
-Les divergences les plus importantes concernent le 100m femmes, où les deux modèles surestiment d'environ 3,3 ans, et le poids hommes pour Moore (+3,1 ans). Plus généralement, les lancers et les épreuves de sprint court présentent les écarts les plus élevés, tandis que les disciplines d'endurance longue (marathon, 1500m, 5000m) affichent les meilleurs accords entre les trois estimations.
+\noindent Les meilleures concordances avec Moore s'observent pour le 1500m hommes (écart de +0,1 an), le saut en longueur hommes (+0,3 an), le 5000m hommes (−0,5 an) et les haies femmes (+0,1 an). Pour IMAP, le javelot hommes (0,0 an), le marathon femmes (−0,2 an) et le marteau femmes (−0,1 an) constituent les cas de meilleure concordance.
 
-### Discussion
+\vspace{5pt}
+
+\noindent Les divergences les plus importantes concernent le 100m femmes, où les deux modèles surestiment d'environ 3,3 ans, et le poids hommes pour Moore (+3,1 ans). Plus généralement, les lancers et les épreuves de sprint court présentent les écarts les plus élevés, tandis que les disciplines d'endurance longue (marathon, 1500m, 5000m) affichent les meilleurs accords entre les trois estimations.
+
+## Discussion
 
 Les écarts observés entre l'estimation empirique de l'étude 1 et les âges au pic estimés par les modèles peuvent être expliqués par plusieus facteurs.
 
-Premièrement, l'étude 1 mesure l'âge auquel chaque athlète a réalisé son record personnel absolu, puis en calcule la moyenne par discipline. Cette estimation est donc individuelle et discrète : elle correspond à un événement unique dans la carrière de chaque athlète. En revanche, les modèles de l'étude 2 ajustent une courbe continue sur la meilleure performance observée à chaque âge, agrégée sur l'ensemble des athlètes. L'âge au pic du modèle représente ainsi le maximum d'une trajectoire collective, qui peut différer du pic individuel moyen. Cette différence de nature entre les deux estimations peut expliquer une partie des écarts
+\vspace{5pt}
 
-Ensuite, les modèles sont plus sensibles aux observations extrêmes. En effet, les modèles sont ajustés sur la meilleure performance par âge, une performance exceptionnelle réalisée par un athlète isolé à un âge avancé peut décaler le pic estimé vers des âges plus avancés. Cet effet peut être plus visible dans les lancers et au 100m qui sont les disciplines avec les écarts les plus élevés.
+\noindent Premièrement, l'étude 1 mesure l'âge auquel chaque athlète a réalisé son record personnel absolu, puis en calcule la moyenne par discipline. Cette estimation est donc individuelle et discrète : elle correspond à un événement unique dans la carrière de chaque athlète. En revanche, les modèles de l'étude 2 ajustent une courbe continue sur la meilleure performance observée à chaque âge, agrégée sur l'ensemble des athlètes. L'âge au pic du modèle représente ainsi le maximum d'une trajectoire collective, qui peut différer du pic individuel moyen. Cette différence de nature entre les deux estimations peut expliquer une partie des écarts.
 
-De plus, comme évoqué en section méthodologie, nos données couvrent une fenêtre restreinte (16--40 ans) qui ne capture qu'imparfaitement la phase de déclin. Il est possible que les modèles, ne disposant pas d'observations suffisantes dans la phase descendante, positionnent le pic légèrement plus tardivement qu'il ne l'est en réalité. Cet effet est cohérent avec la surestimation systématique observée.
+\vspace{5pt}
 
-Cependant, la convergeance sur certaines disciplines est encourageante. L'accord entre les trois estimations est très bon pour le marathon, le 1500m et le 5000m, avec des écarts inférieurs à 1 an dans la majorité des cas. Ce résultat est cohérent avec la littérature : Allen et Hopkins [@Allen2015] soulignent que les disciplines d'endurance longue présentent des trajectoires de performance plus régulières et moins sensibles aux variations individuelles, ce qui favorise la convergence entre une estimation empirique et une modélisation paramétrique.
+\noindent Ensuite, les modèles sont plus sensibles aux observations extrêmes. En effet, les modèles sont ajustés sur la meilleure performance par âge, une performance exceptionnelle réalisée par un athlète isolé à un âge avancé peut décaler le pic estimé vers des âges plus avancés. Cet effet peut être plus visible dans les lancers et au 100m qui sont les disciplines avec les écarts les plus élevés.
 
-Au-delà des valeurs absolues, les deux modèles reproduisent fidèlement l'ordre relatif des disciplines : les lancers et le marathon présentent les pics les plus tardifs, le sprint et le demi-fond les plus précoces, conformément aux attentes de la littérature [@Allen2015; @Komi1992; @Tanaka2003]. Cette restitution de la structure qualitative des données, cohérente avec les mécanismes physiologiques connus, constitue une validation indirecte de la pertinence des deux modèles sur nos données.
+\vspace{5pt}
+
+\noindent De plus, comme évoqué en section méthodologie, nos données couvrent une fenêtre restreinte (16--40 ans) qui ne capture qu'imparfaitement la phase de déclin. Il est possible que les modèles, ne disposant pas d'observations suffisantes dans la phase descendante, positionnent le pic légèrement plus tardivement qu'il ne l'est en réalité. Cet effet est cohérent avec la surestimation systématique observée.
+
+\vspace{5pt}
+
+\noindent Cependant, la convergeance sur certaines disciplines est encourageante. L'accord entre les trois estimations est très bon pour le marathon, le 1500m et le 5000m, avec des écarts inférieurs à 1 an dans la majorité des cas. Ce résultat est cohérent avec la littérature : Allen et Hopkins [@Allen2015] soulignent que les disciplines d'endurance longue présentent des trajectoires de performance plus régulières et moins sensibles aux variations individuelles, ce qui favorise la convergence entre une estimation empirique et une modélisation paramétrique.
+
+\vspace{5pt}
+
+\noindent Au-delà des valeurs absolues, les deux modèles reproduisent fidèlement l'ordre relatif des disciplines : les lancers et le marathon présentent les pics les plus tardifs, le sprint et le demi-fond les plus précoces, conformément aux attentes de la littérature [@Allen2015; @Komi1992; @Tanaka2003]. Cette restitution de la structure qualitative des données, cohérente avec les mécanismes physiologiques connus, constitue une validation indirecte de la pertinence des deux modèles sur nos données.
 
 \newpage
 
@@ -884,11 +944,21 @@ Au-delà des valeurs absolues, les deux modèles reproduisent fidèlement l'ordr
 
 Cette étude avait pour objectif d'analyser la relation entre l'âge et la performance en athlétisme de haut niveau, et d'identifier l'âge au pic selon les disciplines et le sexe. Les résultats obtenus permettent de répondre aux trois questions de recherche initiales. D'abord, l'âge au pic varie significativement selon la discipline : les épreuves de sprint et de demi-fond sont associées à des pics précoces (22--26 ans), tandis que les lancers et le marathon présentent des pics plus tardifs (28--30 ans), conformément aux attentes de la littérature. Ensuite, les différences entre sexes existent mais restent limitées, de l'ordre de 1 à 2 ans, et ne sont pas systématiques selon les disciplines.
 
-Le message central de cette étude est que deux approches méthodologiquement très différentes --- une estimation empirique individuelle et une modélisation paramétrique collective --- produisent des estimations globalement cohérentes de l'âge au pic, en particulier pour les disciplines d'endurance.
+\vspace{5pt}
 
-Cette convergence suggère que la relation âge-performance en athlétisme de haut niveau est suffisamment structurée pour être capturée par des modèles non linéaires relativement parcimonieux. Entre les deux modèles, Moore présente un avantage général sur le RMSE, tandis qu'IMAP offre un cadre interprétatif biologique qui conserve une valeur interprétatif indépendamment des seuls critères statistiques.
+\noindent Le message central de cette étude est que deux approches méthodologiquement très différentes --- une estimation empirique individuelle et une modélisation paramétrique collective --- produisent des estimations globalement cohérentes de l'âge au pic, en particulier pour les disciplines d'endurance.
 
-Plusieurs limites doivent toutefois être soulignées. La principale concerne le calcul de l'âge : en l'absence de la date exacte de chaque compétition, l'âge a été approximé par la différence entre l'année de la performance et l'année de naissance de l'athlète. Cette approximation introduit une incertitude pouvant atteindre jusqu'à un an sur l'âge réel au moment de la performance, ce qui invite à interpréter les écarts inférieurs à 1 an entre les estimations avec prudence. Par ailleurs, la restriction aux athlètes retraités avant 2022 et le filtrage au Top 32 par discipline, bien que nécessaires pour garantir la représentativité des trajectoires, réduisent la taille des échantillons et peuvent introduire un biais de sélection vers les carrières les plus longues et les plus performantes.
+\vspace{5pt}
+
+\noindent Cette convergence suggère que la relation âge-performance en athlétisme de haut niveau est suffisamment structurée pour être capturée par des modèles non linéaires relativement parcimonieux. Entre les deux modèles, Moore présente un avantage général sur le RMSE, tandis qu'IMAP offre un cadre interprétatif biologique qui conserve une valeur interprétatif indépendamment des seuls critères statistiques.
+
+\vspace{5pt}
+
+\noindent Plusieurs limites doivent toutefois être soulignées. La principale concerne le calcul de l'âge : en l'absence de la date exacte de chaque compétition, l'âge a été approximé par la différence entre l'année de la performance et l'année de naissance de l'athlète. Cette approximation introduit une incertitude pouvant atteindre jusqu'à un an sur l'âge réel au moment de la performance, ce qui invite à interpréter les écarts inférieurs à 1 an entre les estimations avec prudence. Par ailleurs, la restriction aux athlètes retraités avant 2022 et le filtrage au Top 32 par discipline, bien que nécessaires pour garantir la représentativité des trajectoires, réduisent la taille des échantillons et peuvent introduire un biais de sélection vers les carrières les plus longues et les plus performantes.
+
+\vspace{5pt}
+
+\noindent Au-delà des limites méthodologiques évoquées, plusieurs facteurs contextuels propres à la période couverte (1985–2024) mériteraient d'être approfondis dans de futures recherches. D'abord, les évolutions technologiques majeures — telles que l'introduction des chaussures à plaques carbone en fond et marathon ou le développement des perches en fibre de carbone — ont pu modifier structurellement les niveaux de performance absolus selon les époques, sans que cet effet ne soit isolé dans notre modélisation. Ensuite, les périodes de dopage institutionnalisé documentées dans certains pays et certaines disciplines durant les années 1980–2000 sont susceptibles d'avoir introduit un biais dans les meilleures performances enregistrées à certains âges, affectant potentiellement la forme des courbes ajustées. Enfin, l'internationalisation progressive de l'athlétisme — et notamment l'émergence des athlètes est-africains dans les disciplines de fond et de marathon — a structurellement reconfiguré les profils de performance au fil des décennies, rendant l'hypothèse de stationnarité implicite aux deux modèles discutable sur un horizon aussi long. Prendre en compte ces dynamiques temporelles constituerait une piste naturelle pour enrichir la modélisation proposée.
 
 \newpage
 
@@ -907,7 +977,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 # Annexes {.unnumbered}
 
-## Distributions par discipline {#sec-annexe-planches}
+#### Distributions par discipline {#sec-annexe-planches .unnumbered}
 
 \vspace*{\fill}
 
@@ -922,7 +992,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 \vspace*{\fill}
 \newpage
 
-## Distributions par famille {#sec-annexe-hist-fam}
+#### Distributions par famille {#sec-annexe-hist-fam .unnumbered} 
 
 ![Distributions par famille (hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men fig-pos="H" width="110%"}
 
@@ -930,7 +1000,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 \newpage
 
-## Diagnostics de normalité par discipline (QQ-plots) {#sec-annexe-qqplots}
+#### Diagnostics de normalité par discipline (QQ-plots) {#sec-annexe-qqplots .unnumbered} 
 
 \vspace*{\fill}
 
@@ -946,7 +1016,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 \newpage
 
-## Diagnostics de normalité par famille (QQ-plots) {#sec-annexe-qqplots}
+#### Diagnostics de normalité par famille (QQ-plots) {#sec-annexe-qqplots .unnumbered} 
 
 ![QQ-plots Familles (H)](outputs/qq_famille_hommes.png){#fig-qq-fam-men fig-pos="H" width="85%"}
 
@@ -955,9 +1025,9 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 \newpage
 
 
-## Résultats détaillés des tests de normalité
+#### Résultats détaillés des tests de normalité {.unnumbered}
 
-### Échelle des familles de disciplines
+##### Échelle des familles de disciplines {.unnumbered}
 
 | Famille | Sexe | Statistique W | $p$-value | Effectif ($n$) | Normalité |
 |:---|:---:|:---:|:---:|:---:|:---:|
@@ -983,7 +1053,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 \vspace{5pt}
 
-### Échelle des épreuves individuelles
+##### Échelle des épreuves individuelles {.unnumbered}
 
 | Discipline     | Sexe   | Statistique W | $p$-value | Effectif ($n$) | Normalité |
 |:---------------|:------:|:-------------:|:---------:|:--------------:|:---------:|
@@ -1008,7 +1078,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 *Note : Les résultats pour les disciplines restantes suivent la même méthodologie (n=32).*
 
 
-## Résultats complets des tests de Wilcoxon par familles
+#### Résultats complets des tests de Wilcoxon par familles {.unnumbered}
 
 | Famille | $n$ | Médiane H | Médiane F | Différence | $p$-value | Significatif |
 |:---------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
@@ -1048,7 +1118,7 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 \vspace{20pt}
 
-## Comparaisons inter-disciplines (Extrait du Test de Dunn) {.unnumbered .unlisted}
+#### Comparaisons inter-disciplines (Extrait du Test de Dunn) {.unnumbered}
 
 Le test de Kruskal-Wallis ayant révélé une différence globale significative entre les disciplines ($p < 0,001$), le test de Dunn permet d'identifier les paires d'épreuves dont les âges au pic diffèrent de manière probante. Le tableau ci-dessous extrait les comparaisons les plus illustratives des dynamiques observées.
 
@@ -1065,7 +1135,7 @@ Le test de Kruskal-Wallis ayant révélé une différence globale significative 
 \vspace{5pt}
 *Note : Les $p$-values ajustées par la méthode de Bonferroni sont conservatrices pour éviter les faux positifs liés aux comparaisons multiples. Seules les paires présentant une $p$-value ajustée $< 0,05$ sont considérées comme statistiquement différentes.*
 
-======= \## Modèles de Moore {.unnumbered}{#sec-annexe-courbes-Moore}
+#### Modèles de Moore {#sec-annexe-courbes-Moore .unnumbered} 
 
 ::: {#fig-moore-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_lancer.png}}
@@ -1121,7 +1191,7 @@ Modèles de Moore pour la marche
 Modèles de Moore pour les épreuves combinées
 :::
 
-## Modèles IMAP {.unnumbered} {#sec-annexe-courbes-IMAP}
+#### Modèles IMAP {#sec-annexe-courbes-IMAP .unnumbered} 
 
 ::: {#fig-imap-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_lancers.png}}
@@ -1177,7 +1247,7 @@ Modèles IMAP pour la marche
 Modèles IMAP pour les épreuves combinées
 :::
 
-## Comparaison des modèles {.unnumbered} {#sec-annexe-comparaison-modeles}
+#### Comparaison des modèles {#sec-annexe-comparaison-modeles .unnumbered} 
 
 | Discipline         | Moore H | IMAP H | Moore F | IMAP F |
 |--------------------|:-------:|:------:|:-------:|:------:|
