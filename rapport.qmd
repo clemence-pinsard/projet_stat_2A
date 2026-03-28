@@ -113,11 +113,11 @@ Imad {Hamri}\\
 
 # Résumé {.unnumbered}
 
-La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à différentes familles de disciplines. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
+La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore et al. (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à différentes familles de disciplines. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance du vieillissement athlétique.
 
 # Abstract {.unnumbered}
 
-Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model (1975) and the IMAP model (Berthelot et al., 2019), across various discipline families. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
+Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model et al. (1975) and the IMAP model (Berthelot et al., 2019), across various discipline families. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of athletic aging.
 
 \newpage
 
@@ -339,7 +339,7 @@ L'analyse combinée des taux de rejet et des diagnostics graphiques confirme que
 
 2.  Des **tests non paramétriques** (Wilcoxon-Mann-Whitney et Kruskal-Wallis), fondés sur les rangs, sont exclusivement utilisés pour les comparaisons statistiques dans la suite de l'analyse.
 
-## Analyse inférentielle : Effets du sexe et de la spécialité sur l'âge au pic
+## Analyse inférentielle : Comparaison de l'âge au pic de performance selon le sexe et les disciplines
 
 ### Méthodologie {.unnumbered .unlisted}
 
