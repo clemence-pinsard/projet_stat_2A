@@ -77,11 +77,11 @@ df_final <- df_retraites %>%
     Group_Discipline == "hurdles" ~ "Haies",
     Group_Discipline == "jumps" ~ "Sauts",
     Group_Discipline == "race-walks" ~ "Marche",
-    discipline == "800 Metres" ~ "800 - 1500 - steeple",
-    discipline == "1500 Metres" ~ "800 - 1500 - steeple",
-    discipline == "3000 Metres Steeplechase" ~ "800 - 1500 - steeple",
-    discipline == "5000 Metres" ~ "5000 - 10000",
-    discipline == "10,000 Metres" ~ "5000 - 10000",
+    discipline == "800 Metres" ~ "Demi-fond",
+    discipline == "1500 Metres" ~ "Demi-fond",
+    discipline == "3000 Metres Steeplechase" ~ "Demi-fond",
+    discipline == "5000 Metres" ~ "Demi-fond long",
+    discipline == "10,000 Metres" ~ "Demi-fond long",
     discipline == "Marathon" ~ "Marathon",
     TRUE ~ "A exclure"
   )) %>%
