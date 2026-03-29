@@ -458,33 +458,55 @@ Dans son modèle, Dan H. Moore explique la relation entre l'âge et la performan
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-L'équation [( @eq-moore)] est un modèle à double exponentielle, constitué de deux composantes :\
+L'équation [(@eq-moore)] est un modèle à double exponentielle, constitué de deux composantes :\
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
 \vspace{5pt}
 
-\noindent Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme un temps de course (en secondes), une distance (en mètres) ou une hauteur (en mètres).
+\noindent Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme une vitesse de course (en kilomètres par heure), une distance (en mètres) ou un nombre de points.
 
 \vspace{5pt}
 
-\noindent En s'appuyant sur l'expression analytique du pic $P(t_{pic}) = (a+c) − a·R^{−α} − c·R^{1−α}$ où $R = \frac {ab} {cd}$ et $\alpha = \frac {b} {b+d}$ ainsi que de sa position $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de la courbe de P(t). Le rapport $\frac a c$ conditionne ainsi directement la valeur maximale atteinte par P(t). Le rapport $\frac a c$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd. 
+\noindent Pour trouver la position du pic, on annule la dérivée $P′(t)=ab \cdot e^{−bt}+cd \cdot e^{dt}=0$, ce qui donne directement : $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$. Pour obtenir la valeur au pic, on substitue $t_{pic}$ P(t) et on obtient alors $P(t_{pic})=(a+c)−a \cdot (\frac {ab} {cd})^{\frac {-b} {b+d}}−c \cdot (\frac {ab} {cd})^{\frac d {b+d}}$.
+À partir de cette expression, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de P(t). De plus, Le rapport $\frac{a}{c}$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic ; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
 
 ::: {#fig-params-ac fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
 
 Effet des paramètres $a$ et $c$ sur la modélisation
+
+*Note de lecture : Ici, b et d sont fixés respectivement à 0,5 et 0,2. Afin de voir l'effet de a, dans le cas "a grand", a est fixé à 8 et c à 0,4. Lorsque l'on passe au cas "a petit", c reste fixé à 0,4 et a passe à 4. Dans le cas "c petit, c vaut 0,3 et a vaut 6. Et dans le cas "c grand", a vaut toujours 6 et c vaut cette fois 2.*
 :::
 
-Les paramètres b et d gouvernent quant à eux la dynamique temporelle de la courbe. b est la vitesse de montée, il est directement proportionnel à la pente initiale via P'(0) ≈ ab tandis que d est la vitesse de descente, estimable depuis la pente de la phase tardive. Leur somme b+d détermine l'étalement global de la courbe : une grande valeur de b+d produit un pic étroit et précoce, une petite valeur un pic large et  comme l'illustre la figure @fig-params-bd. La position du pic $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ montre que b et d interagissent également avec a et c via le rapport $R = \frac {ab} {cd}$: le pic est d'autant plus tardif que la force du terme montant (ab) est grande devant celle du terme descendant (cd).
+\noindent Les paramètres b et d gouvernent la dynamique temporelle de la courbe, c'est-à-dire à quelle vitesse elle monte et descend.\
+- b est la vitesse de montée : plus b est grand, plus la courbe croît rapidement en début de période. Cela se voit directement sur la pente initiale, qui vaut P′(0)=ab (si ab \> cd).
+- d est la vitesse de descente : plus d est grand, plus la chute après le pic est rapide.
+Leur somme $b+d$ contrôle l'étalement global du pic : une grande valeur de $b+d$ produit un pic étroit et précoce, une petite valeur un pic large et tardif, comme l'illustre la figure @fig-params-bd.
+La position du pic, $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ résume bien cette double influence. Au numérateur, le rapport $\frac{ab}{cd}$ compare la « force » du terme montant ($a \cdot b$) à celle du terme descendant ($c \cdot d$) : plus le terme montant domine, plus le pic est repoussé vers la droite. Au dénominateur, $b+d$ comprime ou étire l'ensemble de la courbe sur l'axe du temps. Ainsi, b et d n'agissent pas indépendamment : c'est leur interaction avec a et c qui fixe conjointement le moment où le pic survient.
 
 ::: {#fig-params-bd fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/b_et_d.png}}
 
 Effet des paramètres $b$ et $d$ sur la modélisation
+
+*Note de lecture : Ici, a et c sont fixés respectivement à 6 et 0,5. Dans le cas, b+d grand, b est fixé à 0,8 et d à 0,4. Dans le cas, b+d petit, B est fixé à 0,2 et d est fixe à 0,08. Tandis que dans le cas, b+d moyen, b et d sont fixés respectivement à 0,5 et 0,2.*
 :::
 
-La position de $t_{pic}$ a été obtenu en en annulant la dérivée de P(t). C'est-à-dire en annulant $P'(t) = ab · e^{−bt} − cd · e^{dt}$, l'équation $P'(t) = 0$ traduit l'équilibre instantané entre la vitesse de montée et la vitesse de descente. Ainsi, cette formule montre que ce n'est pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd qui s'affrontent dans le rapport R. La condition d'existence du pic est ab\>cd, soit R\>1, ce qui assure $\ln(R) > 0$ et donc $t_{pic}>0$. Cette condition peut être satisfaite même lorsque c\>a, à condition que d soit suffisamment petit devant b. Plus R est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. À l'inverse, un cas limite instructif est $a \cdot b = c \cdot d$, soit $R = 1$ : $ln(R) = 0$ et $t_{pic} = 0$, il n'y a plus de pic et la courbe est décroissante dès l'origine. C'est pourquoi la contrainte ab \> cd constitue non seulement une condition de positivité des paramètres, mais bien la condition d'existence du pic.
+\noindent La position du pic s'obtient en annulant la dérivée de P(t) :  $P'(t) = ab · e^{−bt} − cd · e^{dt} = 0$. Cette équation a une interprétation intuitive : le pic survient exactement au moment où la vitesse de montée ($ab \cdot e^{-bt}$) est égale à la vitesse de descente ($cd \cdot e^{dt}$). Ce n'est donc pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd pris ensemble. En résolvant l'équation ci-dessus, on obtient l'expression de $t_{pic}$ déjà énoncée précédemment. Pour que ce pic existe t \> 0, il faut que $ln(\frac {ab} {cd})$ \> 0, soit ab \> cd. Quelques cas concrets illustrent cette condition :
+
+| $a$ | $b$ | $c$ | $d$ | $ab$ | $cd$ | Pic ? |
+|:---:|:---:|:---:|:---:|:----:|:----:|:-----:|
+| 2   | 3   | 1   | 4   | 6    | 4    | ✓     |
+| 1   | 2   | 3   | 1   | 2    | 3    | ✗     |
+| 5   | 1   | 1   | 5   | 5    | 5    | ✗ (cas limite) |
+
+: Exemples illustrant la condition d'existence du pic $ab > cd$ {#tbl-condition-pic}
+
+\noindent Notez que cette condition peut être satisfaite même si c \> a, à condition que d soit suffisamment petit devant b (première ligne du tableau). Le cas limite est $ab = cd$. En effet, lorsque $ab = cd$, le logarithme s'annule et $t_{pic} = 0$ : la courbe n'a plus de pic, elle est décroissante dès l'origine. Ce cas marque la frontière entre les deux régimes.
+
+\noindent Plus $\frac{ab}{cd}$ est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. La figure @fig-params-bd illustre comment faire varier ce rapport déplace le pic sur l'axe du temps.
+
 
 ### Modèle IMAP (2019)
 
@@ -502,7 +524,7 @@ où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0
 
 ### Précautions pour gérer le déséquilibre des âges
 
-On note dans nos données un fort déséquilibre dans la distribution des âges (très peu d'âges dits « élevés » et très peu d'âges dit « faibles »). La figure suivante illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans comme on peut le voir sur la figure @fig-brut-1500m-men. Il va falloir gérer ce problème car comme chaque point à le même poids, les âges où nous avons beaucoup de points risquent d'influencer fortement notre modèle.
+On note dans nos données un fort déséquilibre dans la distribution des âges, nous disposons de peu d'athlètes dits jeunes ainsi que de peu d'athlètes que l'on considèrerait comme agés. La figure @fig-brut-1500m-men illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer cette situation car nous cherchons à estimer les paramètres par moindres carrés et alors chaque point a le même poids dans l'estimation et la modélisation. Ainsi les âges très présents risquent d'influencer fortement notre estimation.
 
 ::: {#fig-brut-1500m-men fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_top32/brut_1500_Metres_men.png}}
