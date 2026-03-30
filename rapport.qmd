@@ -204,7 +204,7 @@ La démarche analytique est structurée en trois phases complémentaires. Une **
 Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) permet d'observer que la majorité des records personnels sont enregistrés dans une fenêtre comprise entre 22 et 28 ans pour les deux sexes. On note cependant une répartition distincte selon le genre : les hommes sont davantage représentés entre 21 et 24 ans, tandis que la tendance s'inverse par la suite. À partir de 26 ans, on observe une proportion plus importante de femmes atteignant leur âge au pic.
 
 ::: {#fig-hist fig-pos="H"}
-\fbox{\includegraphics[width=0.85\textwidth]{outputs/histogramme_global.png}}
+\fbox{\includegraphics[width=0.75\textwidth]{outputs/histogramme_global.png}}
 
 Distribution de l'âge au pic
 :::
@@ -379,8 +379,6 @@ Le raisonnement statistique reposant sur la comparaison des rangs plutôt que de
 |   Demi-fond            |   24.0    |   26.0    |    -2.0    |   **Significatif**   |
 
 : Principaux résultats du test de Wilcoxon par famille de discipline {#tbl-wilcox-familles-sig}
-
-\vspace{5pt}
 
 \setlength{\parindent}{0pt}
 *Note : L'intégralité des résultats pour les neuf familles de disciplines est consultable en Annexe (@tbl-wilcox-familles-complet).*
@@ -994,9 +992,9 @@ Voici la liste de toutes les références bibliographiques utiles à la rédacti
 
 #### Distributions par famille {#sec-annexe-hist-fam .unnumbered} 
 
-![Distributions par famille (hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men fig-pos="H" width="110%"}
+![Distributions par famille (hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men fig-pos="H" width="85%"}
 
-![Distributions par famille (femmes)](outputs/hist_famille_femmes.png){#fig-hist-fam-women fig-pos="H" width="110%"}
+![Distributions par famille (femmes)](outputs/hist_famille_femmes.png){#fig-hist-fam-women fig-pos="H" width="85%"}
 
 \newpage
 
