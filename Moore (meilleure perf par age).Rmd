@@ -2677,7 +2677,7 @@ p_lancer <- ggplot(df_total_lancers, aes(x = Age, y = meilleure_perf)) +
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (lancers)",
+    title = "Ajustement du modèle détaillé par discipline pour les Lancers",
     x = "Âge",
     y = "Performance (mètres)"
   ) +
@@ -2745,7 +2745,7 @@ p_saut <- ggplot(df_total_sauts, aes(x = Age, y = meilleure_perf)) +
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (sauts)",
+    title = "Ajustement du modèle détaillé par discipline pour les Sauts",
     x = "Âge",
     y = "Performance (mètres)"
   ) +
@@ -2807,7 +2807,7 @@ p_sprint <- ggplot(df_total_sprints, aes(x = Age, y = meilleure_perf_km_par_h)) 
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (sprints)",
+    title = "Ajustement du modèle détaillé par discipline pour les Sprints",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
@@ -2863,7 +2863,7 @@ p_haies <- ggplot(df_total_haies, aes(x = Age, y = meilleure_perf_km_par_h)) +
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (haies)",
+    title = "Ajustement du modèle détaillé par discipline pour les Haies",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
@@ -2913,7 +2913,7 @@ p_epreuves_combinees <- ggplot(df_total_epreuves_combinees, aes(x = Age, y = mei
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (épreuves combinées)",
+    title = "Ajustement du modèle détaillé par discipline pour les Epreuves Combinées",
     x = "Âge",
     y = "Performance (points)"
   ) +
@@ -2976,7 +2976,7 @@ p_demi_fond <- ggplot(df_total_demi_fond, aes(x = Age, y = meilleure_perf_km_par
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (demi-fond)",
+    title = "Ajustement du modèle détaillé par discipline pour le Demi-fond",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
@@ -3032,7 +3032,7 @@ p_5000_10000 <- ggplot(df_total_5000_10000, aes(x = Age, y = meilleure_perf_km_p
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (5000m-10000m)",
+    title = "Ajustement du modèle détaillé par discipline pour le Demi-fond long",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
@@ -3082,7 +3082,7 @@ p_marathon <- ggplot(df_total_marathon, aes(x = Age, y = meilleure_perf_km_par_h
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (marathon)",
+    title = "Ajustement du modèle détaillé par discipline pour le Marathon",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
@@ -3132,7 +3132,7 @@ p_marche <- ggplot(df_total_marche, aes(x = Age, y = meilleure_perf_km_par_h)) +
   
   theme_bw() + # Un thème un peu plus structuré pour des échelles variées
   labs(
-    title = "Ajustement du modèle : Détail par discipline (marche)",
+    title = "Ajustement du modèle détaillé par discipline pour la Marche",
     x = "Âge",
     y = "Performance (km/h)"
   ) +
