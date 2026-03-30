@@ -197,11 +197,15 @@ Imad {Hamri}\\
 
 ## Méthodologie
 
-\noindent La démarche analytique est structurée en trois phases complémentaires. Une **analyse descriptive** globale est d'abord menée pour identifier les indicateurs de position (médiane, quartiles) selon le sexe et la discipline. Ensuite, la distribution des données est soumise à un **test de normalité** (Shapiro-Wilk) afin de valider le cadre statistique. Enfin, une **analyse inférentielle** est déployée pour tester statistiquement l'influence du sexe et de la spécialité athlétique sur l'âge de performance.
+\noindent La démarche analytique est structurée en trois phases complémentaires. Une **analyse descriptive** globale est d'abord menée pour identifier les indicateurs de position (médiane, quartiles) et de dispersion selon le sexe et la discipline. Ensuite, la distribution des données est soumise à un **test de normalité** (Shapiro-Wilk) afin de valider le cadre statistique. Enfin, une **analyse inférentielle** est déployée pour tester statistiquement l'influence du sexe et de la spécialité athlétique sur l'âge de performance.
 
 ## Analyse descriptive de l'âge au pic : Indicateurs de position et variabilité inter-disciplines
 
-\noindent Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) permet d'observer que la majorité des records personnels sont enregistrés dans une fenêtre comprise entre 22 et 28 ans pour les deux sexes. On note cependant une répartition distincte selon le genre : les hommes sont davantage représentés entre 21 et 24 ans, tandis que la tendance s'inverse par la suite. À partir de 26 ans, on observe une proportion plus importante de femmes atteignant leur âge au pic.
+\noindent Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) montre que la performance de haut niveau est fortement concentrée : 68,2 % des records masculins et 65,9 % des records féminins sont enregistrés dans une fenêtre étroite comprise entre 22 et 28 ans.
+
+On note cependant une divergence  selon le genre. Les hommes semblent présenter une précocité plus marquée, avec 38,4 % d'entre eux atteignant leur pic entre 21 et 24 ans, contre seulement 27,7 % pour les femmes dans cette même tranche. À l'inverse, la distribution féminine est plus décalée vers la maturité : 58,2 % des femmes atteignent leur âge au pic à partir de 26 ans, alors que cette proportion est de 48,7 % chez les hommes.\
+
+Enfin, la valeur extrême de 46 ans observée dans l'échantillon correspond au lanceur de marteau Oleksandr Dryhol qui, bien qu'ayant établi un record du monde vétéran en 2012, a été disqualifié des Jeux Olympiques cette même année pour dopage ; un rappel que certains pics de performance atypiques doivent être interprétés avec une certaine réserve.
 
 ::: {#fig-hist fig-pos="H"}
 \fbox{\includegraphics[width=0.75\textwidth]{outputs/histogramme_global.png}}
@@ -209,7 +213,7 @@ Imad {Hamri}\\
 Distribution de l'âge au pic
 :::
 
-\noindent Les indicateurs de position associés à cette distribution sont détaillés dans le tableau ci-dessous (Table @tbl-stats) :
+\noindent Les indicateurs de position et de dispersion associés à cette distribution sont détaillés dans le tableau ci-dessous (@tbl-stats) :
 
 | Sexe   | Eff. | Min | Q1  | Moyenne $\pm$ SD | Médiane | Q3  | Max |
 |:-------|:----:|:---:|:---:|:----------------:|:-------:|:---:|:---:|
@@ -242,7 +246,7 @@ Distribution de l'âge au pic
 
 ### Analyse descriptive par discipline {.unnumbered .unlisted}
 
-\noindent Le tableau ci-dessous (Tableau @tbl-desc-complet) présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
+\noindent Le tableau ci-dessous (@tbl-desc-complet) présente une synthèse détaillée de l'âge au pic observé pour chaque spécialité. Cette vue permet d'identifier les spécificités propres à chaque discipline, au-delà des tendances globales par familles.
 
 | Discipline    | Hommes <br> (Moy ± SD) | Hommes <br> Med \[Min-Max\] | Femmes <br> (Moy ± SD) | Femmes <br> Med \[Min-Max\] |
 |:--------------|:-------------:|:-------------:|:-------------:|:-------------:|
@@ -272,11 +276,26 @@ Distribution de l'âge au pic
 
 \vspace{4pt}
 
-\noindent L'observation de ce tableau permet de noter que, pour la majorité des disciplines, la **moyenne est supérieure à la médiane**. Ce constat est un indicateur mathématique d'une distribution étirée vers les âges élevés (asymétrie positive).
+\noindent Plusieurs constats se dégagent de cette analyse par discipline :
+
+**Disciplines à pic précoce :** Les épreuves de sprint (100m, 200m, 400m) et le 800m chez les hommes présentent les âges moyens les plus bas (22.9 à 25.6 ans), avec des médianes encore plus précoces pour certaines (22-23 ans).
+
+\vspace{5pt}
+
+**Disciplines à pic tardif :** Le marathon se distingue nettement avec les âges au pic les plus élevés, tant chez les hommes (27.7 ± 4.0 ans) que chez les femmes (30.0 ± 4.1 ans). Les lancers lourds (disque, marteau) affichent également des âges élevés chez les hommes (≥28 ans).
+
+\vspace{5pt}
+
+**Variabilité intra-discipline :** L'écart-type et l'étendue (min-max) varient considérablement selon les épreuves. Le marteau hommes présente la plus grande variabilité (SD = 5.0, étendue de 24 ans), tandis que les haies et les sprints montrent une plus grande homogénéité (SD ≈ 2.5-3.5 ans).
+
+\vspace{5pt}
+
+**Différences entre sexes :** Les femmes tendent à atteindre leur pic légèrement plus tard que les hommes dans les épreuves d'endurance (800m, 10000m, marathon) et les sauts, alors que l'écart est minime voire inversé dans les sprints et lancers.
 
 ## Diagnostic de distribution et test de normalité
 
-\noindent Avant de procéder aux tests d'inférence, il est indispensable d'étudier la forme de la distribution de notre variable d'intérêt : l'âge au pic observé. Cette étape permet de vérifier si les données suivent une loi normale, condition *sine qua non* pour l'utilisation de tests paramétriques classiques.
+\noindent Avant de procéder aux tests d'inférence, il est indispensable d'étudier la forme de la distribution de notre variable d'intérêt : l'âge au pic observé. Cette étape permet de vérifier si les données peuvent être vraisemblablement approchées par une loi normale, condition nécessaire pour justifier l'utilisation de tests paramétriques classiques.
+
 
 ### Analyse visuelle par les histogrammes {.unnumbered .unlisted}
 
@@ -298,7 +317,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 -   Certaines familles, comme le **800 - 1500 - Steeple**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif. \vspace{5pt}
 -   D'autres, comme les **Lancers** et le **Marathon**, présentent une distribution décalée vers la droite et plus étalée, suggérant une plus grande hétérogénéité des âges de performance. \vspace{5pt}
--   De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est limité avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
+-   De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est peu observé avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
 
 \vspace{5pt}
 
@@ -306,7 +325,13 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 ### Test statistique de normalité {.unnumbered .unlisted}
 
-\noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle ($H_0$ : normalité) selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
+\noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Ce test évalue formellement si les données peuvent être approchées par une loi normale :
+
+- **$H_0$ :** Les données peuvent être raisonnablement approchées par une loi normale
+- **$H_1$ :** Les données ne peuvent pas être approchées par une loi normale
+- **Décision :** Si $p < 0,05$, on rejette H₀ (normalité rejetée) → nécessité d'utiliser des tests non paramétriques
+
+Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
 | Niveau d'analyse | Effectif moyen ($n$) | Nb total de tests | Tests rejetant $H_0$ ($p < 0,05$) | \% de Rejet |
 |:-------------|:------------:|:------------:|:-----------------:|:------------:|
@@ -325,7 +350,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 1.  À l'échelle des **familles** ($n \approx 75$), le test est extrêmement sensible et rejette la normalité dans la majorité des cas (61,1 %).
 
-2.  À l'échelle des **disciplines** (*n* = 32), niveau considéré comme le "juste milieu" statistique (suffisant pour la puissance mais évitant la sur-sensibilité), le taux de rejet tombe à 23,8 %.
+2.  À l'échelle des **disciplines** (*n* = 32), niveau considéré comme le "juste milieu" statistique (suffisant pour la puissance mais évitant la sur-sensibilité), le taux de rejet tombe à 23 %.
 
 ### Conclusion sur le choix des tests {.unnumbered .unlisted}
 
@@ -343,15 +368,27 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 ### Méthodologie {.unnumbered .unlisted}
 
-\noindent Le raisonnement statistique reposant sur la comparaison des rangs plutôt que des moyennes permet de s'affranchir des contraintes liées aux valeurs extrêmes et à l'asymétrie des distributions. Les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
+\noindent Les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
 
--   **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe). \vspace{5pt}
--   **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants (comparaison par familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur. \vspace{5pt}
+-   **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe).
+    - **$H_0$ :** Les distributions de l'âge au pic sont identiques entre hommes et femmes.
+    - **$H_1$ :** Les distributions de l'âge au pic diffèrent entre hommes et femmes.
+
+\vspace{5pt}
+
+-   **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants (comparaison par familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
+    - **$H_0$ :** Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
+    - **$H_1$ :** Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
+    
+\vspace{5pt}
+
 -   **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
 
 ### Résultats {.unnumbered .unlisted}
 
-\noindent **Effet global du sexe**
+\setlength{\parindent}{0pt}
+**Effet global du sexe**
+\setlength{\parindent}{15pt}
 
 \noindent Le test de Wilcoxon-Mann-Whitney appliqué à l'ensemble de l'échantillon révèle une différence d'âge au pic statistiquement significative entre les sexes ($p = 0,0016$). La médiane globale de l'âge au pic s'établit à 26 ans pour les athlètes féminines contre 25 ans pour les athlètes masculins.\
 
@@ -423,7 +460,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 **L'influence du sexe et de la discipline** 
 \setlength{\parindent}{15pt}
 
-\noindent Indépendamment du sexe, la famille de disciplines apparaît comme un facteur lié à la chronologie des carrières ($\chi^2 = 98,22$, $p < 0,001$). Le groupe Sprint--Sauts--Haies affiche les pics les plus précoces et forme un ensemble homogène sans différence interne significative. À l'inverse, le Marathon et les Lancers présentent les médianes les plus tardives et les distributions les plus étalées. Cette opposition pourrait s'expliquer par les modèles de développement athlétique : les épreuves de puissance explosive culminent souvent tôt, tandis que les disciplines d'endurance ou de force technique pourraient nécessiter une accumulation d'expérience plus longue [@Allen2015]. Concernant l'effet du sexe à l'échelle globale, la différence d'un an entre les médianes féminines et masculines est statistiquement significative ($p = 0,0016$), mais d'une ampleur mesurée. Elle constitue une tendance qui cache des profils très variés selon les spécialités.\
+\noindent Indépendamment du sexe, la famille de disciplines apparaît comme un facteur lié à la chronologie des carrières. Le groupe Sprint--Sauts--Haies affiche les pics les plus précoces et forme un ensemble homogène sans différence interne significative. À l'inverse, le Marathon et les Lancers présentent les médianes les plus tardives et les distributions les plus étalées. Cette opposition pourrait s'expliquer par les modèles de développement athlétique : les épreuves de puissance explosive culminent souvent tôt, tandis que les disciplines d'endurance ou de force technique pourraient nécessiter une accumulation d'expérience plus longue [@Allen2015]. Concernant l'effet du sexe à l'échelle globale, la différence d'un an entre les médianes féminines et masculines est statistiquement significative ($p = 0,0016$), mais d'une ampleur mesurée. Elle constitue une tendance qui cache des profils très variés selon les spécialités.\
 
 \setlength{\parindent}{0pt}
 
@@ -1071,7 +1108,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-#### Diagnostics de normalité par famille (QQ-plots) {#sec-annexe-qqplots .unnumbered} 
+#### Diagnostics de normalité par famille (QQ-plots) {.unnumbered} 
 
 ![QQ-plots Familles (H)](outputs/qq_famille_hommes.png){#fig-qq-fam-men fig-pos="H" width="85%"}
 
