@@ -14,6 +14,7 @@ library(minpack.lm)
 library(broom)
 library(ggplot2)
 library(dplyr)
+library(car)
 ```
 
 # Moore meilleure perf par age
@@ -141,6 +142,11 @@ rmse_cr(best_fit, df_men_Discus_Throw$meilleure_perf)
 t_pic <- log(params["a"]*params["b"]/(params["c"]*params["d"]))/(params["b"]+params["d"])
 print(t_pic)
 
+deltaMethod(
+  best_fit,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_men_Discus_Throw$Age, df_men_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
 lines(df_men_Discus_Throw$Age, predict(best_fit), col="red", lwd=2)
@@ -197,6 +203,11 @@ rmse_cr(best_fit_f_d, df_women_Discus_Throw$meilleure_perf)
 
 t_pic_f_d <- log(params_f_d["a"]*params_f_d["b"]/(params_f_d["c"]*params_f_d["d"]))/(params_f_d["b"]+params_f_d["d"])
 print(t_pic_f_d)
+
+deltaMethod(
+  best_fit_f_d,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_women_Discus_Throw$Age, df_women_Discus_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
@@ -255,6 +266,11 @@ rmse_cr(best_fit_h_m, df_men_Hammer_Throw$meilleure_perf)
 t_pic_h_m <- log(params_h_m["a"]*params_h_m["b"]/(params_h_m["c"]*params_h_m["d"]))/(params_h_m["b"]+params_h_m["d"])
 print(t_pic_h_m)
 
+deltaMethod(
+  best_fit_h_m,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_men_Hammer_Throw$Age, df_men_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
 lines(df_men_Hammer_Throw$Age, predict(best_fit_h_m), col="red", lwd=2)
@@ -311,6 +327,11 @@ rmse_cr(best_fit_f_m, df_women_Hammer_Throw$meilleure_perf)
 
 t_pic_f_m <- log(params_f_m["a"]*params_f_m["b"]/(params_f_m["c"]*params_f_m["d"]))/(params_f_m["b"]+params_f_m["d"])
 print(t_pic_f_m)
+
+deltaMethod(
+  best_fit_f_m,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_women_Hammer_Throw$Age, df_women_Hammer_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
@@ -369,6 +390,12 @@ rmse_cr(best_fit_h_j, df_men_Javelin_Throw$meilleure_perf)
 t_pic_h_j <- log(params_h_j["a"]*params_h_j["b"]/(params_h_j["c"]*params_h_j["d"]))/(params_h_j["b"]+params_h_j["d"])
 print(t_pic_h_j)
 
+deltaMethod(
+  best_fit_h_j,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
+
 # 5. Visualisation
 plot(df_men_Javelin_Throw$Age, df_men_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
 lines(df_men_Javelin_Throw$Age, predict(best_fit_h_j), col="red", lwd=2)
@@ -425,6 +452,11 @@ rmse_cr(best_fit_f_j, df_women_Javelin_Throw$meilleure_perf)
 
 t_pic_f_j <- log(params_f_j["a"]*params_f_j["b"]/(params_f_j["c"]*params_f_j["d"]))/(params_f_j["b"]+params_f_j["d"])
 print(t_pic_f_j)
+
+deltaMethod(
+  best_fit_f_j,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_women_Javelin_Throw$Age, df_women_Javelin_Throw$meilleure_perf, main="Ajustement du modèle", pch=16)
@@ -483,6 +515,11 @@ rmse_cr(best_fit_h_p, df_men_Shot_Put$meilleure_perf)
 t_pic_h_p <- log(params_h_p["a"]*params_h_p["b"]/(params_h_p["c"]*params_h_p["d"]))/(params_h_p["b"]+params_h_p["d"])
 print(t_pic_h_p)
 
+deltaMethod(
+  best_fit_h_p,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_men_Shot_Put$Age, df_men_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
 lines(df_men_Shot_Put$Age, predict(best_fit_h_p), col="red", lwd=2)
@@ -539,6 +576,11 @@ rmse_cr(best_fit_f_p, df_women_Shot_Put$meilleure_perf)
 
 t_pic_f_p <- log(params_f_p["a"]*params_f_p["b"]/(params_f_p["c"]*params_f_p["d"]))/(params_f_p["b"]+params_f_p["d"])
 print(t_pic_f_p)
+
+deltaMethod(
+  best_fit_f_p,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_women_Shot_Put$Age, df_women_Shot_Put$meilleure_perf, main="Ajustement du modèle", pch=16)
@@ -598,6 +640,11 @@ rmse_cr(best_fit_h_100, df_men_100_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_100 <- log(params_h_100["a"]*params_h_100["b"]/(params_h_100["c"]*params_h_100["d"]))/(params_h_100["b"]+params_h_100["d"])
 print(t_pic_h_100)
+
+deltaMethod(
+  best_fit_h_100,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_men_100_Metres$Age, df_men_100_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
@@ -660,6 +707,11 @@ rmse_cr(best_fit_f_100, df_women_100_Metres$meilleure_perf_km_par_h)
 t_pic_f_100 <- log(params_f_100["a"]*params_f_100["b"]/(params_f_100["c"]*params_f_100["d"]))/(params_f_100["b"]+params_f_100["d"])
 print(t_pic_f_100)
 
+deltaMethod(
+  best_fit_f_100,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_women_100_Metres$Age, df_women_100_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
 lines(df_women_100_Metres$Age, predict(best_fit_f_100), col="red", lwd=2)
@@ -716,6 +768,11 @@ rmse_cr(best_fit_h_200, df_men_200_Metres$meilleure_perf_km_par_h)
 
 t_pic_h_200 <- log(params_h_200["a"]*params_h_200["b"]/(params_h_200["c"]*params_h_200["d"]))/(params_h_200["b"]+params_h_200["d"])
 print(t_pic_h_200)
+
+deltaMethod(
+  best_fit_h_200,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_men_200_Metres$Age, df_men_200_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
@@ -777,6 +834,11 @@ rmse_cr(best_fit_f_200, df_women_200_Metres$meilleure_perf_km_par_h)
 t_pic_f_200 <- log(params_f_200["a"]*params_f_200["b"]/(params_f_200["c"]*params_f_200["d"]))/(params_f_200["b"]+params_f_200["d"])
 print(t_pic_f_200)
 
+deltaMethod(
+  best_fit_f_200,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_women_200_Metres$Age, df_women_200_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
 lines(df_women_200_Metres$Age, predict(best_fit_f_200), col="red", lwd=2)
@@ -835,6 +897,11 @@ rmse_cr(best_fit_h_400, df_men_400_Metres$meilleure_perf_km_par_h)
 t_pic_h_400 <- log(params_h_400["a"]*params_h_400["b"]/(params_h_400["c"]*params_h_400["d"]))/(params_h_400["b"]+params_h_400["d"])
 print(t_pic_h_400)
 
+deltaMethod(
+  best_fit_h_400,
+  "log(a*b / (c*d)) / (b + d)"
+)
+
 # 5. Visualisation
 plot(df_men_400_Metres$Age, df_men_400_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
 lines(df_men_400_Metres$Age, predict(best_fit_h_400), col="red", lwd=2)
@@ -891,6 +958,11 @@ rmse_cr(best_fit_f_400, df_women_400_Metres$meilleure_perf_km_par_h)
 
 t_pic_f_400 <- log(params_f_400["a"]*params_f_400["b"]/(params_f_400["c"]*params_f_400["d"]))/(params_f_400["b"]+params_f_400["d"])
 print(t_pic_f_400)
+
+deltaMethod(
+  best_fit_f_400,
+  "log(a*b / (c*d)) / (b + d)"
+)
 
 # 5. Visualisation
 plot(df_women_400_Metres$Age, df_women_400_Metres$meilleure_perf_km_par_h, main="Ajustement du modèle", pch=16)
