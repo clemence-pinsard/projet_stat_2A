@@ -197,11 +197,11 @@ Imad {Hamri}\\
 
 ## Méthodologie
 
-\noindent La démarche analytique est structurée en trois phases complémentaires. Une **analyse descriptive** globale est d'abord menée pour identifier les indicateurs de position (médiane, quartiles) et de dispersion selon le sexe et la discipline. Ensuite, la distribution des données est soumise à un **test de normalité** (Shapiro-Wilk) afin de valider le cadre statistique. Enfin, une **analyse inférentielle** est déployée pour tester statistiquement l'influence du sexe et de la spécialité athlétique sur l'âge de performance.
+\noindent La démarche analytique est structurée en trois phases complémentaires. Une **analyse descriptive** globale est d'abord menée pour identifier les indicateurs de position (médiane, quartiles) et de dispersion selon le sexe et la discipline. Ensuite, la distribution des données est soumise à un **test de normalité** (Shapiro-Wilk) afin de valider le cadre statistique. Enfin, une **analyse inférentielle** est déployée pour tester statistiquement les liens entre le sexe, la spécialité athlétique et l'âge de performance.
 
 ## Analyse descriptive de l'âge au pic : Indicateurs de position et variabilité inter-disciplines
 
-\noindent Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) montre que la performance de haut niveau est fortement concentrée : 68,2 % des records masculins et 65,9 % des records féminins sont enregistrés dans une fenêtre étroite comprise entre 22 et 28 ans.
+\noindent Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) montre que la performance de haut niveau est fortement concentrée : 68,2 % des records masculins et 65,9 % des records féminins sont enregistrés dans une fenêtre comprise entre 22 et 28 ans.
 
 On note cependant une divergence  selon le genre. Les hommes semblent présenter une précocité plus marquée, avec 38,4 % d'entre eux atteignant leur pic entre 21 et 24 ans, contre seulement 27,7 % pour les femmes dans cette même tranche. À l'inverse, la distribution féminine est plus décalée vers la maturité : 58,2 % des femmes atteignent leur âge au pic à partir de 26 ans, alors que cette proportion est de 48,7 % chez les hommes.\
 
@@ -238,7 +238,7 @@ Distribution de l'âge au pic
 
 -   **Proximité entre sexes :** En **Marche**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes. \vspace{5pt}
 -   **Dispersion :** La famille **Lancers** et le **Marathon** montrent des distributions supérieures très étirées, signalant une plus grande variabilité de l'âge au pic. \vspace{5pt}
--   **Valeurs extrêmes :** Les **Lancers** et le **5000 - 10000** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement au épreuves combinées ou aux Haies.
+-   **Valeurs extrêmes :** Les **Lancers** et le **Demi-fond long** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement au épreuves combinées ou aux Haies.
 
 \vspace{4pt}
 
@@ -278,6 +278,8 @@ Distribution de l'âge au pic
 
 \noindent Plusieurs constats se dégagent de cette analyse par discipline :
 
+\vspace{5pt}
+
 **Disciplines à pic précoce :** Les épreuves de sprint (100m, 200m, 400m) et le 800m chez les hommes présentent les âges moyens les plus bas (22.9 à 25.6 ans), avec des médianes encore plus précoces pour certaines (22-23 ans).
 
 \vspace{5pt}
@@ -286,7 +288,7 @@ Distribution de l'âge au pic
 
 \vspace{5pt}
 
-**Variabilité intra-discipline :** L'écart-type et l'étendue (min-max) varient considérablement selon les épreuves. Le marteau hommes présente la plus grande variabilité (SD = 5.0, étendue de 24 ans), tandis que les haies et les sprints montrent une plus grande homogénéité (SD ≈ 2.5-3.5 ans).
+**Variabilité intra-discipline :** L'écart-type et l'étendue (min-max) varient considérablement selon les épreuves. Le marteau hommes présente la plus grande variabilité (SD = 5.0, étendue de 24 ans), tandis que les haies et les sprints montrent une plus grande homogénéité (SD $\approx$ 2,5-3,5 ans).
 
 \vspace{5pt}
 
@@ -315,7 +317,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \noindent L'observation de la @fig-hist-men révèle des profils variés :
 
--   Certaines familles, comme le **800 - 1500 - Steeple**, montrent une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif. \vspace{5pt}
+-   Certaine famille, comme le **Demi-fond**, montre une concentration très marquée sur des âges précoces avec une chute rapide de l'effectif. \vspace{5pt}
 -   D'autres, comme les **Lancers** et le **Marathon**, présentent une distribution décalée vers la droite et plus étalée, suggérant une plus grande hétérogénéité des âges de performance. \vspace{5pt}
 -   De manière générale, on observe une "queue" de distribution vers la droite (asymétrie positive), indiquant que si l'accès au haut niveau est peu observé avant 20 ans, le maintien de la performance peut se prolonger tardivement pour certains individus.
 
@@ -325,11 +327,11 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 ### Test statistique de normalité {.unnumbered .unlisted}
 
-\noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Ce test évalue formellement si les données peuvent être approchées par une loi normale :
+\noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Ce test évalue formellement si les données de chaque groupe peuvent être modélisées par une loi normale :
 
-- **$H_0$ :** Les données peuvent être raisonnablement approchées par une loi normale
-- **$H_1$ :** Les données ne peuvent pas être approchées par une loi normale
-- **Décision :** Si $p < 0,05$, on rejette H₀ (normalité rejetée) → nécessité d'utiliser des tests non paramétriques
+- **$H_0$ :** La distribution de l'âge au pic selon la famille (ou la discipline) peut être raisonnablement approchée par une loi normale.
+- **$H_1$ :** La distribution de l'âge au pic selon la famille (ou la discipline) ne peut pas être approchée par une loi normale.
+- **Décision :** Si $p < 0,05$, on rejette **$H_0$** (normalité rejetée) et il est nécessaire d'utiliser des tests non paramétriques.
 
 Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
@@ -374,14 +376,10 @@ Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test a
     - **$H_0$ :** Les distributions de l'âge au pic sont identiques entre hommes et femmes.
     - **$H_1$ :** Les distributions de l'âge au pic diffèrent entre hommes et femmes.
 
-\vspace{5pt}
-
 -   **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants (comparaison par familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
     - **$H_0$ :** Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
     - **$H_1$ :** Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
     
-\vspace{5pt}
-
 -   **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
 
 ### Résultats {.unnumbered .unlisted}
@@ -423,7 +421,7 @@ Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test a
 
 \vspace{5pt}
 
-\noindent Au seuil de significativité $\alpha = 0,05$, l'hypothèse nulle d'égalité des médianes est rejetée pour quatre familles : le Fond (5000-10000), le Marathon, le Demi-fond (800-1500-Steeple) et les Haies. Pour les cinq autres familles (Lancers, Sprint, Sauts, Marche et Épreuves combinées), aucune différence statistiquement significative n'est démontrée entre les sexes.\
+\noindent Au seuil de significativité $\alpha = 0,05$, l'hypothèse nulle d'égalité des médianes est rejetée pour quatre familles : le Demi-fond long (5000-10000), le Marathon, le Demi-fond (800-1500-Steeple) et les Haies. Pour les cinq autres familles (Lancers, Sprint, Sauts, Marche et Épreuves combinées), aucune différence statistiquement significative n'est démontrée entre les sexes.\
 
 \setlength{\parindent}{0pt}
 

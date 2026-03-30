@@ -270,6 +270,68 @@ ggplot(stats_pic_equilibre, aes(x = Age_Pic_Obs, fill = Sex)) +
   )
 ggsave("outputs/histogramme_global.png", width = 8, height = 5, dpi = 300)
 ```
+```{r}
+# --- ANALYSE DES CHIFFRES POUR LE TEXTE ---
+
+# 1. Calcul du pourcentage entre 22 et 28 ans (Global)
+prop_22_28 <- stats_pic_equilibre %>%
+  summarise(prop = mean(Age_Pic_Obs >= 22 & Age_Pic_Obs <= 28) * 100)
+print(paste0("Pourcentage global entre 22 et 28 ans : ", round(prop_22_28$prop, 1), "%"))
+
+# 2. Comparaison Précocité (21-24 ans) vs Maturité (26 ans+) par Sexe
+comparaison_sexe <- stats_pic_equilibre %>%
+  group_by(Sex) %>%
+  summarise(
+    precoces_21_24 = mean(Age_Pic_Obs >= 21 & Age_Pic_Obs <= 24) * 100,
+    tardifs_26_plus = mean(Age_Pic_Obs >= 26) * 100
+  )
+print("--- Comparaison des proportions (%) ---")
+print(comparaison_sexe)
+
+# 3. Identification des athlètes extrêmes (Min et Max)
+extremes <- stats_pic_equilibre %>%
+  filter(Age_Pic_Obs == min(Age_Pic_Obs) | Age_Pic_Obs == max(Age_Pic_Obs)) %>%
+  select(Sex, discipline, Age_Pic_Obs) %>%
+  arrange(Age_Pic_Obs)
+
+print("--- Détails des records extrêmes (Min et Max) ---")
+print(extremes)
+```
+```{r}
+# --- IDENTIFICATION DES ATHLÈTES EXTRÊMES ET CHIFFRES CLÉS ---
+
+# 1. Les plus jeunes au pic de performance (Top 5)
+jeunes_talents <- stats_pic_equilibre %>%
+  arrange(Age_Pic_Obs) %>%
+  select(Nom, Sex, discipline, Age_Pic_Obs) %>%
+  head(5)
+
+# 2. Les plus "vétérans" au pic de performance (Top 5)
+veterans_performance <- stats_pic_equilibre %>%
+  arrange(desc(Age_Pic_Obs)) %>%
+  select(Nom, Sex, discipline, Age_Pic_Obs) %>%
+  head(5)
+
+# 3. Calcul précis pour la phrase sur les 22-28 ans
+stats_22_28 <- stats_pic_equilibre %>%
+  group_by(Sex) %>%
+  summarise(
+    prop_22_28 = mean(Age_Pic_Obs >= 22 & Age_Pic_Obs <= 28) * 100,
+    prop_21_24 = mean(Age_Pic_Obs >= 21 & Age_Pic_Obs <= 24) * 100,
+    prop_26_plus = mean(Age_Pic_Obs >= 26) * 100
+  )
+
+print("--- Les 5 records les plus précoces ---")
+print(jeunes_talents)
+
+print("--- Les 5 records les plus tardifs ---")
+print(veterans_performance)
+
+print("--- Proportions par sexe (%) ---")
+print(stats_22_28)
+```
+
+
 
 ```{r}
 ggplot(stats_pic_equilibre, aes(x = Famille, y = Age_Pic_Obs, fill = Sex)) +
