@@ -820,7 +820,7 @@ où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est 
 | $c$ | $141{,}92$ | $11{,}915$ |
 | $d$ | $0{,}001$ | $0{,}001$ |
 | $t_{\text{pic}}$ | $26$ ans $[24{,}5 ; 27{,}5]$ | $25{,}6$ ans $[23{,}6 ; 27{,}6]$ |
-| RMSE | $0{,}39$ km/h | $0{,}529$ km/h |
+| RMSE | $0{,}1935$ km/h | $0{,}319$ km/h |
 | AIC | $-5{,}11$ | $19{,}48$ |
 | BIC | $0{,}77$ | $25{,}58$ |
 
@@ -847,7 +847,7 @@ Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annu
 **Âge au pic et qualité d'ajustement.**
 \setlength{\parindent}{5pt}
 
-\noindent L'âge au pic estimé est très similaire entre sexes : 26,0 ans chez les hommes et 25,6 ans chez les femmes. L'ajustement est meilleur pour les hommes que pour les femmes, comme en témoigne un RMSE plus faible (0,39 vs 0,53 km/h). Les critères AIC et BIC, non comparables entre sexes car issus de jeux de données distincts, sont utilisés ici pour la comparaison entre modèles au sein de chaque groupe.
+\noindent L'âge au pic estimé est très similaire entre sexes : 26,0 ans chez les hommes et 25,6 ans chez les femmes. L'ajustement est meilleur pour les hommes que pour les femmes, comme en témoigne un RMSE plus faible (0,1935 km/h vs 0,319 km/h). Les critères AIC et BIC, non comparables entre sexes car issus de jeux de données distincts, sont utilisés ici pour la comparaison entre modèles au sein de chaque groupe.
 
 #### Modèle IMAP
 
@@ -1138,8 +1138,6 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 | Sprint | Femmes | 0.971 | 0.032 | 96 | non |
 : Résultats des tests de Shapiro-Wilk par famille {#tbl-shapiro-famille}
 
-\vspace{5pt}
-
 ##### Échelle des épreuves individuelles {.unnumbered}
 
 | Discipline     | Sexe   | Statistique W | $p$-value | Effectif ($n$) | Normalité |
@@ -1164,6 +1162,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 *Note : Les résultats pour les disciplines restantes suivent la même méthodologie (n=32).*
 
+\newpage
 
 #### Résultats complets des tests de Wilcoxon par familles {.unnumbered}
 
@@ -1204,8 +1203,6 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 : Tests de Wilcoxon-Mann-Whitney par discipline {#tbl-wilcox-annexe}
 
 *Note : Les haies hautes et les épreuves combinées n'apparaissent pas car ce ne sont pas les mêmes épreuves selon le sexe.*
-
-\vspace{20pt}
 
 \newpage
 
