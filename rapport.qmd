@@ -421,6 +421,8 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \noindent Le tableau suivant présente les résultats des tests de comparaison de moyennes de rangs (Wilcoxon-Mann-Whitney) effectués au sein de chaque famille d'épreuves pour évaluer l'effet du sexe sur l'âge au pic observé ($n = 1344$).
 
+\newpage
+
 | Famille                          | Médiane H | Médiane F | Différence (F-H) | Conclusion |
 |:------------------|:----------:|:----------:|:---------------:|:----------:|
 |   Demi-fond long                  |   23.0    |   26.0    |    -3.0    |   **Significatif**   |
@@ -1086,8 +1088,13 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 # Références {.unnumbered}
 
+\begingroup
+\setlength{\parskip}{10pt}
+
 ::: {#refs}
 :::
+
+\endgroup
 
 \newpage
 
