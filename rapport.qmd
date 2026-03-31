@@ -11,6 +11,8 @@ format:
       text: |
         \usepackage{float}
         \usepackage[hidelinks]{hyperref}
+        \usepackage{caption}
+        \captionsetup{justification=centering, singlelinecheck=false}
     cite-method: citeproc
     link-citations: true 
     documentclass: article
@@ -492,7 +494,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 **Perspectives et limites** \setlength{\parindent}{15pt}
 
-\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels comme la structure des circuits professionnels ou des contextes socio-économiques participent aux écarts observés (Capranica et al. [@Capranica2013]). De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.
+\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels comme la structure des circuits professionnels ou des contextes socio-économiques participent aux écarts observés (Capranica et al. [@Capranica2013]). De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.\
 
 \noindent Ces résultats appuient néanmoins l'idée d'une segmentation par famille et par discipline, tout en tenant compte de la variable du sexe, pour la suite de l'étude. L'âge au pic n'étant qu'un indicateur ponctuel, il semble utile de modéliser la durée de maintien au plus haut niveau en conservant cette distinction, afin de mieux appréhender les trajectoires de performance complètes.
 
@@ -881,7 +883,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \noindent Le paramètre $\alpha_0$ contrôle le taux initial de croissance cellulaire : sa valeur plus élevée chez les hommes ($0{,}137$ contre $0{,}041$) est cohérente avec une phase de progression plus rapide visible sur le graphique entre 16 et 24 ans, où la courbe masculine monte plus abruptement. Le paramètre $\alpha_r$ gouverne la vitesse à laquelle cette croissance sature : sa valeur très faible chez les hommes ($0{,}006$) traduit une saturation lente, c'est-à-dire un plateau étendu autour du pic, bien visible sur le panneau droit de la figure entre 25 et 31 ans. Chez les femmes, $\alpha_r$ plus élevé ($0{,}031$) produit une saturation plus rapide et un pic plus prononcé, cohérent avec la forme plus arquée de la courbe féminine.\
 
-\noindent Le paramètre $\beta_r$ décrit la vitesse du déclin fonctionnel : sa valeur fortement négative chez les hommes ($-0{,}116$) indique un déclin relativement rapide après le pic, tandis que la valeur quasi nulle chez les femmes ($-0{,}001$) suggère un déclin plus graduel sur la fenêtre d'observation. Cette différence se lit directement sur la figure : la courbe masculine descend plus nettement après 30 ans, tandis que la courbe féminine marque un déclin plus progressif jusqu'à 35 ans avant de s'accentuer.
+\noindent Le paramètre $\beta_r$ décrit la vitesse du déclin fonctionnel : sa valeur fortement négative chez les hommes ($-0{,}116$) indique un déclin relativement rapide après le pic, tandis que la valeur quasi nulle chez les femmes ($-0{,}001$) suggère un déclin plus graduel sur la fenêtre d'observation. Cette différence se lit directement sur la figure : la courbe masculine descend plus nettement après 30 ans, tandis que la courbe féminine marque un déclin plus progressif jusqu'à 35 ans avant de s'accentuer.\
 
 \setlength{\parindent}{0pt}
 **Âge au pic et qualité d'ajustement.**
@@ -967,7 +969,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 ## Méthode
 
-\noindent Afin d'évaluer la cohérence des résultats obtenus par les deux modèles, nous proposons une comparaison directe des âges au pic estimés par chaque modèles avec l'âge empirique. En effet, l'étude 1 fournit une estimation empirique de l'âge au pic, défini comme la moyenne d'âge des athlètes à leur meilleure performance enregistrée, pour chaque couple (sexe × discipline).\
+\noindent Afin d'évaluer la cohérence des résultats obtenus par les deux modèles, nous proposons une comparaison directe des âges au pic estimés par chaque modèles avec l'âge au pic empirique. En effet, l'étude 1 fournit une estimation empirique de l'âge au pic, défini comme la moyenne d'âge des athlètes à leur meilleure performance enregistrée, pour chaque couple (sexe × discipline).\
 
 \noindent La comparaison entre les trois estimations (étude 1, Moore, IMAP) est réalisée discipline par discipline et séparément pour les hommes et les femmes. L'écart entre l'estimation empirique de l'étude 1 et les estimations modélisées de l'étude 2 constitue un indicateur de cohérence entre les deux approches.
 
@@ -1020,7 +1022,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \noindent Cependant, la convergeance sur certaines disciplines est encourageante. L'accord entre les trois estimations est très bon pour le marathon, le 1500m et le 5000m, avec des écarts inférieurs à 1 an dans la majorité des cas. Ce résultat est cohérent avec la littérature : Allen et Hopkins [@Allen2015] soulignent que les disciplines d'endurance longue présentent des trajectoires de performance plus régulières et moins sensibles aux variations individuelles, ce qui favorise la convergence entre une estimation empirique et une modélisation paramétrique.\
 
-\noindent Au-delà des valeurs absolues, les deux modèles reproduisent fidèlement l'ordre relatif des disciplines : les lancers et le marathon présentent les pics les plus tardifs, le sprint et le demi-fond les plus précoces, conformément aux attentes de la littérature [@Allen2015; @Komi1992; @Tanaka2003]. Cette restitution de la structure qualitative des données, cohérente avec les mécanismes physiologiques connus, constitue une validation indirecte de la pertinence des deux modèles sur nos données.
+\noindent Au-delà des valeurs absolues, les deux modèles reproduisent fidèlement l'ordre relatif des disciplines : les lancers et le marathon présentent les pics les plus tardifs, le sprint et le demi-fond les plus précoces, conformément aux attentes de la littérature évoquées précédemment. Cette restitution de la structure qualitative des données, cohérente avec les mécanismes physiologiques connus, constitue une validation indirecte de la pertinence des deux modèles sur nos données.
 
 \newpage
 
@@ -1034,7 +1036,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \noindent Plusieurs limites doivent toutefois être soulignées. La principale concerne le calcul de l'âge : en l'absence de la date exacte de chaque compétition, l'âge a été approximé par la différence entre l'année de la performance et l'année de naissance de l'athlète. Cette approximation introduit une incertitude pouvant atteindre jusqu'à un an sur l'âge réel au moment de la performance, ce qui invite à interpréter les écarts inférieurs à 1 an entre les estimations avec prudence. Par ailleurs, la restriction aux athlètes retraités avant 2022 et le filtrage au Top 32 par discipline, bien que nécessaires pour garantir la représentativité des trajectoires, réduisent la taille des échantillons et peuvent introduire un biais de sélection vers les carrières les plus longues et les plus performantes.\
 
-\noindent Au-delà des limites méthodologiques évoquées, plusieurs facteurs contextuels propres à la période couverte (1985–2024) mériteraient d'être approfondis dans de futures recherches. D'abord, les évolutions technologiques majeures — telles que l'introduction des chaussures à plaques carbone en fond et marathon ou le développement des perches en fibre de carbone — ont pu modifier structurellement les niveaux de performance absolus selon les époques, sans que cet effet ne soit isolé dans notre modélisation. Ensuite, les périodes de dopage institutionnalisé documentées dans certains pays et certaines disciplines durant les années 1980–2000 sont susceptibles d'avoir introduit un biais dans les meilleures performances enregistrées à certains âges, affectant potentiellement la forme des courbes ajustées. Enfin, l'internationalisation progressive de l'athlétisme — et notamment l'émergence des athlètes est-africains dans les disciplines de fond et de marathon — a structurellement reconfiguré les profils de performance au fil des décennies, rendant l'hypothèse de stationnarité implicite aux deux modèles discutable sur un horizon aussi long. Prendre en compte ces dynamiques temporelles constituerait une piste naturelle pour enrichir la modélisation proposée.
+\noindent Au-delà des limites méthodologiques évoquées, plusieurs facteurs contextuels propres à la période couverte (1985–2022) mériteraient d'être approfondis dans de futures recherches. D'abord, les évolutions technologiques majeures — telles que l'introduction des chaussures à plaques carbone en fond et marathon ou le développement des perches en fibre de carbone — ont pu modifier structurellement les niveaux de performance absolus selon les époques, sans que cet effet ne soit isolé dans notre modélisation. Ensuite, les périodes de dopage institutionnalisé documentées dans certains pays et certaines disciplines durant les années 1980–2000 sont susceptibles d'avoir introduit un biais dans les meilleures performances enregistrées à certains âges, affectant potentiellement la forme des courbes ajustées. Enfin, l'internationalisation progressive de l'athlétisme et notamment l'émergence des athlètes est-africains dans les disciplines de fond et de marathon a structurellement reconfiguré les profils de performance au fil des décennies, rendant l'hypothèse de stationnarité implicite aux deux modèles discutable sur un horizon aussi long. Prendre en compte ces dynamiques temporelles constituerait une piste naturelle pour enrichir la modélisation proposée.
 
 \newpage
 
@@ -1057,14 +1059,15 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 ::: {#refs}
 :::
-
 \endgroup
 
 \newpage
 
+\setlength{\parskip}{0.3em}
+
 # Annexes {.unnumbered}
 
-#### Distributions par discipline {#sec-annexe-planches .unnumbered}
+#### Distributions par discipline {#sec-annexe-planches}
 
 \vspace*{\fill}
 
@@ -1079,7 +1082,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 \vspace*{\fill}
 \newpage
 
-#### Distributions par famille {#sec-annexe-hist-fam .unnumbered} 
+#### Distributions par famille {#sec-annexe-planches}
 
 ![Distributions par famille (hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men fig-pos="H" width="85%"}
 
@@ -1087,7 +1090,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-#### Diagnostics de normalité par discipline (QQ-plots) {#sec-annexe-qqplots .unnumbered} 
+#### Diagnostics de normalité par discipline (QQ-plots) {#sec-annexe-qqplots} 
 
 \vspace*{\fill}
 
@@ -1103,7 +1106,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-#### Diagnostics de normalité par famille (QQ-plots) {.unnumbered} 
+#### Diagnostics de normalité par famille (QQ-plots) {#sec-annexe-qqplots-famille} 
 
 ![QQ-plots Familles (H)](outputs/qq_famille_hommes.png){#fig-qq-fam-men fig-pos="H" width="85%"}
 
@@ -1112,9 +1115,9 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 \newpage
 
 
-#### Résultats détaillés des tests de normalité {.unnumbered}
+#### Résultats détaillés des tests de normalité {#sec-annexe-testn}
 
-##### Échelle des familles de disciplines {.unnumbered}
+##### Échelle des familles de disciplines {#sec-annexe-test-f}
 
 | Famille | Sexe | Statistique W | $p$-value | Effectif ($n$) | Normalité |
 |:---|:---:|:---:|:---:|:---:|:---:|
@@ -1138,7 +1141,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 | Sprint | Femmes | 0.971 | 0.032 | 96 | non |
 : Résultats des tests de Shapiro-Wilk par famille {#tbl-shapiro-famille}
 
-##### Échelle des épreuves individuelles {.unnumbered}
+##### Échelle des épreuves individuelles {#sec-annexe-test-d}
 
 | Discipline     | Sexe   | Statistique W | $p$-value | Effectif ($n$) | Normalité |
 |:---------------|:------:|:-------------:|:---------:|:--------------:|:---------:|
@@ -1164,7 +1167,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-#### Résultats complets des tests de Wilcoxon par familles {.unnumbered}
+#### Résultats complets des tests de Wilcoxon par familles {#sec-annexe-testw}
 
 | Famille | $n$ | Médiane H | Médiane F | Différence | $p$-value | Significatif |
 |:---------------|:--------:|:--------:|:--------:|:--------:|:--------:|:--------:|
@@ -1206,7 +1209,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-#### Comparaisons inter-disciplines (Extrait du Test de Dunn) {.unnumbered}
+#### Comparaisons inter-disciplines (Extrait du Test de Dunn) {#sec-annexe-testd}
 
 Le test de Kruskal-Wallis ayant révélé une différence globale significative entre les disciplines ($p < 0,001$), le test de Dunn permet d'identifier les paires d'épreuves dont les âges au pic diffèrent de manière probante. Le tableau ci-dessous extrait les comparaisons les plus illustratives des dynamiques observées.
 
@@ -1225,7 +1228,7 @@ Le test de Kruskal-Wallis ayant révélé une différence globale significative 
 
 \newpage
 
-#### Ages au pic estimés par discipline {#sec-age-pic-discipline .unnumbered}
+#### Ages au pic estimés par discipline {#sec-age-pic-discipline}
 
 | Discipline    | Moore H            | IMAP H               | Moore F            | IMAP F             |
 |:--------------|:------------------:|:--------------------:|:------------------:|:------------------:|
@@ -1255,7 +1258,7 @@ Le test de Kruskal-Wallis ayant révélé une différence globale significative 
 
 \newpage
 
-#### Ajustement du modèle de Moore à nos données pour chaque discipline {#sec-annexe-courbes-Moore .unnumbered} 
+#### Ajustement du modèle de Moore à nos données pour chaque discipline {#sec-annexe-courbes-Moore} 
 
 ::: {#fig-moore-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_lancer.png}}
@@ -1313,7 +1316,7 @@ Modèles de Moore pour les épreuves combinées - Points : meilleure performance
 
 \newpage
 
-#### Ajustement du modèle IMAP à nos données pour chaque discipline {#sec-annexe-courbes-IMAP .unnumbered} 
+#### Ajustement du modèle IMAP à nos données pour chaque discipline {#sec-annexe-courbes-IMAP} 
 
 ::: {#fig-imap-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_lancers.png}}
@@ -1371,7 +1374,7 @@ Modèles IMAP pour les épreuves combinées - Points : meilleure performance ann
 
 \newpage
 
-#### Comparaison des modèles {#sec-annexe-comparaison-modeles .unnumbered} 
+#### Comparaison des modèles {#sec-annexe-comparaison-modeles} 
 
 | Discipline         | Moore H | IMAP H | Moore F | IMAP F |
 |--------------------|:-------:|:------:|:-------:|:------:|
