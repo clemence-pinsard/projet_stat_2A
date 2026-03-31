@@ -27,6 +27,11 @@ fontsize: 11pt
 papersize: a4
 geometry: top=1.5cm, bottom=1.5cm, left=2.5cm, right=2.5cm
 bibliography: references.bib
+csl: https://raw.githubusercontent.com/citation-style-language/styles/master/ieee.csl
+citeproc: true
+# Ajoute ceci dans ton YAML :
+metadata:
+  reference-section-title: "Références"
 link-citations: true 
 nocite: "@*"
 language:
@@ -380,14 +385,14 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 - **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe).
   \begin{itemize}
-    \item[---] **$H_0$ :** Les distributions de l'âge au pic sont identiques entre hommes et femmes.
-    \item[---] **$H_1$ :** Les distributions de l'âge au pic diffèrent entre hommes et femmes.
+    \item[---] $H_0$ : Les distributions de l'âge au pic sont identiques entre hommes et femmes.
+    \item[---] $H_1$ : Les distributions de l'âge au pic diffèrent entre hommes et femmes.
   \end{itemize}
 
 - **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants. Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
   \begin{itemize}
-    \item[---] **$H_0$ :** Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
-    \item[---] **$H_1$ :** Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
+    \item[---] $H_0$ : Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
+    \item[---] $H_1$ : Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
   \end{itemize}
     
 - **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
@@ -462,25 +467,25 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 **Distribution globale**
 \setlength{\parindent}{15pt}
 
-\noindent L'âge au pic observé se concentre majoritairement entre 22 et 28 ans pour les deux sexes. L'analyse fait apparaître une asymétrie positive, indiquant que si l'accès précoce au haut niveau est peu fréquent, certains athlètes maintiennent leur performance au-delà de 30 ans. Les médianes obtenues (25 ans chez les hommes, 26 ans chez les femmes) semblent cohérentes avec les valeurs de référence de la littérature. Par exemple, une étude sur les finalistes mondiaux situe l'âge médian de performance maximale autour de 26 ans [@Hollings2014].\
+\noindent L'âge au pic observé se concentre majoritairement entre 22 et 28 ans pour les deux sexes. L'analyse fait apparaître une asymétrie positive, indiquant que si l'accès précoce au haut niveau est peu fréquent, certains athlètes maintiennent leur performance au-delà de 30 ans. Les médianes obtenues (25 ans chez les hommes, 26 ans chez les femmes) semblent cohérentes avec les valeurs de référence de la littérature. Par exemple, une étude de Hollings et al. [@Hollings2014] sur les finalistes mondiaux situe l'âge médian de performance maximale autour de 26 ans.\
 
 \setlength{\parindent}{0pt}
 **L'influence du sexe et de la discipline** 
 \setlength{\parindent}{15pt}
 
-\noindent Indépendamment du sexe, la famille de disciplines apparaît comme un facteur lié à la chronologie des carrières. Le groupe Sprint--Sauts--Haies affiche les pics les plus précoces et forme un ensemble homogène sans différence interne significative. À l'inverse, le Marathon et les Lancers présentent les médianes les plus tardives et les distributions les plus étalées. Cette opposition pourrait s'expliquer par les modèles de développement athlétique : les épreuves de puissance explosive culminent souvent tôt, tandis que les disciplines d'endurance ou de force technique pourraient nécessiter une accumulation d'expérience plus longue [@Allen2015]. Concernant l'effet du sexe à l'échelle globale, la différence d'un an entre les médianes féminines et masculines est statistiquement significative ($p = 0,0016$), mais d'une ampleur mesurée. Elle constitue une tendance qui cache des profils très variés selon les spécialités.\
+\noindent Indépendamment du sexe, la famille de disciplines apparaît comme un facteur lié à la chronologie des carrières. Le groupe Sprint--Sauts--Haies affiche les pics les plus précoces et forme un ensemble homogène sans différence interne significative. À l'inverse, le Marathon et les Lancers présentent les médianes les plus tardives et les distributions les plus étalées. Cette opposition pourrait s'expliquer par les modèles de développement athlétique : les épreuves de puissance explosive culminent souvent tôt, tandis que les disciplines d'endurance ou de force technique pourraient nécessiter une accumulation d'expérience plus longue (Allen et al. [@Allen2015]). Concernant l'effet du sexe à l'échelle globale, la différence d'un an entre les médianes féminines et masculines est statistiquement significative ($p = 0,0016$), mais d'une ampleur mesurée. Elle constitue une tendance qui cache des profils très variés selon les spécialités.\
 
 \setlength{\parindent}{0pt}
 
 **Lien entre Sexe et Discipline** \setlength{\parindent}{15pt}
 
-\noindent L'analyse par épreuve suggère que cet effet du sexe n'est pas uniforme. L'écart est significatif dans les familles d'endurance (Fond, Marathon, Demi-fond). Cette observation laisse supposer que les trajectoires féminines dans ces épreuves pourraient être caractérisées par une maturité plus tardive. Des travaux mentionnent que ce décalage pourrait être lié à des différences d'utilisation des lipides durant l'effort prolongé, favorisant potentiellement une forme de résistance métabolique à long terme [@Tarnopolsky2008]. À l'inverse, l'absence de différence significative pour le Sprint et les Sauts suggère que pour les disciplines explosives, les fenêtres temporelles de performance sont proches entre les sexes. Le lancer du disque constitue le seul cas où la médiane masculine dépasse celle des femmes ($p = 0,012$).\
+\noindent L'analyse par épreuve suggère que cet effet du sexe n'est pas uniforme. L'écart est significatif dans les familles d'endurance (Fond, Marathon, Demi-fond). Cette observation laisse supposer que les trajectoires féminines dans ces épreuves pourraient être caractérisées par une maturité plus tardive. Des travaux mentionnent que ce décalage pourrait être lié à des différences d'utilisation des lipides durant l'effort prolongé, favorisant potentiellement une forme de résistance métabolique à long terme (Tarnopolsky et al. [@Tarnopolsky2008]). À l'inverse, l'absence de différence significative pour le Sprint et les Sauts suggère que pour les disciplines explosives, les fenêtres temporelles de performance sont proches entre les sexes. Le lancer du disque constitue le seul cas où la médiane masculine dépasse celle des femmes ($p = 0,012$).\
 
 \setlength{\parindent}{0pt}
 
 **Perspectives et limites** \setlength{\parindent}{15pt}
 
-\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels --- comme la structure des circuits professionnels ou des contextes socio-économiques --- participent aux écarts observés [@Capranica2013]. De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.
+\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels --- comme la structure des circuits professionnels ou des contextes socio-économiques --- participent aux écarts observés (Capranica et al. [@Capranica2013]). De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.
 
 \noindent Ces résultats appuient néanmoins l'idée d'une segmentation par famille et par discipline, tout en tenant compte de la variable du sexe, pour la suite de l'étude. L'âge au pic n'étant qu'un indicateur ponctuel, il semble utile de modéliser la durée de maintien au plus haut niveau en conservant cette distinction, afin de mieux appréhender les trajectoires de performance complètes.
 
@@ -958,15 +963,15 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 ### Âge au pic selon la famille de disciplines
 
-\noindent Les résultats confirment l'hypothèse d'une variabilité de l'âge au pic selon la filière énergétique sollicitée, conformément aux travaux d'Allen et Hopkins [@Allen2015]. Le pic plus tardif observé dans les lancers (28--30 ans) s'explique par la dépendance de ces disciplines à la force maximale, qui atteint son apogée plus tardivement que la vitesse explosive [@Komi1992]. À l'inverse, la précocité relative des épreuves de sprint et de demi-fond peut être associée à la prédominance des fibres musculaires rapides et à la capacité anaérobie, qualités qui culminent plus tôt dans la vie adulte [@Tanaka2003]. Le marathon constitue un cas particulier : le pic tardif estimé à près de 30 ans pour les deux sexes est cohérent avec la littérature sur l'endurance longue, qui souligne le rôle déterminant de l'expérience de course accumulée et de la maturité physiologique aérobie [@Allen2015].
+\noindent Les résultats confirment l'hypothèse d'une variabilité de l'âge au pic selon la filière énergétique sollicitée, conformément aux travaux d'Allen et Hopkins [@Allen2015]. Le pic plus tardif observé dans les lancers (28--30 ans) s'explique par la dépendance de ces disciplines à la force maximale, qui atteint son apogée plus tardivement que la vitesse explosive (Komi et al. [@Komi1992]). À l'inverse, la précocité relative des épreuves de sprint et de demi-fond peut être associée à la prédominance des fibres musculaires rapides et à la capacité anaérobie, qualités qui culminent plus tôt dans la vie adulte (Tanaka et al. [@Tanaka2003]). Le marathon constitue un cas particulier : le pic tardif estimé à près de 30 ans pour les deux sexes est cohérent avec la littérature sur l'endurance longue, qui souligne le rôle déterminant de l'expérience de course accumulée et de la maturité physiologique aérobie [@Allen2015].
 
 ### Différences entre sexes
 
-\noindent Les écarts observés entre hommes et femmes restent faibles (1 à 2 ans au maximum) et non systématiques selon les disciplines, ce qui est cohérent avec les conclusions d'Allen et Hopkins [@Allen2015]. Ces différences pourraient partiellement s'expliquer par des trajectoires de développement hormonal distinctes : la testostérone, dont le pic survient plus tôt chez les hommes, favorise un gain de masse musculaire et de puissance explosive précoce, tandis que les adaptations physiologiques féminines, notamment cardiovasculaires, se développeraient sur une fenêtre temporelle légèrement plus étendue [@Deaner2012]. Toutefois, la faiblesse des écarts invite à nuancer l'influence du sexe comme facteur déterminant de l'âge au pic en athlétisme d'élite.
+\noindent Les écarts observés entre hommes et femmes restent faibles (1 à 2 ans au maximum) et non systématiques selon les disciplines, ce qui est cohérent avec les conclusions d'Allen et Hopkins [@Allen2015]. Ces différences pourraient partiellement s'expliquer par des trajectoires de développement hormonal distinctes : la testostérone, dont le pic survient plus tôt chez les hommes, favorise un gain de masse musculaire et de puissance explosive précoce, tandis que les adaptations physiologiques féminines, notamment cardiovasculaires, se développeraient sur une fenêtre temporelle légèrement plus étendue (Deaner et al. [@Deaner2012]). Toutefois, la faiblesse des écarts invite à nuancer l'influence du sexe comme facteur déterminant de l'âge au pic en athlétisme d'élite.
 
 ### Comparaison des modèles Moore et IMAP
 
-\noindent L'absence de dominance systématique d'un modèle sur l'autre suggère que les deux formulations capturent des dynamiques similaires sur la fenêtre d'observation restreinte (16--40 ans). Les divergences les plus marquées dans les disciplines de sprint et de demi-fond pourraient s'expliquer par la sensibilité respective des deux modèles aux optima locaux sur des données peu étendues aux âges extrêmes. La richesse interprétative du modèle IMAP, dont les paramètres sont ancrés dans une théorie biologique cellulaire [@Berthelot2019], constitue un argument en sa faveur indépendamment des seuls critères statistiques, notamment pour des usages prospectifs ou comparatifs entre populations. \newpage
+\noindent L'absence de dominance systématique d'un modèle sur l'autre suggère que les deux formulations capturent des dynamiques similaires sur la fenêtre d'observation restreinte (16--40 ans). Les divergences les plus marquées dans les disciplines de sprint et de demi-fond pourraient s'expliquer par la sensibilité respective des deux modèles aux optima locaux sur des données peu étendues aux âges extrêmes. La richesse interprétative du modèle IMAP, dont les paramètres sont ancrés dans une théorie biologique cellulaire (Berthelot et al. [@Berthelot2019]), constitue un argument en sa faveur indépendamment des seuls critères statistiques, notamment pour des usages prospectifs ou comparatifs entre populations. \newpage
 
 # Comparaison des deux approches : âge au pic observé et âge au pic modélisé
 
@@ -1070,9 +1075,9 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \newpage
 
-# Références {.unnumbered}
+\setlength{\parskip}{1em} 
 
-\noindent Voici la liste de toutes les références bibliographiques utiles à la rédaction de ce rapport :
+# Références {.unnumbered}
 
 ::: {#refs}
 :::
