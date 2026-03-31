@@ -2,6 +2,11 @@
 title: ""
 format:
   pdf:
+    colorlinks: true
+    linkcolor: black
+    urlcolor: black
+    citecolor: black
+    toccolor: black
     include-in-header:
       text: |
         \usepackage{float}
@@ -144,7 +149,7 @@ Imad {Hamri}\\
 
 \noindent L'objectif principal de ce projet est d'analyser la relation entre l'âge et la performance en athlétisme. Plus spécifiquement, nous cherchons à comprendre comment évoluent les performances athlétiques au fil du temps et à déterminer l'âge auquel les athlètes atteignent leur pic de performance.\
 
-\noindent Certaines études caractérisent la maturité athlétique d'une discipline par l'âge moyen de ses compétiteurs lors d'une saison donnée. Cette approche peut toutefois être trompeuse : selon les pays ou les disciplines, les athlètes ne débutent ni ne terminent leur carrière au même âge, ce qui fait varier cet âge moyen indépendamment du niveau de performance.  Notre étude se concentre donc sur l'identification de l'âge au pic de performance, c'est-à-dire l'âge auquel les capacités athlétiques sont à leur maximum. Cette approche permet de mieux comprendre la dynamique temporelle de la performance sportive, caractérisée par une phase de croissance progressive des capacités, suivie d'un plateau puis d'un déclin lié au vieillissement.
+\noindent Certaines études caractérisent la maturité athlétique d'une discipline par l'âge moyen de ses compétiteurs lors d'une saison donnée. Cette approche peut toutefois être trompeuse : selon les pays ou les disciplines, les athlètes ne débutent ni ne terminent leur carrière au même âge, ce qui fait varier cet âge moyen indépendamment du niveau de performance.  Notre étude se concentre donc sur l'identification de l'âge au pic de performance, c'est-à-dire l'âge auquel les capacités athlétiques sont à leur maximum. Cette approche permet de mieux comprendre la dynamique temporelle de la performance sportive, caractérisée par une phase de croissance progressive des capacités, suivie d'un plateau puis d'un déclin lié au vieillissement.\
 
 \noindent Ce rapport s'articule en trois parties. Une première étude présente les statistiques descriptives et une analyse inférentielle de l'âge au pic observé selon les disciplines et le sexe. Une deuxième étude mobilise deux modèles non linéaires, le modèle de Moore (1975) et le modèle IMAP (Berthelot et al., 2019), afin de modéliser la trajectoire complète de la performance. Enfin, une troisième partie confronte les estimations empiriques et modélisées afin d'en évaluer la cohérence.
 
@@ -162,13 +167,13 @@ Imad {Hamri}\\
 
 # Présentation des données
 
-\noindent Notre étude s'appuie sur une base de données issue de World Athletics, la fédération sportive internationale chargée de régir les fédérations nationales d'athlétisme et d'organiser les compétitions internationales mondiales \footnote{\url{https://fr.wikipedia.org/wiki/World_Athletics}}. Cette base recense, pour chaque discipline et chaque année entre 1985 et 2025, quelques unes des meilleures performances mondiales réalisées lors de compétitions officielles. Notre étude se limitera aux performances réalisées dans des disciplines présentes dans les grands championnats (championnat du monde, d'Europe).\
+\noindent Notre étude s'appuie sur une base de données issue de World Athletics, la fédération sportive internationale chargée de régir les fédérations nationales d'athlétisme et d'organiser les compétitions internationales mondiales \footnote{\url{https://fr.wikipedia.org/wiki/World_Athletics}}. Cette base recense, pour chaque discipline et chaque année entre 1985 et 2025, quelques unes des meilleures performances mondiales réalisées lors de compétitions officielles. Notre étude se limitera aux performances réalisées dans des disciplines présentes dans les grands championnats (Championnats du monde, d'Europe).\
 
 \noindent Les données comportent plusieurs variables clés : l'identifiant de l'athlète, son âge au moment de la performance, son sexe, sa nationalité, la discipline pratiquée, la performance brute (temps, distance ou hauteur selon la discipline) et le ResultScore. Ce dernier, développé par World Athletics, constitue une métrique normalisée permettant de comparer les performances entre disciplines différentes en s'appuyant sur des paramètres définis par des experts du domaine.\
 
 \noindent La base couvre l'ensemble des disciplines olympiques en athlétisme : courses (sprint, demi-fond, fond, haies), sauts (hauteur, longueur, triple saut, perche), lancers (poids, disque, javelot, marteau) et épreuves combinées (décathlon, heptathlon). Cette diversité permet d'analyser finement les spécificités de chaque famille de disciplines.\
 
-\noindent Il convient toutefois de noter certaines limites structurelles : un déséquilibre dans la répartition des athlètes par âge, avec une sous-représentation des athlètes de plus de 35 ans, ainsi qu'une possible hétérogénéité dans la qualité de l'enregistrement des données selon les périodes et les pays. La sous-représentation des athlètes de plus de 35 ans sera un détail dont il faudra tenir compte puisqu'elle est dûe au fait que les données dont nous disposons correspondent aux perfromances des meilleurs athlètes chaque saison et donc cela explique pourquoi les athlètes de 35 ans sont peu présents comparés à des athlètes plus jeunes. Ces biais potentiels seront pris en compte dans notre analyse et discutés dans l'interprétation des résultats.
+\noindent Il convient toutefois de noter certaines limites structurelles : un déséquilibre dans la répartition des âges, marqué par une raréfaction des athlètes de plus de 35 ans, ainsi qu'une possible hétérogénéité dans la qualité de l'enregistrement des données selon les périodes et les pays. Ce faible effectif chez les seniors s'explique par la nature même de notre échantillon, qui se concentre sur les performances de l'élite mondiale à chaque saison. Ces biais potentiels seront intégrés à notre analyse et discutés lors de l'interprétation des résultats.
 
 ## Préparation et nettoyage des données
 
@@ -189,18 +194,18 @@ Imad {Hamri}\\
 \noindent L'analyse repose sur un ensemble de variables structurées pour répondre à la problématique de l'évolution de la performance :
 
 -   **Sex :** Variable qualitative à 2 modalités (men, women) qui va être utile pour comparer les performances entre les femmes et les hommes. \vspace{5pt}
--   **Famille :** Regroupement des disciplines par famille (sprints, lancers, sauts, haies, marche, épreuves combinées, marathon, demi-fond long, demi-fond)) \vspace{5pt}
+-   **Famille :** Regroupement des disciplines par famille (sprints, lancers, sauts, haies, marche, épreuves combinées, marathon, demi-fond long, demi-fond) \vspace{5pt}
 -   **Discipline :** Variable qualitative à 23 modalités correspondant aux noms des différentes disciplines de l'athlétisme. \vspace{5pt}
 -   **Age :** Variable quantitative que nous avons codé représentant l'âge de l'athlète lorsqu'il a réalisé la performance correspondante, elle est calculée en faisant la différence entre l'année au cours de laquelle la performance a été réalisée et l'année de naissance de l'athlète. \vspace{5pt}
--   **Age_Pic_Obs :** Variable quantitative qui correspond à l'âge auquel l'athlète a réalisé son record personnel absolu au cours de sa carrière. Il s'agit de la variable dépendante centrale, elle a été obtenue comme l'âge auquel la performance maximale a été réalisée par chaque athlète. \vspace{5pt}
+-   **Age_Pic_Obs :** Variable quantitative représentant l’âge auquel l’athlète a réalisé son record personnel absolu au cours de sa carrière. En tant que variable d’intérêt principale, elle correspond au moment où la performance maximale a été enregistrée pour chaque individu. \vspace{5pt}
 -   **mark_numeric :** Variable quantitative qui correspond à la meilleure performance d'un athlète sur une saison au format numérique (en seconde ou mètre selon la discipline). \vspace{5pt}
--   **meilleure_perf_km_par_h :** Variable quantitative calculée à partir de **mark_numeric** pour les disciplines où **mark_numeric** correspond à un temps en seconde. Elle permet de convertir de la performance en kilomètre par heure pour les disciplines de courses ou marche afin d'avoir des valeurs positives à maximiser dans nos modèles.
+-   **meilleure_perf_km_par_h :** Variable quantitative calculée à partir de **mark_numeric** pour les disciplines où **mark_numeric** correspond à un temps en seconde. Elle permet de convertir la performance en kilomètre par heure pour les disciplines de courses ou marche afin d'avoir des valeurs positives à maximiser dans nos modèles.
 
 \newpage
 
 # Étude 1 : Statistiques descriptives et analyse inférentielle
 
-\noindent Dans l'optique de mieux comprendre la structure de l'échantillon d'élite et d'en obtenir une vue d'ensemble, les caractéristiques de l'âge au pic observé sont examinées en premier lieu. Cette analyse préliminaire permet d'identifier des tendances majeures et de justifier le choix des modélisations non linéaires (Moore et IMAP) qui suivront.
+\noindent Dans l'optique de mieux comprendre la structure de cet échantillon d'élite et d'en obtenir une vue d'ensemble, les caractéristiques de l'âge au pic observé sont examinées en premier lieu. Cette analyse préliminaire permet d'identifier des tendances majeures et de justifier le choix des modélisations non linéaires (Moore et IMAP) qui suivront.
 
 ## Méthodologie
 
@@ -330,7 +335,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \vspace{5pt}
 
-\noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir les histogrammes par discipline @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
+\noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir les histogrammes par discipline @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette absence de normalité est confirmée par les graphiques Quantile-Quantile (QQ-plots) en Annexe (@fig-qq-disc-men), où l'écart des points par rapport à la droite de référence valide l'utilisation de tests non paramétriques. Ces observations visuelles sont les premiers indicateurs de la nécessité d'utiliser des outils statistiques non paramétriques.
 
 \newpage
 
@@ -340,7 +345,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 - **$H_0$ :** La distribution de l'âge au pic selon la famille (ou la discipline) peut être raisonnablement approchée par une loi normale.
 - **$H_1$ :** La distribution de l'âge au pic selon la famille (ou la discipline) ne peut pas être approchée par une loi normale.
-- **Décision :** Si $p < 0,05$, on rejette **$H_0$** (normalité rejetée) et il est nécessaire d'utiliser des tests non paramétriques.
+- Décision : Si $p < 0,05$, on rejette **$H_0$** (normalité rejetée) et il est nécessaire d'utiliser des tests non paramétriques.
 
 \noindent Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
@@ -487,7 +492,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 **Perspectives et limites** \setlength{\parindent}{15pt}
 
-\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels --- comme la structure des circuits professionnels ou des contextes socio-économiques --- participent aux écarts observés (Capranica et al. [@Capranica2013]). De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.
+\noindent Ces interprétations doivent être considérées avec prudence. Les liens statistiques établis ici ne permettent pas de conclure à une causalité biologique directe. Il est possible que des facteurs contextuels comme la structure des circuits professionnels ou des contextes socio-économiques participent aux écarts observés (Capranica et al. [@Capranica2013]). De plus, il convient de noter que l'histoire de l'athlétisme féminin suggère que l'accès plus tardif à certaines épreuves (le Marathon féminin n'est intégré aux Jeux Olympiques qu'en 1984 et le 10 000 m en 1988) a pu potentiellement influencer la structure des carrières et les âges de performance maximale observés, par rapport aux épreuves masculines plus anciennement institutionnalisées.
 
 \noindent Ces résultats appuient néanmoins l'idée d'une segmentation par famille et par discipline, tout en tenant compte de la variable du sexe, pour la suite de l'étude. L'âge au pic n'étant qu'un indicateur ponctuel, il semble utile de modéliser la durée de maintien au plus haut niveau en conservant cette distinction, afin de mieux appréhender les trajectoires de performance complètes.
 
@@ -516,9 +521,9 @@ $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
 \noindent Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme une vitesse de course (en kilomètres par heure), une distance (en mètres) ou un nombre de points.\
 
-\noindent Pour trouver la position du pic, on annule la dérivée $P′(t)=ab \cdot e^{−bt}+cd \cdot e^{dt}=0$, ce qui donne directement : $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$. Pour obtenir la valeur au pic, on calcule P(t) pour $tt = t_{pic}$ et on obtient alors $P(t_{pic})=(a+c)−a \cdot (\frac {ab} {cd})^{\frac {-b} {b+d}}−c \cdot (\frac {ab} {cd})^{\frac d {b+d}}$.\
+\noindent Pour trouver la position du pic, on annule la dérivée $P′(t)=ab \cdot e^{−bt}+cd \cdot e^{dt}=0$, ce qui donne directement : $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$. Pour obtenir la valeur au pic, on calcule P(t) pour $t = t_{pic}$ et on obtient alors $P(t_{pic})=(a+c)−a \cdot (\frac {ab} {cd})^{\frac {-b} {b+d}}−c \cdot (\frac {ab} {cd})^{\frac d {b+d}}$.\
 
-\noindent À partir de cette expression, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de P(t). De plus, le rapport $\frac{a}{c}$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic ; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
+\noindent À partir de cette expression, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La @fig-params-ac illustre les effets de a et de c sur l'allure de P(t). De plus, le rapport $\frac{a}{c}$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic ; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
 
 ::: {#fig-params-ac fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
@@ -527,7 +532,7 @@ Effet des paramètres $a$ et $c$ sur la modélisation
 :::
 
 \setlength{\parindent}{0pt}
-*Note : Ici, b et d sont fixés respectivement à 0,5 et 0,2. Afin de voir l'effet de a, dans le cas "a grand", a est fixé à 8 et c à 0,4. Lorsque l'on passe au cas "a petit", c reste fixé à 0,4 et a passe à 4. Dans le cas "c petit, c vaut 0,3 et a vaut 6. Et dans le cas "c grand", a vaut toujours 6 et c vaut cette fois 2.*
+*Note : Ici, b et d sont fixés respectivement à 0,5 et 0,2. Afin de voir l'effet de a, dans le cas a grand, a est fixé à 8 et c à 0,4. Lorsque l'on passe au cas "a petit", c reste fixé à 0,4 et a passe à 4. Dans le cas c petit, c vaut 0,3 et a vaut 6. Et dans le cas c grand, a vaut toujours 6 et c vaut cette fois 2.*
 \setlength{\parindent}{15pt}\
 
 \noindent Les paramètres b et d gouvernent la dynamique temporelle de la courbe, c'est-à-dire à quelle vitesse elle monte et descend.
@@ -537,7 +542,7 @@ Effet des paramètres $a$ et $c$ sur la modélisation
 
 \vspace{5pt}
 
-\noindent Leur somme $b+d$ contrôle l'étalement global du pic : une grande valeur de $b+d$ produit un pic étroit et précoce, une petite valeur un pic large et tardif, comme l'illustre la figure @fig-params-bd.
+\noindent Leur somme $b+d$ contrôle l'étalement global du pic : une grande valeur de $b+d$ produit un pic étroit et précoce, une petite valeur un pic large et tardif, comme l'illustre la @fig-params-bd.
 La position du pic, $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ résume bien cette double influence. Au numérateur, le rapport $\frac{ab}{cd}$ compare la « force » du terme montant ($a \cdot b$) à celle du terme descendant ($c \cdot d$) : plus le terme montant domine, plus le pic est repoussé vers la droite. Au dénominateur, $b+d$ comprime ou étire l'ensemble de la courbe sur l'axe du temps. Ainsi, b et d n'agissent pas indépendamment : c'est leur interaction avec a et c qui fixe conjointement le moment où le pic survient.
 
 ::: {#fig-params-bd fig-pos="H"}
@@ -571,7 +576,7 @@ Effet des paramètres $b$ et $d$ sur la modélisation
 
 ### Modèle IMAP (2019)
 
-\noindent Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et ses collaborateurs. en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors modélisée par :
+\noindent Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et ses collaborateurs en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors modélisée par :
 
 ```{=tex}
 \begin{equation}
@@ -587,7 +592,7 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 ### Précautions pour gérer le déséquilibre des âges
 
-\noindent On note dans nos données un fort déséquilibre dans la distribution des âges, nous disposons de peu d'athlètes dits jeunes ainsi que de peu d'athlètes que l'on considèrerait comme agés. La figure @fig-brut-1500m-men illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer cette situation car nous cherchons à estimer les paramètres par moindres carrés et alors chaque point a le même poids dans l'estimation et la modélisation. Ainsi les âges très présents risquent d'influencer fortement notre estimation.
+\noindent On note dans nos données un fort déséquilibre dans la distribution des âges, nous disposons de peu d'athlètes dits jeunes ainsi que de peu d'athlètes que l'on considèrerait comme agés. La @fig-brut-1500m-men illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer cette situation car nous cherchons à estimer les paramètres par moindres carrés et alors chaque point a le même poids dans l'estimation et la modélisation. Ainsi les âges très présents risquent d'influencer fortement notre estimation.
 
 ::: {#fig-brut-1500m-men fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_top32/brut_1500_Metres_men.png}}
@@ -698,7 +703,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 ### Choix du modèle le plus performant
 
-\noindent Une fois les modèles estimés, les modèles non convergés sont d'abord écartés. Pour choisir ensuite les paramètres optimaux parmi les estimations convergentes, il nous faut un critère de sélection qui quantifie la qualité d'ajustement de chaque courbe aux données.
+\noindent Une fois l'estimation terminée, les modèles n'ayant pas convergé sont écartés. Pour choisir ensuite les paramètres optimaux parmi les estimations convergentes, il nous faut un critère de sélection qui quantifie la qualité d'ajustement de chaque courbe aux données.
 
 \vspace{5pt}
 
@@ -799,7 +804,7 @@ où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est 
 
 : Âge au pic estimé par le modèle IMAP selon le groupe de disciplines et le sexe {#tbl-imap-groupes}
 
-\noindent Les estimations se situent entre 25 et 30 ans pour la majorité des groupes. Le marathon constitue l'exception la plus nette, avec un pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes. Les différences entre sexes sont faibles : les femmes présentent un pic légèrement plus tardif dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais légèrement plus précoce dans les épreuves de demi-fond long et les épreuves combinées, avec des écarts restant dans une marge de 1 à 2 ans.Concernant la qualité d'ajustement, le RMSE varie selon l'unité de mesure de la performance : les disciplines exprimées en mètres (lancers, RMSE moyen de 1,57 m chez les hommes) présentent des erreurs absolues plus élevées que les disciplines exprimées en km/h (marche athlétique, RMSE \< 0,01).
+\noindent Les estimations se situent entre 25 et 30 ans pour la majorité des groupes. Le marathon constitue l'exception la plus nette, avec un pic estimé à 29,5 ans chez les hommes et 29,8 ans chez les femmes. Les différences entre sexes sont faibles : les femmes présentent un pic légèrement plus tardif dans les sauts (+0,7 an en moyenne) et au marathon (+0,3 an), mais légèrement plus précoce dans les épreuves de demi-fond long et les épreuves combinées, avec des écarts restant dans une marge de 1 à 2 ans. Concernant la qualité d'ajustement, le RMSE varie selon l'unité de mesure de la performance : les disciplines exprimées en mètres (lancers, RMSE moyen de 1,57 m chez les hommes) présentent des erreurs absolues plus élevées que les disciplines exprimées en km/h (marche athlétique, RMSE \< 0,01).
 
 ### Exemple du 1500m 
 
@@ -807,18 +812,20 @@ où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est 
 
 #### Modèle de Moore
 
-|                  |    Hommes     |     Femmes     |
-|------------------|:-------------:|:--------------:|
-| a                |   $30{,}89$   |   $29{,}215$   |
-| b                |   $0{,}126$   |  $0{,}11279$   |
-| c                |  $141{,}92$   |   $11{,}915$   |
-| d                |   $0{,}001$   |   $0{,}001$    |
-| $t_{\text{pic}}$ |   $26$ ans [24,5; 27,5] |  $25{,}6$ ans [23,6; 27,6] |
-| RMSE             | $0{,}39$ km/h | $0{,}529$ km/h |
-| AIC              |   $-5{,}11$   |   $19{,}48$    |
-| BIC              |   $0{,}77$    |   $25{,}58$    |
+::: {.column-body-outset}
+| T | Hommes | Femmes |
+|:---|:---:|:---:|
+| $a$ | $30{,}89$ | $29{,}215$ |
+| $b$ | $0{,}126$ | $0{,}11279$ |
+| $c$ | $141{,}92$ | $11{,}915$ |
+| $d$ | $0{,}001$ | $0{,}001$ |
+| $t_{\text{pic}}$ | $26$ ans $[24{,}5 ; 27{,}5]$ | $25{,}6$ ans $[23{,}6 ; 27{,}6]$ |
+| RMSE | $0{,}39$ km/h | $0{,}529$ km/h |
+| AIC | $-5{,}11$ | $19{,}48$ |
+| BIC | $0{,}77$ | $25{,}58$ |
 
 : Paramètres estimés et critères d'ajustement du modèle de Moore --- 1500m {#tbl-moore-1500m}
+:::
 
 ::: {#fig-moore-1500 fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/moore_1500m.png}}
@@ -1033,7 +1040,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 # Remerciements {.unnumbered}
 
-\noindent Nous tenons tout à remercier notre tuteur, Monsieur Imad HAMRI, qui nous a proposé ce sujet et accompagné durant sa réalisation.\
+\noindent Nous tenons tout à remercier notre tuteur, Monsieur Imad HAMRI, ingénieur de recherche à l'IRMES (INSEP), qui nous a proposé ce sujet et accompagné durant sa réalisation.\
 
 \noindent Ce projet s’est révélé être un défi pour nous au vu des modèles utilisés que nous n’avions pas eu l’occasion d’étudier en cours. Nous avons apprécié enrichir notre bagage statistique auprès de notre tuteur.\
 
