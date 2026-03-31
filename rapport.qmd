@@ -113,11 +113,11 @@ Imad {Hamri}\\
 
 # Résumé {.unnumbered}
 
-\noindent La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les 100 meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore et al. (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à différentes familles de disciplines. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance de l'évolution des performances au cours d'une carrière.
+\noindent La détection précoce des talents sportifs et la compréhension de la trajectoire des athlètes d'élite constituent des enjeux majeurs pour les fédérations sportives internationales. Cette étude s'intéresse à la relation entre l'âge et la performance en athlétisme, en cherchant à identifier l'âge au pic de performance selon les disciplines et le sexe. Mieux comprendre cette dynamique permet non seulement d'optimiser la planification des carrières sportives, mais aussi d'améliorer les stratégies de détection et d'accompagnement des jeunes athlètes. L'analyse s'appuie sur les données de World Athletics couvrant la période 1985--2024, recensant les meilleures performances annuelles mondiales par discipline et par sexe. Deux modèles non linéaires sont mobilisés : le modèle de Moore et al. (1975) et le modèle IMAP (Berthelot et al., 2019), appliqués à différentes familles de disciplines. Cette étude permet de comparer les dynamiques de progression et de déclin entre disciplines et entre sexes, et ainsi contribuer à une meilleure connaissance de l'évolution des performances au cours d'une carrière.
 
 # Abstract {.unnumbered}
 
-\noindent Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the top 100 annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model et al. (1975) and the IMAP model (Berthelot et al., 2019), across various discipline families. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of how performance changes over the course of a career.
+\noindent Early talent detection and understanding the career trajectories of elite athletes are key challenges for international sports federations. This study examines the relationship between age and performance in athletics, aiming to identify peak performance age across disciplines and sexes. A deeper understanding of this dynamic can help optimize career planning and improve strategies for identifying and supporting young athletes. The analysis draws on World Athletics data spanning 1985--2024, covering the best annual performances worldwide per discipline and sex. Two nonlinear models are applied: the Moore model et al. (1975) and the IMAP model (Berthelot et al., 2019), across various discipline families. This study allows us to compare the dynamics of progression and decline between disciplines and between sexes, and thus contribute to a better understanding of how performance changes over the course of a career.
 
 \newpage
 
@@ -493,7 +493,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-\noindent L'équation @eq-moore est un modèle à double exponentielle, constitué de deux composantes :\
+\noindent L'@eq-moore est un modèle à double exponentielle, constitué de deux composantes :\
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
@@ -501,11 +501,11 @@ $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
 \noindent Dans ce modèle, les paramètres a, b, c et d sont tous positifs et P(t) correspond à la performance à l'âge t. Dans cette équation, t désigne l'âge de l'athlète exprimé en années, et P(t) représente la performance à cet âge. Selon la discipline, la performance peut être exprimée comme une vitesse de course (en kilomètres par heure), une distance (en mètres) ou un nombre de points.\
 
-\noindent Pour trouver la position du pic, on annule la dérivée $P′(t)=ab \cdot e^{−bt}+cd \cdot e^{dt}=0$, ce qui donne directement : $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$. Pour obtenir la valeur au pic, on substitue $t_{pic}$ P(t) et on obtient alors $P(t_{pic})=(a+c)−a \cdot (\frac {ab} {cd})^{\frac {-b} {b+d}}−c \cdot (\frac {ab} {cd})^{\frac d {b+d}}$.
+\noindent Pour trouver la position du pic, on annule la dérivée $P′(t)=ab \cdot e^{−bt}+cd \cdot e^{dt}=0$, ce qui donne directement : $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$. Pour obtenir la valeur au pic, on calcule P(t) pour $tt = t_{pic}$ et on obtient alors $P(t_{pic})=(a+c)−a \cdot (\frac {ab} {cd})^{\frac {-b} {b+d}}−c \cdot (\frac {ab} {cd})^{\frac d {b+d}}$.
 
 \vspace{5pt}
 
-\noindent À partir de cette expression, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de P(t). De plus, Le rapport $\frac{a}{c}$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic ; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
+\noindent À partir de cette expression, on peut caractériser précisément le rôle de chaque paramètre. Les paramètres a et c gouvernent l'amplitude de la courbe mais agissent en sens opposés : a détermine le plateau vers lequel tend le terme montant et tire le pic vers le haut, tandis que c contrôle l'amplitude du terme descendant et l'abaisse. La figure @fig-params-ac illustre les effets de a et de c sur l'allure de P(t). De plus, le rapport $\frac{a}{c}$ conditionne la forme du pic : si $c \ll a$, le terme ascendant domine et a fixe seul l'ordre de grandeur du pic ; si au contraire $c \gg a$, le terme descendant est de grande amplitude et le pic résulte d'un équilibre plus prononcé entre les deux composantes. Dans tous les cas, la condition nécessaire et suffisante à l'existence d'un pic est ab\>cd.
 
 ::: {#fig-params-ac fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
@@ -551,12 +551,12 @@ Effet des paramètres $b$ et $d$ sur la modélisation
 
 \vspace{5pt}
 
-\noindent Plus $\frac{ab}{cd}$ est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. La figure @fig-params-bd illustre comment faire varier ce rapport déplace le pic sur l'axe du temps.
+\noindent Plus $\frac{ab}{cd}$ est grand, plus le pic est tardif : la composante descendante, de faible vigueur relative, tarde à contrebalancer la montée. 
 
 
 ### Modèle IMAP (2019)
 
-\noindent Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et ses collaborateurs. en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors donnée par :
+\noindent Le modèle IMAP (\textit{Integrative Model of Age-Performance}), développé par Berthelot et ses collaborateurs. en 2019, propose une approche biologiquement fondée de la relation âge-performance, en modélisant la dynamique des populations cellulaires au cours de la vie. Contrairement au modèle de Moore, dont les paramètres sont purement empiriques, l'IMAP s'appuie sur deux mécanismes cellulaires distincts : la sénescence réplicative $\alpha(t)$, qui décrit la croissance puis la saturation de la population cellulaire, et la perte de fonctionnalité cellulaire $\beta(t)$, qui traduit le déclin progressif lié au vieillissement. La performance $P(t)$ à l'âge $t$ est alors modélisée par :
 
 ```{=tex}
 \begin{equation}
@@ -564,7 +564,7 @@ Effet des paramètres $b$ et $d$ sur la modélisation
 P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})} \cdot \left(1 - e^{\beta_r(t - t_d)}\right)
 \end{equation}
 ```
-\noindent où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés.
+\noindent où $N_\infty$ est la taille asymptotique de la population cellulaire, $\alpha_0 > 0$ et $\alpha_r > 0$ contrôlent respectivement le taux initial et la vitesse de saturation de la croissance cellulaire, $\beta_0 > 0$ et $\beta_r > 0$ contrôlent le taux et la vitesse du déclin fonctionnel, et $t_d > 0$ est un paramètre explicite correspondant à l'âge de décès. Ce dernier paramètre constitue une différence importante avec le modèle de Moore : il assure une convergence contrôlée de la courbe et réduit la variabilité des estimations aux âges avancés, il impose donc $P(t_d) = 0$.
 
 ## Méthode
 
@@ -681,7 +681,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 \vspace{5pt}
 
-\noindent Le nombre d'estimations par valeur de $t_d$ est fixé à 500, contre 1000 pour le modèle de Moore. Ce choix résulte d'un compromis entre coût calculatoire et couverture de l'espace des paramètres : l'IMAP étant estimé pour 8 valeurs de t_d, le nombre total d'estimations par couple (sexe $\times$ discipline) s'élève à 4 000, soit quatre fois plus que pour Moore. ainsi augmenter davantage le nombre de départs par valeur de t_d n'a pas apporté d'amélioration sensible du RMSE lors de nos tests préliminaires.
+\noindent Le nombre d'estimations par valeur de $t_d$ est fixé à 500, contre 1000 pour le modèle de Moore. Ce choix résulte d'un compromis entre coût calculatoire et couverture de l'espace des paramètres : l'IMAP étant estimé pour 8 valeurs de $t_d$, le nombre total d'estimations par couple (sexe $\times$ discipline) s'élève à 4 000, soit quatre fois plus que pour Moore. ainsi augmenter davantage le nombre de départs par valeur de $t_d$ n'a pas apporté d'amélioration sensible du RMSE lors de nos tests préliminaires.
 
 ### Choix du modèle le plus performant
 
@@ -689,7 +689,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 \vspace{5pt}
 
-\noindent Le critère retenu est le RMSE (Root Mean Squared Error), défini par : $$S(\theta) = \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2$$ On retient alors les paramètres qui minimisent ce critère : $$\hat{\theta} = \arg\min_{\theta} RMSE(\theta)$$
+\noindent Le critère retenu est le RMSE (Root Mean Squared Error), défini par : $$S(\theta) = \sqrt{\frac 1 N \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2}$$ On retient alors les paramètres qui minimisent ce critère : $$\hat{\theta} = \arg\min_{\theta} RMSE(\theta)$$
 où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est la performance estimée par notre modèle à $age_i$ avec l'ensemble de paramètres $\theta$ et N est le nombre de points dont nous disposons pour chaque couple ($sexe \times discipline$) dont nous souhaitons estimer les paramètres.
 
 \vspace{5pt}
