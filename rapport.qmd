@@ -205,9 +205,9 @@ Imad {Hamri}\\
 
 \noindent Afin de cerner les principales caractéristiques de la population étudiée, une analyse descriptive a été menée sur l'ensemble des disciplines. L'examen de la distribution globale (@fig-hist) montre que la performance de haut niveau est fortement concentrée : 68,2 % des records masculins et 65,9 % des records féminins sont enregistrés dans une fenêtre comprise entre 22 et 28 ans.
 
-On note cependant une divergence  selon le genre. Les hommes semblent présenter une précocité plus marquée, avec 38,4 % d'entre eux atteignant leur pic entre 21 et 24 ans, contre seulement 27,7 % pour les femmes dans cette même tranche. À l'inverse, la distribution féminine est plus décalée vers la maturité : 58,2 % des femmes atteignent leur âge au pic à partir de 26 ans, alors que cette proportion est de 48,7 % chez les hommes.\
+\noindent On note cependant une divergence  selon le genre. Les hommes semblent présenter une précocité plus marquée, avec 38,4 % d'entre eux atteignant leur pic entre 21 et 24 ans, contre seulement 27,7 % pour les femmes dans cette même tranche. À l'inverse, la distribution féminine est plus décalée vers la maturité : 58,2 % des femmes atteignent leur âge au pic à partir de 26 ans, alors que cette proportion est de 48,7 % chez les hommes.\
 
-Enfin, la valeur extrême de 46 ans observée dans l'échantillon correspond au lanceur de marteau Oleksandr Dryhol qui, bien qu'ayant établi un record du monde vétéran en 2012, a été disqualifié des Jeux Olympiques cette même année pour dopage ; un rappel que certains pics de performance atypiques doivent être interprétés avec une certaine réserve.
+\noindent Enfin, la valeur extrême de 46 ans observée dans l'échantillon correspond au lanceur de marteau Oleksandr Dryhol qui, bien qu'ayant établi un record du monde vétéran en 2012, a été disqualifié des Jeux Olympiques cette même année pour dopage ; un rappel que certains pics de performance atypiques doivent être interprétés avec une certaine réserve.
 
 ::: {#fig-hist fig-pos="H"}
 \fbox{\includegraphics[width=0.75\textwidth]{outputs/histogramme_global.png}}
@@ -335,7 +335,7 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 - **$H_1$ :** La distribution de l'âge au pic selon la famille (ou la discipline) ne peut pas être approchée par une loi normale.
 - **Décision :** Si $p < 0,05$, on rejette **$H_0$** (normalité rejetée) et il est nécessaire d'utiliser des tests non paramétriques.
 
-Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
+\noindent Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test aux grands effectifs), nous avons comparé les taux de rejet de l'hypothèse nulle selon deux échelles d'analyse : l'échelle globale des familles et l'échelle spécifique des disciplines.
 
 | Niveau d'analyse | Effectif moyen ($n$) | Nb total de tests | Tests rejetant $H_0$ ($p < 0,05$) | \% de Rejet |
 |:-------------|:------------:|:------------:|:-----------------:|:------------:|
@@ -493,7 +493,7 @@ Afin de neutraliser le "paradoxe de la puissance" (la sur-sensibilité du test a
 
 $$P(t) = a \cdot(1 - e^{-bt}) + c \cdot(1 - e^{dt})$$ {#eq-moore}
 
-L'équation [(@eq-moore)] est un modèle à double exponentielle, constitué de deux composantes :\
+\noindent L'équation @eq-moore est un modèle à double exponentielle, constitué de deux composantes :\
 - $P_1(t) = a(1 - e^{-bt})$ : correspond à la phase d'amélioration des performances avec l'âge.\
 - $P_2(t) = c(1 - e^{dt})$ : correspond à la phase de déclin des performances, liée au vieillissement.
 
@@ -511,9 +511,11 @@ L'équation [(@eq-moore)] est un modèle à double exponentielle, constitué de 
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/a_et_c.png}}
 
 Effet des paramètres $a$ et $c$ sur la modélisation
-
-*Note de lecture : Ici, b et d sont fixés respectivement à 0,5 et 0,2. Afin de voir l'effet de a, dans le cas "a grand", a est fixé à 8 et c à 0,4. Lorsque l'on passe au cas "a petit", c reste fixé à 0,4 et a passe à 4. Dans le cas "c petit, c vaut 0,3 et a vaut 6. Et dans le cas "c grand", a vaut toujours 6 et c vaut cette fois 2.*
 :::
+
+\setlength{\parindent}{0pt}
+*Note : Ici, b et d sont fixés respectivement à 0,5 et 0,2. Afin de voir l'effet de a, dans le cas "a grand", a est fixé à 8 et c à 0,4. Lorsque l'on passe au cas "a petit", c reste fixé à 0,4 et a passe à 4. Dans le cas "c petit, c vaut 0,3 et a vaut 6. Et dans le cas "c grand", a vaut toujours 6 et c vaut cette fois 2.*
+\setlength{\parindent}{15pt}
 
 \noindent Les paramètres b et d gouvernent la dynamique temporelle de la courbe, c'est-à-dire à quelle vitesse elle monte et descend.
 
@@ -529,9 +531,11 @@ La position du pic, $t_{pic} = \frac {ln(\frac {ab} {cd})} {b+d}$ résume bien c
 \fbox{\includegraphics[width=0.80\textwidth]{methodo/b_et_d.png}}
 
 Effet des paramètres $b$ et $d$ sur la modélisation
-
-*Note de lecture : Ici, a et c sont fixés respectivement à 6 et 0,5. Dans le cas, b+d grand, b est fixé à 0,8 et d à 0,4. Dans le cas, b+d petit, B est fixé à 0,2 et d est fixe à 0,08. Tandis que dans le cas, b+d moyen, b et d sont fixés respectivement à 0,5 et 0,2.*
 :::
+
+\setlength{\parindent}{0pt}
+*Note : Ici, a et c sont fixés respectivement à 6 et 0,5. Dans le cas, b+d grand, b est fixé à 0,8 et d à 0,4. Dans le cas, b+d petit, B est fixé à 0,2 et d est fixe à 0,08. Tandis que dans le cas, b+d moyen, b et d sont fixés respectivement à 0,5 et 0,2.*
+\setlength{\parindent}{15pt}
 
 \noindent La position du pic s'obtient en annulant la dérivée de P(t) :  $P'(t) = ab · e^{−bt} − cd · e^{dt} = 0$. Cette équation a une interprétation intuitive : le pic survient exactement au moment où la vitesse de montée ($ab \cdot e^{-bt}$) est égale à la vitesse de descente ($cd \cdot e^{dt}$). Ce n'est donc pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd pris ensemble. En résolvant l'équation ci-dessus, on obtient l'expression de $t_{pic}$ déjà énoncée précédemment. Pour que ce pic existe t \> 0, il faut que $ln(\frac {ab} {cd})$ \> 0, soit ab \> cd. Quelques cas concrets illustrent cette condition :
 
@@ -1210,6 +1214,8 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 \vspace{20pt}
 
+\newpage
+
 #### Comparaisons inter-disciplines (Extrait du Test de Dunn) {.unnumbered}
 
 Le test de Kruskal-Wallis ayant révélé une différence globale significative entre les disciplines ($p < 0,001$), le test de Dunn permet d'identifier les paires d'épreuves dont les âges au pic diffèrent de manière probante. Le tableau ci-dessous extrait les comparaisons les plus illustratives des dynamiques observées.
@@ -1227,117 +1233,123 @@ Le test de Kruskal-Wallis ayant révélé une différence globale significative 
 \vspace{5pt}
 *Note : Les $p$-values ajustées par la méthode de Bonferroni sont conservatrices pour éviter les faux positifs liés aux comparaisons multiples. Seules les paires présentant une $p$-value ajustée $< 0,05$ sont considérées comme statistiquement différentes.*
 
-#### Modèles de Moore {#sec-annexe-courbes-Moore .unnumbered} 
+\newpage
+
+#### Ajustement du modèle de Moore à nos données pour chaque discipline {#sec-annexe-courbes-Moore .unnumbered} 
 
 ::: {#fig-moore-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_lancer.png}}
 
-Modèles de Moore pour les lancers
+Modèles de Moore pour les lancers - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-sauts fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_saut.png}}
 
-Modèles de Moore pour les sauts
+Modèles de Moore pour les sauts - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-sprints fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_sprint.png}}
 
-Modèles de Moore pour les sprints
+Modèles de Moore pour les sprints - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-haies fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_haies.png}}
 
-Modèles de Moore pour les haies
+Modèles de Moore pour les haies - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-demi-fond fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_demi_fond.png}}
 
-Modèles de Moore pour les disciplines de demi-fond
+Modèles de Moore pour les disciplines de demi-fond - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-fond fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_5000_10000.png}}
 
-Modèles de Moore pour les disciplines de demi-fond long
+Modèles de Moore pour les disciplines de demi-fond long - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-marathon fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_marathon.png}}
 
-Modèles de Moore pour le marathon
+Modèles de Moore pour le marathon - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-marche fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_marche.png}}
 
-Modèles de Moore pour la marche
+Modèles de Moore pour la marche - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
 ::: {#fig-moore-combinees fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/ajustement_epreuves_combinees.png}}
 
-Modèles de Moore pour les épreuves combinées
+Modèles de Moore pour les épreuves combinées - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée. Ligne noire : âge au pic modélisé.
 :::
 
-#### Modèles IMAP {#sec-annexe-courbes-IMAP .unnumbered} 
+\newpage
+
+#### Ajustement du modèle IMAP à nos données pour chaque discipline {#sec-annexe-courbes-IMAP .unnumbered} 
 
 ::: {#fig-imap-lancers fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_lancers.png}}
 
-Modèles IMAP pour les lancers
+Modèles IMAP pour les lancers - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-sauts fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_sauts.png}}
 
-Modèles IMAP pour les sauts
+Modèles IMAP pour les sauts - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-sprints fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_sprints.png}}
 
-Modèles IMAP pour les sprints
+Modèles IMAP pour les sprints - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-haies fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_haies.png}}
 
-Modèles IMAP pour les haies
+Modèles IMAP pour les haies - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-demi-fond fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_demi_fond.png}}
 
-Modèles IMAP pour les disciplines de demi-fond
+Modèles IMAP pour les disciplines de demi-fond - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-fond fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_fond.png}}
 
-Modèles IMAP pour les disciplines de demi-fond long
+Modèles IMAP pour les disciplines de demi-fond long - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-marathon fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_marathon.png}}
 
-Modèles IMAP pour le marathon
+Modèles IMAP pour le marathon - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-marche fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_marche.png}}
 
-Modèles IMAP pour la marche
+Modèles IMAP pour la marche - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
 
 ::: {#fig-imap-combinees fig-pos="H"}
 \fbox{\includegraphics[width=0.90\textwidth]{annexes/imap_combinees.png}}
 
-Modèles IMAP pour les épreuves combinées
+Modèles IMAP pour les épreuves combinées - Points : meilleure performance annuelle par âge (km/h). Ligne rouge : courbe ajustée.
 :::
+
+\newpage
 
 #### Comparaison des modèles {#sec-annexe-comparaison-modeles .unnumbered} 
 
