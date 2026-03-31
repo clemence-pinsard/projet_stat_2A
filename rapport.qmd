@@ -252,7 +252,7 @@ Distribution de l'âge au pic
 
 -   **Proximité entre sexes :** En **Marche**, en **Sauts** et dans les **Épreuves combinées**, les médianes et les quartiles sont quasiment alignés entre les hommes et les femmes. \vspace{5pt}
 -   **Dispersion :** La famille **Lancers** et le **Marathon** montrent des distributions supérieures très étirées, signalant une plus grande variabilité de l'âge au pic. \vspace{5pt}
--   **Valeurs extrêmes :** Les **Lancers** et le **Demi-fond long** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement au épreuves combinées ou aux Haies.
+-   **Valeurs extrêmes :** Les **Lancers** et le **Demi-fond long** présentent de nombreux points isolés vers le haut, particulièrement chez les hommes, contrairement aux épreuves combinées ou aux Haies.
 
 \vspace{4pt}
 
@@ -557,7 +557,7 @@ Effet des paramètres $b$ et $d$ sur la modélisation
 *Note : Ici, a et c sont fixés respectivement à 6 et 0,5. Dans le cas, b+d grand, b est fixé à 0,8 et d à 0,4. Dans le cas, b+d petit, B est fixé à 0,2 et d est fixe à 0,08. Tandis que dans le cas, b+d moyen, b et d sont fixés respectivement à 0,5 et 0,2.*
 \setlength{\parindent}{15pt}\
 
-\noindent La position du pic s'obtient en annulant la dérivée de P(t) :  $P'(t) = ab · e^{−bt} − cd · e^{dt} = 0$. Cette équation a une interprétation intuitive : le pic survient exactement au moment où la vitesse de montée ($ab \cdot e^{-bt}$) est égale à la vitesse de descente ($cd \cdot e^{dt}$). Ce n'est donc pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd pris ensemble. En résolvant l'équation ci-dessus, on obtient l'expression de $t_{pic}$ déjà énoncée précédemment. Pour que ce pic existe t \> 0, il faut que $ln(\frac {ab} {cd})$ \> 0, soit ab \> cd. Quelques cas concrets illustrent cette condition :
+\noindent La position du pic s'obtient en annulant la dérivée de P(t) :  $P'(t) = ab · e^{−bt} − cd · e^{dt} = 0$. Cette équation a une interprétation intuitive : le pic survient exactement au moment où la vitesse de montée ($ab \cdot e^{-bt}$) est égale à la vitesse de descente ($cd \cdot e^{dt}$). Ce n'est donc pas a seul ni b seul qui positionnent le pic, mais bien les produits ab et cd pris ensemble. En résolvant l'équation ci-dessus, on obtient l'expression de $t_{pic}$ déjà énoncée précédemment. Pour que ce pic existe (t \> 0), il faut que $ln(\frac {ab} {cd})$ \> 0, soit ab \> cd. Quelques cas concrets illustrent cette condition (@tbl-condition-pic) :
 
 | $a$ | $b$ | $c$ | $d$ | $ab$ | $cd$ | Pic ? |
 |:---:|:---:|:---:|:---:|:----:|:----:|:-----:|
@@ -594,7 +594,7 @@ P(t) = \beta_0 N_\infty \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 ### Précautions pour gérer le déséquilibre des âges
 
-\noindent On note dans nos données un fort déséquilibre dans la distribution des âges, nous disposons de peu d'athlètes dits jeunes ainsi que de peu d'athlètes que l'on considèrerait comme agés. La @fig-brut-1500m-men illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer cette situation car nous cherchons à estimer les paramètres par moindres carrés et alors chaque point a le même poids dans l'estimation et la modélisation. Ainsi les âges très présents risquent d'influencer fortement notre estimation.
+\noindent On note dans nos données un fort déséquilibre dans la distribution des âges, nous disposons de peu d'athlètes dits jeunes ainsi que de peu d'athlètes que l'on peut considérer comme agés. La @fig-brut-1500m-men illustre cela, entre 20 et 30 ans, il y a beaucoup plus de points qu'avant 20 ans ou après 30 ans. Il va falloir gérer cette situation car nous cherchons à estimer les paramètres par moindres carrés et alors chaque point a le même poids dans l'estimation et la modélisation. Ainsi les âges très présents risquent d'influencer fortement notre estimation.
 
 ::: {#fig-brut-1500m-men fig-pos="H"}
 \fbox{\includegraphics[width=0.80\textwidth]{donnees_reelles_top32/brut_1500_Metres_men.png}}
@@ -614,7 +614,7 @@ Meilleures performances par âge (1500 m - Hommes)
 
 #### Pourquoi cette méthode ? 
 
-\noindent La méthode de la descente de gradient est l'une des méthodes possibles pour estimer les paramètres des différents modèles afin de modéliser la relation âge-performance en athlétisme de haut niveau. En effet, dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$ pour le modèle IMAP. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte du fait des paramètres du modèle présents dans les deux exponentielles : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
+\noindent La méthode de la descente de gradient est l'une des méthodes possibles pour estimer les paramètres des différents modèles afin de modéliser la relation âge-performance en athlétisme de haut niveau. En effet, dans le cadre du modèle de Moore comme pour le modèle IMAP, les formules présentent une non-linéarité par rapport à certains paramètres. La non-linéarité est selon les paramètres b et d, situés en exposants pour le modèle de Moore et selon les paramètres $\alpha_r$, $\beta_r$ et $\alpha_0$ pour le modèle IMAP. Contrairement à une régression linéaire classique (MCO), il n'existe pas de formule explicite permettant de calculer directement les coefficients optimaux par une simple inversion matricielle. La structure même de l'équation, composée de deux membres bi-exponentiels, crée une interdépendance forte car les paramètres du modèle sont présents dans les deux exponentielles : il devient difficile d'isoler l'influence de chaque partie sur l'allure globale de la courbe, car les deux termes "se mélangent" pour produire le résultat final. Là où une régression linéaire tenterait de trouver une solution globale et instantanée, la descente de gradient adopte une approche plus fine et progressive. Elle ajuste les paramètres et de concert, avançant pas à pas dans toutes les directions pour minimiser l'erreur, permettant ainsi de calibrer précisément le modèle là où les méthodes directes échouent.
 
 #### Fonctionnement 
 
@@ -650,7 +650,7 @@ Optimum local et descente de graident - Schéma conceptuel qui illustre le résu
 -   $a$ est tiré uniformément entre 0,9 et 1,2 fois la valeur de performance maximale observée, reflétant le fait que le plateau asymptotique du terme montant est légèrement supérieur au pic ;
 -   $b$ est tiré uniformément dans un intervalle centré sur $\frac{\hat{p}}{a}$, où $\hat{p}$ désigne le taux de variation empirique de P calculé sur les premiers points observés. Ce choix est motivé par l'approximation $P'(0) \approx ab$, valable en début de courbe lorsque le terme montant domine localement;
 -   $c$ est tiré uniformément dans un voisinage étroit de $\frac a {100}$, par choix conservateur afin de démarrer dans une région où la condition ab\>cd est nécessairement vérifiée et où le pic existe, sans que cette valeur initiale contraigne la solution finale estimée par l'algorithme;
--   $d$ est tiré uniformément autour de l'estimateur $\frac{\ln[(f(t_3) - a) / (f(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points $t_3$ et $t_4$ situés dans la phase descendante de la courbe.
+-   $d$ est tiré uniformément autour de l'estimateur $\frac{\ln[(P(t_3) - a) / (P(t_4) - a)]}{t_3 - t_4}$, obtenu par régression sur deux points $t_3$ et $t_4$ situés dans la phase descendante de la courbe et $P_{t_3}$, $P_{t_4}$ les valeurs de performance empiriques correspondantes.
 
 \vspace{5pt}
 
@@ -686,7 +686,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 ```{=tex}
 \begin{itemize}
   \item $A$ est tiré négativement dans l'intervalle
-        $[-0{,}003 \cdot t_d \;;\; -0{,}002 \cdot t_d]$,
+        $[-0{,}003 \cdot t_d \;;\;-0{,}002 \cdot t_d]$,
         reflétant le fait que le terme de déclin impose $A < 0$ pour que
         la courbe reste positive sur la fenêtre d'observation ;
   \item $\alpha_0$ est tiré dans
@@ -709,7 +709,7 @@ $$P(t) = A \cdot e^{\frac{\alpha_0}{\alpha_r}(1 - e^{-\alpha_r t})}
 
 \vspace{5pt}
 
-\noindent Le critère retenu est le RMSE (Root Mean Squared Error), défini par : $$S(\theta) = \sqrt{\frac 1 N \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2}$$ On retient alors les paramètres qui minimisent ce critère : $$\hat{\theta} = \arg\min_{\theta} RMSE(\theta)$$
+\noindent Le critère retenu est le RMSE (Root Mean Squared Error), défini par : $$RMSE(\theta) = \sqrt{\frac 1 N \sum_{i=1}^{N} (f_i - \hat{f}(age_i, \theta))^2}$$ On retient alors les paramètres qui minimisent ce critère : $$\hat{\theta} = \arg\min_{\theta} RMSE(\theta)$$
 où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est la performance estimée par notre modèle à $age_i$ avec l'ensemble de paramètres $\theta$ et N est le nombre de points dont nous disposons pour chaque couple ($sexe \times discipline$) dont nous souhaitons estimer les paramètres.\
 
 \noindent Le RMSE présente l'avantage d'être exprimé dans la même unité que les données, ce qui le rend directement interprétable : un RMSE de 5 signifie que la courbe s'écarte en moyenne de 5 unités des valeurs observées. Notons que minimiser le RMSE est mathématiquement équivalent à minimiser la somme des erreurs quadratiques, puisque la racine carrée et la division par N sont des transformations monotones qui ne changent pas l'argmin.\
@@ -722,7 +722,7 @@ où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est 
 
 \vspace{5pt}
 
-\noindent Le calcul de l'AIC et du BIC repose sur la log-vraisemblance du modèle, qui suppose les résidus distribués selon une loi normale $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$. Sous cette hypothèse, la log-vraisemblance est proportionnelle à la somme des carrés des résidus, ce qui justifie l'expression des critères à partir de la SCR.
+\noindent Le calcul de l'AIC et du BIC repose sur la log-vraisemblance du modèle, qui suppose les résidus distribués selon une loi normale $\varepsilon_i \sim \mathcal{N}(0, \sigma^2)$. Sous cette hypothèse, la log-vraisemblance est proportionnelle à la somme des carrés des résidus, ce qui justifie l'expression des critères à partir de la SCR (somme des carrés des résidus).
 
 #### AIC : Akaike Information Criterion
 
@@ -730,19 +730,15 @@ où $f_i$ est la performance observée à $age_i$, $\hat{f}(age_i, \theta)$ est 
 
 #### BIC : Bayesian Information Criterion
 
-\noindent Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents.
+\noindent Le BIC est quant à lui défini par $$BIC=n \cdot \ln(\frac {SRC} n)+(p+1) \cdot \ln (n),$$ et se distingue de l'AIC uniquement par le remplacement du facteur 2 par $\ln (n)$ dans le terme de pénalité. Bien que proches dans leur formulation, ces deux critères conduisent fréquemment au choix de modèles différents.\
 
-\vspace{5pt}
-
-\noindent Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.
-
-\vspace{5pt}
+\noindent Pour chacun de ces critères, le modèle retenu est celui présentant la valeur la plus faible.\
 
 \noindent En cas de désaccord entre les deux critères, nous privilégions le BIC. En effet, le BIC pénalise plus fortement la complexité que l'AIC (facteur $\ln(n)$ contre 2), ce qui le rend plus adapté à notre contexte où le nombre d'observations par couple (sexe $\times$ discipline) est limité et où le risque de surapprentissage est plus préoccupant que le risque de sous-ajustement.
 
 \vspace{5pt}
 
-\noindent Il convient de distinguer deux niveaux de sélection. Le MSE est utilisé en première étape pour sélectionner, parmi les multiples estimations d'un même modèle avec des points de départ différents, celle qui s'ajuste le mieux aux données : c'est un critère de calibration numérique. L'AIC et le BIC interviennent en deuxième étape pour comparer entre eux les deux modèles (Moore et IMAP) une fois leurs paramètres optimaux identifiés : ces critères intègrent une pénalité sur le nombre de paramètres, ce qui permet une comparaison équitable entre le modèle de Moore (4 paramètres) et le modèle IMAP (4 paramètres libres + $t_d$ fixé).
+\noindent Il convient de distinguer deux niveaux de sélection. Le RMSE est utilisé en première étape pour sélectionner, parmi les multiples estimations d'un même modèle avec des points de départ différents, celle qui s'ajuste le mieux aux données : c'est un critère de calibration numérique. L'AIC et le BIC interviennent en deuxième étape pour comparer entre eux les deux modèles (Moore et IMAP) une fois leurs paramètres optimaux identifiés : ces critères intègrent une pénalité sur le nombre de paramètres, ce qui permet une comparaison équitable entre le modèle de Moore (4 paramètres) et le modèle IMAP (4 paramètres libres + $t_d$ fixé). Le RMSE pourra aussi être utilisé pour comparer les disciplines entre elles mais pour cela il faudra le normalisé (par l'écart-type).
 
 ## Résultats
 
