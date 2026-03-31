@@ -210,7 +210,7 @@ Imad {Hamri}\\
 \noindent Enfin, la valeur extrême de 46 ans observée dans l'échantillon correspond au lanceur de marteau Oleksandr Dryhol qui, bien qu'ayant établi un record du monde vétéran en 2012, a été disqualifié des Jeux Olympiques cette même année pour dopage ; un rappel que certains pics de performance atypiques doivent être interprétés avec une certaine réserve.
 
 ::: {#fig-hist fig-pos="H"}
-\fbox{\includegraphics[width=0.75\textwidth]{outputs/histogramme_global.png}}
+\fbox{\includegraphics[width=0.90\textwidth]{outputs/histogramme_global.png}}
 
 Distribution de l'âge au pic
 :::
@@ -327,6 +327,8 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 \noindent Cette asymétrie positive est confirmée lorsque l'on descend à l'échelle de la discipline individuelle (voir les histogrammes par discipline @fig-hist-disc-men en Annexe). Même sur des effectifs plus réduits, la forme des distributions reste hachée et décalée vers la gauche, ce qui visuellement invalide l'utilisation d'une courbe en cloche (normale) pour modéliser ces données. Cette observation visuelle est le premier indicateur de la nécessité d'utiliser des outils statistiques non paramétriques.
 
+\newpage
+
 ### Test statistique de normalité {.unnumbered .unlisted}
 
 \noindent Pour valider les observations visuelles, le test de **Shapiro-Wilk** a été appliqué systématiquement. Ce test évalue formellement si les données de chaque groupe peuvent être modélisées par une loi normale :
@@ -368,21 +370,27 @@ Distributions de l'âge au pic de performance (Athlètes masculins)
 
 2.  Des **tests non paramétriques** (Wilcoxon-Mann-Whitney et Kruskal-Wallis), fondés sur les rangs, sont exclusivement utilisés pour les comparaisons statistiques dans la suite de l'analyse.
 
+\newpage
+
 ## Analyse inférentielle : Comparaison de l'âge au pic de performance selon le sexe et les disciplines
 
 ### Méthodologie {.unnumbered .unlisted}
 
 \noindent Les procédures suivantes ont été appliquées avec un seuil de significativité $\alpha = 0,05$ :
 
--   **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe).
-    - **$H_0$ :** Les distributions de l'âge au pic sont identiques entre hommes et femmes.
-    - **$H_1$ :** Les distributions de l'âge au pic diffèrent entre hommes et femmes.
+- **Test de Wilcoxon-Mann-Whitney :** Utilisé pour comparer l'âge au pic entre deux groupes indépendants (comparaison par sexe).
+  \begin{itemize}
+    \item[---] **$H_0$ :** Les distributions de l'âge au pic sont identiques entre hommes et femmes.
+    \item[---] **$H_1$ :** Les distributions de l'âge au pic diffèrent entre hommes et femmes.
+  \end{itemize}
 
--   **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants (comparaison par familles de disciplines). Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
-    - **$H_0$ :** Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
-    - **$H_1$ :** Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
+- **Test de Kruskal-Wallis :** Utilisé pour comparer plus de deux groupes indépendants. Il constitue l'alternative non paramétrique à l'ANOVA à un facteur.
+  \begin{itemize}
+    \item[---] **$H_0$ :** Les distributions de l'âge au pic sont identiques pour toutes les familles de disciplines.
+    \item[---] **$H_1$ :** Au moins une famille de disciplines présente une distribution d'âge au pic différente des autres.
+  \end{itemize}
     
--   **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
+- **Test post-hoc de Dunn :** En cas de résultat significatif au test de Kruskal-Wallis, cette procédure identifie les paires se distinguant spécifiquement. Une **correction de Bonferroni** est systématiquement appliquée aux $p$-values pour limiter le risque d'erreur de type I lié à la multiplicité des tests.
 
 ### Résultats {.unnumbered .unlisted}
 
