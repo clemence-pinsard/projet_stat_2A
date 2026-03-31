@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(minpack.lm)
+library(numDeriv)
 ```
 
 # IMAP — Toutes disciplines (automatisé)
@@ -117,10 +118,10 @@ for (sex in sexes) {
   for (disc in toutes_disciplines) {
 
     # Disciplines mono-sexe
-    if (sex == "men"   && disc == "Heptathlon")          next
-    if (sex == "men"   && disc == "100_Metres_Hurdles")  next
-    if (sex == "women" && disc == "Decathlon")           next
-    if (sex == "women" && disc == "110_Metres_Hurdles")  next
+    if (sex == "men"   && disc == "Heptathlon")         next
+    if (sex == "men"   && disc == "100_Metres_Hurdles") next
+    if (sex == "women" && disc == "Decathlon")          next
+    if (sex == "women" && disc == "110_Metres_Hurdles") next
 
     info <- get_df_and_var(sex, disc)
     if (is.null(info)) next
@@ -136,7 +137,6 @@ for (sex in sexes) {
     # --- Boucle sur les valeurs de td ---
     for (offset in TD_OFFSETS) {
       td_val <- max_age + offset
-
       formule <- as.formula(paste0(
         perf_var,
         " ~ A * exp((alpha0 / alphar) * (1 - exp(-alphar * Age))) * (1 - exp(betar * (Age - ",
@@ -167,7 +167,6 @@ for (sex in sexes) {
         }
       }
 
-      # On retient ce td s'il améliore le RMSE global
       if (!is.null(best_fit_td) && min_rmse_td < min_rmse_global) {
         min_rmse_global <- min_rmse_td
         best_fit_global <- best_fit_td
@@ -177,22 +176,36 @@ for (sex in sexes) {
 
     # --- Stockage ---
     if (!is.null(best_fit_global)) {
-      params <- coef(best_fit_global)
-      t_pic  <- calc_t_pic_imap(params, td = best_td)
+
+      params   <- coef(best_fit_global)
+      vcov_mat <- vcov(best_fit_global)
+      t_pic    <- calc_t_pic_imap(params, td = best_td)
+
+      grad_vec <- numDeriv::grad(
+        func = function(p) calc_t_pic_imap(p, td = best_td),
+        x    = params
+      )
+
+      se_t_pic  <- sqrt(as.numeric(t(grad_vec) %*% vcov_mat %*% grad_vec))
+      ic_lower  <- t_pic - 1.96 * se_t_pic
+      ic_upper  <- t_pic + 1.96 * se_t_pic
 
       resultats_imap <- bind_rows(resultats_imap, data.frame(
-        Sex        = sex,
-        discipline = disc,
-        A          = params["A"],
-        alpha0     = params["alpha0"],
-        alphar     = params["alphar"],
-        betar      = params["betar"],
-        td         = best_td,
-        t_pic      = t_pic,
-        RMSE       = min_rmse_global,
-        AIC        = AIC(best_fit_global),
-        BIC        = BIC(best_fit_global),
-        converge   = TRUE
+        Sex         = sex,
+        discipline  = disc,
+        A           = params["A"],
+        alpha0      = params["alpha0"],
+        alphar      = params["alphar"],
+        betar       = params["betar"],
+        td          = best_td,
+        t_pic       = t_pic,
+        t_pic_se    = se_t_pic,
+        t_pic_lower = ic_lower,
+        t_pic_upper = ic_upper,
+        RMSE        = min_rmse_global,
+        AIC         = AIC(best_fit_global),
+        BIC         = BIC(best_fit_global),
+        converge    = TRUE
       ))
 
       assign(paste0("best_fit_imap_", sex, "_", gsub(",", "", disc)),
@@ -201,11 +214,15 @@ for (sex in sexes) {
              best_td, envir = .GlobalEnv)
 
     } else {
+
       resultats_imap <- bind_rows(resultats_imap, data.frame(
-        Sex = sex, discipline = disc,
-        A = NA, alpha0 = NA, alphar = NA, betar = NA,
-        td = NA, t_pic = NA, RMSE = NA, AIC = NA, BIC = NA,
-        converge = FALSE
+        Sex         = sex,
+        discipline  = disc,
+        A           = NA, alpha0 = NA, alphar = NA, betar = NA,
+        td          = NA, t_pic  = NA, t_pic_se = NA,
+        t_pic_lower = NA, t_pic_upper = NA,
+        RMSE        = NA, AIC = NA, BIC = NA,
+        converge    = FALSE
       ))
     }
 
@@ -214,7 +231,8 @@ for (sex in sexes) {
         if (!is.null(best_fit_global)) paste0(
           " | RMSE : ", round(min_rmse_global, 4),
           " | td : ", best_td,
-          " | t_pic : ", round(t_pic, 1)
+          " | t_pic : ", round(t_pic, 1),
+          " | IC : [", round(ic_lower, 1), " ; ", round(ic_upper, 1), "]"
         ) else "",
         "\n")
   }
@@ -611,3 +629,16 @@ for (sex in c("men", "women")) {
 
 
 ```
+
+## Intervalles de confiance 
+
+```{r}
+deltaMethod(
+  best_fit_imap_men_100_Metres,
+  "log(a*b / (c*d)) / (b + d)"
+)
+```
+
+
+
+
