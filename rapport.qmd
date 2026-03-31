@@ -742,7 +742,7 @@ N sont des transformations monotones qui ne changent pas l'argmin.
 
 ### Résultats du modèle de Moore 
 
-\noindent Pour tous les couples (sexe $\times$ discipline), les modèles de Moore ont convergé. Le tableau @tbl-moore-groupes présente l'âge au pic de performance estimé par le modèle de Moore pour chaque groupe de disciplines et selon le sexe, avec les valeurs minimales et maximales observées au sein de chaque groupe. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-moore-lancers à @fig-moore-combinees).
+\noindent Pour tous les couples (sexe $\times$ discipline), les modèles de Moore ont convergé. La @tbl-moore-groupes présente l'âge au pic de performance estimé par le modèle de Moore pour chaque groupe de disciplines et selon le sexe, avec les valeurs minimales et maximales observées au sein de chaque groupe. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-moore-lancers à @fig-moore-combinees). De même le détail des $t_{pic}$ par discipline et leurs intervalles de confiance sont disponibles dans la @tbl-ages en annexe.
 
 | Groupe    | Sexe   | $t_{\text{pic}}$ moyen | Min  | Max  |
 |-----------|--------|------------------------|------|------|
@@ -779,7 +779,7 @@ N sont des transformations monotones qui ne changent pas l'argmin.
 
 ### Résultats du modèle IMAP 
 
-\noindent Le modèle IMAP a convergé pour l'ensemble des 42 couples (sexe $\times$ discipline). Le Tableau @tbl-imap-groupes présente les âges au pic estimés par groupe de disciplines. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-imap-lancers à @fig-imap-combinees).
+\noindent Le modèle IMAP a convergé pour l'ensemble des 42 couples (sexe $\times$ discipline). La @tbl-imap-groupes présente les âges au pic estimés par groupe de disciplines. Les courbes correspondant à ces modèles sont présentées en annexe (@fig-imap-lancers à @fig-imap-combinees). De même le détail des $t_{pic}$ par discipline et leurs intervalles de confiance sont disponibles dans la @tbl-ages en annexe.
 
 | Groupe    | Sexe   | $t_{\text{pic}}$ moyen | Min  | Max  |
 |-----------|--------|------------------------|------|------|
@@ -808,7 +808,7 @@ N sont des transformations monotones qui ne changent pas l'argmin.
 
 ### Exemple du 1500m 
 
-\noindent Le 1500m va permettre de détailler l'ajusement du modèle de Moore à nos données (@fig-moore-1500). Les paramètres estimés (a, b, c, d), $t_{pic}$ calculé à partir des paramètres estimés ainsi que les critères d'ajustement pour les deux sexes sont présentés dans le tableau @tbl-moore-1500m.
+\noindent Le 1500m va permettre de détailler l'ajusement du modèle de Moore à nos données (@fig-moore-1500). Les paramètres estimés (a, b, c, d), $t_{pic}$ calculé à partir des paramètres estimés ainsi que les critères d'ajustement pour les deux sexes sont présentés dans la @tbl-moore-1500m.
 
 #### Modèle de Moore
 
@@ -818,7 +818,7 @@ N sont des transformations monotones qui ne changent pas l'argmin.
 | b                |   $0{,}126$   |  $0{,}11279$   |
 | c                |  $141{,}92$   |   $11{,}915$   |
 | d                |   $0{,}001$   |   $0{,}001$    |
-| $t_{\text{pic}}$ |   $26$ ans    |  $25{,}6$ ans  |
+| $t_{\text{pic}}$ |   $26$ ans [24,5; 27,5] |  $25{,}6$ ans [23,6; 27,6] |
 | RMSE             | $0{,}39$ km/h | $0{,}529$ km/h |
 | AIC              |   $-5{,}11$   |   $19{,}48$    |
 | BIC              |   $0{,}77$    |   $25{,}58$    |
@@ -853,7 +853,7 @@ Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annu
 
 #### Modèle IMAP
 
-\noindent Le 1500m offre une illustration détaillée de l'ajustement du modèle IMAP sur une discipline de demi-fond (@fig-imap-1500). Les paramètres estimés et les critères d'ajustement pour les deux sexes sont présentés dans le tableau @tbl-imap-1500.
+\noindent Le 1500m offre une illustration détaillée de l'ajustement du modèle IMAP sur une discipline de demi-fond (@fig-imap-1500). Les paramètres estimés et les critères d'ajustement pour les deux sexes sont présentés dans la @tbl-imap-1500.
 
 |                  |     Hommes     |     Femmes     |
 |------------------|:--------------:|:--------------:|
@@ -862,7 +862,7 @@ Ajustement du modèle de Moore sur le 1500m. Points : meilleure performance annu
 | $\alpha_r$       |  $0{,}00593$   |  $0{,}03059$   |
 | $\beta_r$        |  $-0{,}1156$   |  $-0{,}00100$  |
 | $t_d$            |      $84$      |      $85$      |
-| $t_{\text{pic}}$ |  $27{,}7$ ans  |  $27{,}1$ ans  |
+| $t_{\text{pic}}$ | $27{,}7$ ans [25,8; 29,6] | $27{,}1$ ans [24,6; 29,6] |
 | RMSE             | $0{,}238$ km/h | $0{,}346$ km/h |
 | AIC              |    $4{,}83$    |   $23{,}45$    |
 | BIC              |   $10{,}72$    |   $29{,}55$    |
@@ -899,7 +899,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 #### Âges au pic
 
-\noindent Le Tableau @tbl-comparatif-pic présente les âges au pic estimés par les deux modèles pour l'ensemble des disciplines.
+\noindent La @tbl-comparatif-pic présente les âges au pic estimés par les deux modèles pour l'ensemble des disciplines.
 
 | Discipline         | Moore H | IMAP H | Moore F | IMAP F |
 |--------------------|:-------:|:------:|:-------:|:------:|
@@ -985,7 +985,8 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 
 ## Résultats
 
-\noindent Le tableau ci-dessous présente les âges au pic réel et estimés par le modèle de Moore et le modèle IMAP.
+\noindent La @tbl-comparaison-trois présente les âges au pic réel et estimés par le modèle de Moore et le modèle IMAP. Plus de détails sont dispinible en annexes dans la @tbl-ages, où l'on peut notamment retrouver les intervalles de confiance sur les âges au pic estimés par les modèles.
+
 
 | Discipline  | Réel H (Moy) | Moore H | IMAP H | Réel F (Moy) | Moore F | IMAP F |
 |:------------|:------------:|:-------:|:------:|:------------:|:-------:|:------:|
@@ -1072,6 +1073,12 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 \newpage
 
 # Remerciements {.unnumbered}
+
+\noindent Nous tenons tout à remercier notre tuteur, Monsieur Imad HAMRI, qui nous a proposé ce sujet et accompagné durant sa réalisation.\
+
+\noindent Ce projet s’est révélé être un défi pour nous au vu des modèles utilisés que nous n’avions pas eu l’occasion d’étudier en cours. Nous avons apprécié enrichir notre bagage statistique auprès de notre tuteur.\
+
+\noindent Nous tenons également à remercier les enseignants de l’ENSAI qui sont restés disponibles afin de répondre à nos interrogations durant le projet.
 
 \newpage
 
@@ -1245,6 +1252,36 @@ Le test de Kruskal-Wallis ayant révélé une différence globale significative 
 
 \vspace{5pt}
 *Note : Les $p$-values ajustées par la méthode de Bonferroni sont conservatrices pour éviter les faux positifs liés aux comparaisons multiples. Seules les paires présentant une $p$-value ajustée $< 0,05$ sont considérées comme statistiquement différentes.*
+
+\newpage
+
+#### Ages au pic par discipline {#sec-age-pic-discipline .unnumbered}
+
+| Discipline  | Réel H (Moy) | Moore H | IMAP H | Réel F (Moy) | Moore F | IMAP F |
+|:------------|:------------:|:-------:|:------:|:------------:|:-------:|:------:|
+| 100m        | 25,6 | 27,6 [25,8 ; 29,4] | 29,2 [27,0 ; 31,5] | 24,8 | 28,1 [26,6 ; 29,6] | 28,2 [26,8 ; 29,7] |
+| 200m        | 24,5 | 24,7 [22,8 ; 26,6] | 25,3 [22,9 ; 27,8] | 25,3 | 27,4 [25,7 ; 29,2] | 26,9 [25,2 ; 28,8] |
+| 400m        | 24,1 | 25,1 [23,4 ; 26,8] | 26,6 [24,5 ; 28,7] | 25,3 | 25,1 [23,1 ; 27,2] | 26,8 [24,3 ; 29,0] |
+| 800m        | 22,9 | 23,8 [21,6 ; 25,9] | 25,2 [22,1 ; 28,2] | 25,4 | 25,1 [23,0 ; 27,3] | 26,4 [23,5 ; 29,8] |
+| 1500m       | 25,9 | 26,0 [24,5 ; 27,5] | 27,7 [25,8 ; 29,6] | 25,9 | 25,6 [23,6 ; 27,6] | 27,1 [24,6 ; 29,6] |
+| 5000m       | 24,5 | 24,0 [21,8 ; 26,1] | 25,4 [21,0 ; 29,8] | 25,2 | 24,4 [23,2 ; 25,7] | 25,8 [23,8 ; 27,7] |
+| 10 000m     | 23,7 | 22,3 [15,6 ; 29,1] | 24,9 [−35,9 ; 75,6] | 26,8 | 28,1 [24,9 ; 31,4] | 28,3 [25,7 ; 31,0] |
+| Marathon    | 27,7 | 29,7 [28,0 ; 31,5] | 29,5 [27,9 ; 31,3] | 30,0 | 29,3 [25,1 ; 33,4] | 29,8 [26,4 ; 33,3] |
+| Haies       | 26,0 | 27,2 [25,7 ; 28,7] | 26,9 [24,4 ; 27,4] | 26,9 | 27,0 [25,0 ; 29,0] | 28,0 [26,0 ; 29,9] |
+| 400m haies  | 24,6 | 25,7 [23,8 ; 27,5] | 27,0 [25,0 ; 29,1] | 25,8 | 26,9 [26,2 ; 27,7] | 26,4 [25,5 ; 27,3] |
+| Steeple     | 24,9 | 26,8 [25,7 ; 28,0] | 26,8 [25,6 ; 28,1] | 25,3 | 25,8 [24,0 ; 27,7] | 24,9 [22,9 ; 26,8] |
+| Marche      | 26,3 | 27,2 [24,9 ; 29,6] | 28,2 [25,3 ; 30,6] | 25,8 | 26,1 [24,2 ; 28,1] | 27,3 [24,9 ; 29,8] |
+| Hauteur     | 25,4 | 25,1 [23,4 ; 26,8] | 26,3 [24,0 ; 28,6] | 25,4 | 26,7 [25,4 ; 28,0] | 27,8 [26,4 ; 29,2] |
+| Perche      | 26,5 | 27,9 [26,0 ; 29,8] | 28,4 [26,6 ; 30,1] | 27,0 | 28,5 [26,7 ; 30,2] | 28,7 [27,1 ; 30,2] |
+| Longueur    | 25,6 | 25,9 [23,6 ; 28,2] | 26,3 [24,1 ; 28,5] | 26,2 | 26,8 [25,2 ; 28,5] | 27,0 [25,2 ; 28,8] |
+| Triple saut | 25,6 | 26,9 [25,5 ; 28,3] | 28,0 [26,5 ; 29,5] | 26,7 | 27,0 [25,2 ; 28,8] | 28,2 [26,4 ; 29,9] |
+| Poids       | 26,8 | 29,9 [28,1 ; 31,6] | 28,7 [27,7 ; 29,8] | 26,7 | 28,7 [27,4 ; 30,0] | 27,2 [26,5 ; 27,7] |
+| Disque      | 28,8 | 30,9 [29,1 ; 32,8] | 30,0 [28,9 ; 31,4] | 26,5 | 28,7 [26,6 ; 30,8] | 28,3 [26,3 ; 30,2] |
+| Marteau     | 28,0 | 29,5 [27,4 ; 31,6] | 28,9 [27,3 ; 30,2] | 27,3 | 27,1 [26,2 ; 28,0] | 27,2 [26,2 ; 28,2] |
+| Javelot     | 26,8 | 28,5 [26,6 ; 30,4] | 26,8 [25,2 ; 28,5] | 26,4 | 27,5 [26,1 ; 29,0] | 27,6 [26,2 ; 29,0] |
+| Combinées   | 26,2 | 27,2 [25,9 ; 28,5] | 26,6 [25,5 ; 27,8] | 26,8 | 27,0 [25,6 ; 28,5] | 25,3 [24,3 ; 26,4] |
+
+: Âges optimaux prédits avec intervalles de confiance à 95% {#tbl-ages tbl-colwidths="[8,6,20,20,6,20,20]"}
 
 \newpage
 
