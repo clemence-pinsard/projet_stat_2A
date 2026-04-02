@@ -1082,7 +1082,7 @@ Ajustement du modèle IMAP sur le 1500m. Points : meilleure performance annuelle
 \vspace*{\fill}
 \newpage
 
-#### Distributions par famille {#sec-annexe-planches}
+#### Distributions par famille {#sec-annexe-planchesf}
 
 ![Distributions par famille (hommes)](outputs/hist_famille_hommes.png){#fig-hist-fam-men fig-pos="H" width="85%"}
 
