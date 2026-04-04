@@ -14,6 +14,7 @@ library(minpack.lm)
 library(broom)
 library(ggplot2)
 library(dplyr)
+install.packages("car")
 library(car)
 ```
 
@@ -3358,5 +3359,79 @@ ggsave("annexes/ajustement_marche.png", plot = p_marche, width = 12, height = 9)
 ```
 
 
+## Graphique poster
+
+```{r}
+df_men_Moore <- df_men_1500_Metres
+df_men_IMAP <- df_men_1500_Metres
+
+df_women_Moore <- df_women_1500_Metres
+df_women_IMAP <- df_women_1500_Metres
+
+# 1. On ajoute une colonne pour identifier le modèle
+df_men_Moore$Modele <- "Moore"
+df_men_IMAP$Modele <- "IMAP"
+
+df_women_Moore$Modele <- "Moore"
+df_women_IMAP$Modele <- "IMAP"
+
+# 2. On ajoute les prédictions dans chaque dataframe
+df_men_Moore$predict <- predict(best_fit_h_1500)
+df_men_IMAP$predict <- predict(best_fit_imap_men_1500_Metres)
+
+df_men_Moore$age_pic_estime   <- t_pic_h_1500
+df_men_IMAP$age_pic_estime <- 27.73215
+
+df_women_Moore$predict <- predict(best_fit_f_1500)
+df_women_IMAP$predict <- predict(best_fit_imap_women_1500_Metres)
+
+df_women_Moore$age_pic_estime   <- t_pic_f_1500
+df_women_IMAP$age_pic_estime <- 27.10936
+
+# 3. On fusionne les deux
+df_total_men <- rbind(df_men_Moore, df_men_IMAP)
+
+df_total_women <- rbind(df_women_Moore, df_women_IMAP)
+```
 
 
+```{r}
+graphe_poster_men <- ggplot(df_total_men, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  # Ajout des points (le pch=16 est le style par défaut de ggplot)
+  geom_point(alpha = 0.5, color="grey") + 
+  # Ajout des lignes de prédiction
+  geom_line(aes(y = predict, color=Modele), size = 1) +
+  geom_vline(aes(xintercept = age_pic_estime, color = Modele), linetype = "dashed", size = 0.8) +
+  # Personnalisation des titres et labels
+  labs(
+    title = "Exemple du 1500m - Hommes",
+    x = "Âge",
+    y = "Vitesse (km/h)",
+    color = "Modele"
+  ) +
+  scale_color_manual(values = c("Moore" = "#4ECDC4", "IMAP" = "#FFD700"))+
+  theme_minimal()
+
+ggsave("annexes/poster_modeles_homems.png", plot = graphe_poster_men, width = 12, height = 9)
+```
+
+
+```{r}
+graphe_poster_women <- ggplot(df_total_women, aes(x = Age, y = meilleure_perf_km_par_h)) +
+  # Ajout des points (le pch=16 est le style par défaut de ggplot)
+  geom_point(alpha = 0.5, color="grey") + 
+  # Ajout des lignes de prédiction
+  geom_line(aes(y = predict, color=Modele), size = 1) +
+  geom_vline(aes(xintercept = age_pic_estime, color = Modele), linetype = "dashed", size = 0.8) +
+  # Personnalisation des titres et labels
+  labs(
+    title = "Exemple du 1500m - Femmes",
+    x = "Âge",
+    y = "Vitesse (km/h)",
+    color = "Modele"
+  ) +
+  scale_color_manual(values = c("Moore" = "#4ECDC4", "IMAP" = "#FFD700"))+
+  theme_minimal()
+
+ggsave("annexes/poster_modeles_femmes.png", plot = graphe_poster_women, width = 12, height = 9)
+```
